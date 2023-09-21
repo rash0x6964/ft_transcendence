@@ -35,6 +35,11 @@ export default function MainNavBar({ coins }: Props) {
         ))}
       </div>
 
+      <div className="w-60 h-2 bg-secondary-100 my-auto rounded relative">
+        <div className="bg-primary w-1/2 h-full rounded absolute blur-sm"></div>
+        <div className="bg-primary w-1/2 h-full rounded "></div>
+      </div>
+	  
       <div className="w-5 h-5 my-auto bg-slate-800 rotate-45 relative ">
         <div className="w-0 h-0 border-l-4 border-l-transparent border-t-4 border-primary border-r-4 border-r-transparent rotate-[-45deg] bottom-0 right-[-2px] absolute"></div>
         <div className="text-[8px] text-center absolute rotate-[-45deg] mr-2  w-full">
@@ -42,9 +47,6 @@ export default function MainNavBar({ coins }: Props) {
         </div>
       </div>
 
-      <div className="w-30 h-2 bg-secondary-100 my-auto">
-        <div className="bg-primary w-20 h-full"></div>
-      </div>
     </div>
   )
 }

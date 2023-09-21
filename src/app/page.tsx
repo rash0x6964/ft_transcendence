@@ -1,4 +1,4 @@
-import MainNavBar from "@/components/MainNavBar"
+import MainNavBar from "@/components/MainNavBar/MainNavBar"
 import React from "react"
 
 export default function page() {

@@ -1,6 +1,7 @@
 import React from "react"
 import Coins from "../components/icon_components/Coins"
 import MatchHistory from "../components/icon_components/MatchHistory"
+import Badge from "./icon_components/Badge"
 
 type Props = {
   coins: number
@@ -8,7 +9,8 @@ type Props = {
 
 export default function MainNavBar({ coins }: Props) {
   let history: boolean[] = [true, true, false, false, true]
-  let x = ``
+  let RP:number = 10050;
+
   return (
     <div className="bg-transparent-500 p-5 flex justify-center flex-row-reverse  h-fit gap-7">
       <div className="flex  gap-2">
@@ -20,14 +22,15 @@ export default function MainNavBar({ coins }: Props) {
         />
       </div>
       <div className="w-[1px] h-[40px] bg-slate-700 my-auto mx-4"></div>
-      <div className="flex gap-1 my-auto">
+      <div className="flex gap-2 my-auto">
         <Coins className="my-auto" />
-        <span>{coins} coins</span>
+        <span className="text-xs font-semibold my-auto">{coins} coins</span>
       </div>
       <div className="flex my-auto gap-1 ">
         <MatchHistory className="my-auto" />
-        {history.map((x) => (
+        {history.map((x, i) => (
           <div
+            key={i}
             className={`w-[11px] h-[14px] my-auto rounded-sm ${
               x ? "bg-emerald-500" : "bg-red-500"
             }`}
@@ -47,6 +50,15 @@ export default function MainNavBar({ coins }: Props) {
         </div>
       </div>
 
+
+      <div className="w-30 h-2 bg-secondary-100 my-auto">
+        <div className="bg-primary w-20 h-full"></div>
+      </div>
+
+	  <div className="my-auto flex gap-2">
+        <Badge className="my-auto" />
+		<div className="text-xs font-semibold my-auto">{`${RP} `}RP</div>
+      </div>
     </div>
   )
 }

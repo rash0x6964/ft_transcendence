@@ -22,8 +22,8 @@ export default function PlayerLevel({percentage,level,className}:Props) {
 
 				</div>
 				<div className="w-28 h-2 bg-secondary-400 my-auto rounded relative">
-					<div className={`bg-primary w-[${percentage}%] h-full rounded absolute blur-sm`}></div>
-					<div className={`bg-primary w-[${percentage}%] h-full rounded `}></div>
+					<div style={{width:`${percentage}%`}} className={`bg-primary h-full rounded absolute blur-sm`}></div>
+					<div  style={{width:`${percentage}%`}}  className={`bg-primary  h-full rounded `}></div>
 				</div>
 
 

@@ -17,7 +17,7 @@ export default function MainNavBar({ coins }: Props) {
   let RP: number = 10050
 
   return (
-    <div className="flex justify-between py-3 px-7">
+    <div className="flex justify-between py-3 px-7 mb-4">
       <Settings className="text-white my-auto" width={25} height={25} />
       <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
         <PlayerName

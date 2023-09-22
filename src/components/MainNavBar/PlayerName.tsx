@@ -1,6 +1,6 @@
 import React from 'react'
 import PropWithClass from '@/types/PropWithClass'
-
+import Avatar from '../BaseComponents/Avatar'
 type Props = {
 	name: string,
 	src: string,
@@ -13,11 +13,8 @@ export default function PlayerName({ name, src , className }: Props & PropWithCl
 				<div className="w-[1px] h-[40px] mr-4 bg-slate-700 my-auto "></div>
 				<span className="text-sm my-auto">{name}</span>
 
-				<img
-					className="rounded-full  object-cover shadow w-12 mx-2"
-					src={src}
-					alt=""
-				/>
+				<Avatar src={src} alt={name} className='w-12 h-12' />
+
 			</div>
 		</div>
 	)

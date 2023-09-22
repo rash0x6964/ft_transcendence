@@ -38,7 +38,7 @@ export default function LeftBar({ className }: Props) {
 	return (
 		<div className={className}>
 			<div className="flex flex-col gap-6">
-				{links.map((link) => <Button href={link.href} icon={link.icon} />)}
+				{links.map((link,i) => <Button key={`link-${i}`} href={link.href} icon={link.icon} />)}
 
 			</div>
 			<div className="flex flex-col gap-y-4">

@@ -26,7 +26,7 @@ export default function RootLayout({
           <div className="bg-secondary-400 container  rounded-lg">
             {children}
           </div>
-          <RightBar className="w-16 bg-secondary mx-2 mb-4 rounded-lg" />
+          <RightBar className="w-16 bg-secondary mx-2 mb-2 rounded-lg flex flex-col items-center gap-5 py-5" />
         </div>
       </body>
     </html>

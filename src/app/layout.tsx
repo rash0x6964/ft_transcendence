@@ -2,7 +2,8 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Lexend } from "next/font/google"
 import MainNavBar from "@/components/MainNavBar/MainNavBar"
-
+import LeftBar from "@/components/LeftBar/LeftBar"
+import RightBar from "@/components/RightBar/RightBar"
 const lexend = Lexend({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -21,9 +22,11 @@ export default function RootLayout({
         <div className="w-screen h-screen absolute bg-gradient-to-br from-40% bg-gradient-t from-backdrop to-mirage -z-10 "></div>
         <MainNavBar coins={8000} />
         <div className="flex flex-1 justify-between">
-          <div className="w-16 bg-secondary mx-2 mb-2 rounded-lg"> </div>
-          <div className="bg-secondary-400 container  rounded-lg">{children}</div>
-          <div className="w-16 bg-secondary mx-2 mb-2 rounded-lg"> </div>
+          <LeftBar className="w-16 bg-secondary mx-2 mb-2 rounded-lg" />
+          <div className="bg-secondary-400 container  rounded-lg">
+            {children}
+          </div>
+          <RightBar className="w-16 bg-secondary mx-2 mb-2 rounded-lg" />
         </div>
       </body>
     </html>

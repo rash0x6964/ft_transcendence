@@ -1,4 +1,5 @@
 import Achievement from "./Achievement"
+import SectionTitle from "./SectionTitle"
 
 export default function Achievements() {
   const achievements = [
@@ -21,8 +22,8 @@ export default function Achievements() {
 
   return (
     <>
-      <div className="bg-secondary rounded-2xl max-w-lg">
-        <h2 className="font-semibold p-3">Achievements</h2>
+      <div className="bg-secondary rounded-2xl max-w-lg m-10">
+        <SectionTitle text="Achievements" />
         <div className="flex flex-wrap justify-center">
           {achievements.map((achievement) => (
             <Achievement key={achievement.name} name={achievement.name} />

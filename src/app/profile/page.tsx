@@ -1,4 +1,5 @@
 import Achievements from "./(components)/Achievements"
+import MatchHistory from "./(components)/MatchHistory"
 
 // <div>
 {
@@ -18,8 +19,9 @@ import Achievements from "./(components)/Achievements"
 
 export default function page() {
   return (
-    <div>
+    <div className="flex">
       <Achievements />
+      <MatchHistory />
     </div>
   )
 }

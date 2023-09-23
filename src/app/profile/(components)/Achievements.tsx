@@ -24,11 +24,9 @@ export default function Achievements() {
       <div className="bg-secondary rounded-2xl max-w-lg">
         <h2 className="font-semibold p-3">Achievements</h2>
         <div className="flex flex-wrap justify-center">
-          {achievements.map((achievement) => {
-            return (
-              <Achievement key={achievement.name} name={achievement.name} />
-            )
-          })}
+          {achievements.map((achievement) => (
+            <Achievement key={achievement.name} name={achievement.name} />
+          ))}
         </div>
       </div>
     </>

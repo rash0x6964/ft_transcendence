@@ -1,6 +1,6 @@
 import { type } from "os"
 import React from "react"
-import Test from "../svgs/Pen"
+import Test from "../../app/settings/icons/Pen"
 
 type Props = {
   placeholder: string

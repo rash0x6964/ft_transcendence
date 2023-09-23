@@ -25,7 +25,7 @@ export default function Achievements() {
       <div className="bg-secondary rounded-2xl max-w-lg m-10">
         <SectionTitle text="Achievements" />
         <div className="flex flex-wrap justify-center">
-          {achievements.map((achievement) => (
+          {achievements.map(achievement => (
             <Achievement key={achievement.name} name={achievement.name} />
           ))}
         </div>

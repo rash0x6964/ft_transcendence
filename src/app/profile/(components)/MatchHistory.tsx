@@ -1,13 +1,14 @@
+import Match from "../(types)/Match"
 import MatchEntry from "./MatchEntry"
 import SectionTitle from "./SectionTitle"
 
 export default function MatchHistory() {
-  const matches = [
-    { name: "one" },
-    { name: "two" },
-    { name: "three" },
-    { name: "four" },
-    { name: "five" },
+  const matches: Match[] = [
+    { name: "one", type: "Normal", win: true, days: 3 },
+    { name: "two", type: "Normal", win: false, days: 3 },
+    { name: "three", type: "Ranked", win: true, days: 3 },
+    { name: "four", type: "Ranked", win: false, days: 3 },
+    { name: "five", type: "Normal", win: true, days: 3 },
   ]
 
   return (
@@ -16,7 +17,7 @@ export default function MatchHistory() {
         <SectionTitle text="Match History" />
         <div>
           {matches.map((match) => (
-            <MatchEntry key={match.name} name={match.name} />
+            <MatchEntry key={match.name} match={match} />
           ))}
         </div>
       </div>

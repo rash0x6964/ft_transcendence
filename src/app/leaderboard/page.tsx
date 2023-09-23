@@ -3,18 +3,56 @@ import RP from "../../components/svgs/RP"
 
 export default function page() {
   return (
-    <div className="flex flex-col gap-5 container">
-      <div className="flex justify-around">
-        <div className="flex flex-col gap-2">
-          <div className="self-center">
+    <div className="mx-auto flex flex-col gap-5 container">
+      <div className="grid grid-rows-3 grid-cols-5 gap-4">
+        <div className="flex flex-col gap-3 col-start-2 row-start-2 row-span-4">
+          <div className="self-center relative mb-3">
             <img
-              className="rounded-full border-4"
+              className="rounded-full border-4 w-36"
               src="https://steamavatar.io/img/1477742918oUeJT.jpg"
               alt=""
             />
-			<span className="rounded-full border-4 ">2</span>
+			<span className="text-xl text-center w-10 h-10 rounded-full border-4 absolute bottom-[-15px] left-[52px] bg-secondary">2</span>
           </div>
+
           <span className="self-center">ghalix</span>
+
+          <div className="flex gap-3 self-center">
+            <RP />
+            <span className="">8500 RP</span>
+          </div>
+        </div>
+
+		<div className="flex flex-col gap-3 col-start-3 row-start-1 row-span-2">
+          <div className="self-center relative mb-3">
+            <img
+              className="rounded-full border-4 w-36 border-yellow-300 "
+              src="https://steamavatar.io/img/1477742918oUeJT.jpg"
+              alt=""
+            />
+			<span className="text-xl text-center w-10 h-10 rounded-full border-4 border-yellow-300 absolute bottom-[-15px] left-[52px] bg-secondary">1</span>
+          </div>
+
+          <span className="self-center">ghalix</span>
+
+          <div className="flex gap-3 self-center">
+            <RP />
+            <span className="">8500 RP</span>
+          </div>
+        </div>
+
+		<div className="flex flex-col gap-3 col-start-4 row-start-2 row-end-4">
+          <div className="self-center relative mb-3">
+            <img
+              className="rounded-full border-4 w-36 border-yellow-600"
+              src="https://steamavatar.io/img/1477742918oUeJT.jpg"
+              alt=""
+            />
+			<span className="text-xl text-center w-10 h-10 rounded-full border-4 border-yellow-600 absolute bottom-[-15px] left-[52px] bg-secondary">3</span>
+          </div>
+
+          <span className="self-center">samini</span>
+
           <div className="flex gap-3 self-center">
             <RP />
             <span className="">8500 RP</span>

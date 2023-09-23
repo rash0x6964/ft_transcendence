@@ -13,7 +13,7 @@ export default function MatchHistory() {
 
   return (
     <>
-      <div className="bg-secondary rounded-2xl m-10">
+      <div className="m-10">
         <SectionTitle text="Match History" />
         <div>
           {matches.map((match) => (

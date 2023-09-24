@@ -21,10 +21,10 @@ export default function MatchHistory() {
 
   return (
     <>
-      <div className="m-10">
+      <div className="m-10 flex-grow">
         <SectionTitle text="Match History" />
         <div>
-          {matches.map(match => (
+          {matches.map((match) => (
             <MatchEntry key={match.name} match={match} />
           ))}
         </div>

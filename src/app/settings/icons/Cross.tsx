@@ -6,6 +6,7 @@ export default function Cross() {
   const router = useRouter()
   const handleClick: () => void = () => {
     const path: string | null = localStorage.getItem("pathBeforeSetting")
+	localStorage.removeItem("pathBeforeSetting")
 	if (path)
 		router.push(path)
 	else

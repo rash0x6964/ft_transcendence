@@ -1,5 +1,5 @@
-import Trophy from "../../components/svgs/Trophy"
-import RP from "../../components/svgs/RP"
+import Trophy from "@/components/svgs/Trophy"
+import RP from "@/components/svgs/RP"
 
 export default function page() {
   return (
@@ -12,7 +12,7 @@ export default function page() {
               src="https://steamavatar.io/img/1477742918oUeJT.jpg"
               alt=""
             />
-			<span className="rounded-full border-4 ">2</span>
+            <span className="rounded-full border-4 ">2</span>
           </div>
           <span className="self-center">ghalix</span>
           <div className="flex gap-3 self-center">

@@ -19,12 +19,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
       <body className={lexend.className + " flex flex-col items-center"}>
         <div className="w-screen h-screen absolute bg-gradient-to-br from-40% bg-gradient-t from-backdrop to-mirage -z-10 "></div>
         <div className="flex justify-end w-full p-10">
-          <Cross />
+          <Cross  />
         </div>
         <div className="flex  flex-col md:flex-row justify-center">
           <div className="flex gap-2 w-52 flex-col mx-3">

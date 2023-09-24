@@ -1,6 +1,5 @@
-import { type } from "os"
 import React from "react"
-import Test from "../../app/settings/icons/Pen"
+import Test from "../svgs/Menu"
 
 type Props = {
   placeholder: string
@@ -16,15 +15,13 @@ export default function Input({
   icon,
 }: Props) {
   return (
-    <div
-      className={`rounded-xl flex py-4 justify-between bg-secondary w-80 px-5 ${className}`}
-    >
+    <div className={`rounded-xl flex  justify-between  w-80 px-5 ${className}`}>
       <input
-        className=" appearance-none outline-none text-slate-300 bg-transparent placeholder-slate-700"
+        className=" appearance-none my-auto h-fit outline-none text-slate-300 bg-transparent placeholder-slate-700"
         placeholder={placeholder}
         type={type}
       />
-      {icon || <Test />}
+      <div className=" my-auto">{icon || <Test />}</div>
     </div>
   )
 }

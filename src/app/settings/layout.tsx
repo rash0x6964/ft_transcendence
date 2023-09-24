@@ -1,8 +1,11 @@
 import "../globals.css"
 import type { Metadata } from "next"
 import { Lexend } from "next/font/google"
-import Button from "./Button"
+import NavButton from "./NavButton"
 import Cross from "./icons/Cross"
+import Game from "./icons/Game"
+import Security from "./icons/Security"
+import Profile from "./icons/Profile"
 
 const lexend = Lexend({ subsets: ["latin"] })
 
@@ -18,20 +21,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={lexend.className + " h-screen flex flex-col items-center"}
-      >
+      <body className={lexend.className + " flex flex-col items-center"}>
         <div className="w-screen h-screen absolute bg-gradient-to-br from-40% bg-gradient-t from-backdrop to-mirage -z-10 "></div>
-        <div className="flex justify-end w-full p-5">
+        <div className="flex justify-end w-full p-10">
           <Cross />
         </div>
-        <div className="flex container flex-col md:flex-row justify-center">
+        <div className="flex  flex-col md:flex-row justify-center">
           <div className="flex gap-2 w-52 flex-col mx-3">
-            <Button title="Profile" selected={true} />
-            <Button title="Sign in & Security" />
-            <Button title="Game Prefrences" />
+            <NavButton title="Profile" path="profile" icon={<Profile />} />
+            <NavButton
+              title="Sign in & Security"
+              path="security"
+              icon={<Security />}
+            />
+            <NavButton title="Game Prefrences" path="game" icon={<Game />} />
           </div>
-          <div className="flex-1 max-w-[900px]">{children}</div>
+          <div className="w-[823px]">{children}</div>
         </div>
       </body>
     </html>

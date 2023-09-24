@@ -1,6 +1,17 @@
+"use client"
+import { useRouter } from "next/navigation"
 import React from "react"
 
 export default function Cross() {
+  const router = useRouter()
+  const handleClick: () => void = () => {
+    const path: string | null = localStorage.getItem("pathBeforeSetting")
+	if (path)
+		router.push(path)
+	else
+		router.push("/")
+  }
+
   return (
     <svg
       width="30"
@@ -8,6 +19,8 @@ export default function Cross() {
       viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={handleClick}
+      className="cursor-pointer"
     >
       <path
         d="M15 27.5C21.9036 27.5 27.5 21.9036 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z"

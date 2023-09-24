@@ -1,14 +1,5 @@
-import React from "react"
+import { redirect } from 'next/navigation'
 
 export default function page() {
-  return (
-    <div>
-      <p> Profile </p>
-	  <div> 
-		haha
-	  </div>
-      <p> User Details </p>
-	  
-    </div>
-  )
+	redirect("/settings/profile")
 }

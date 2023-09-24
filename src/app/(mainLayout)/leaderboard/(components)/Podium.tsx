@@ -1,5 +1,5 @@
 import React from "react"
-import RP from "../../../components/svgs/RP"
+import RP from "../../../../components/svgs/RP"
 
 type Props = {
   playerName: string

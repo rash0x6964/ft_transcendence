@@ -1,6 +1,6 @@
 import React from "react"
-import Trophy from "../../../components/svgs/Trophy"
-import RP from "../../../components/svgs/RP"
+import Trophy from "../../../../components/svgs/Trophy"
+import RP from "../../../../components/svgs/RP"
 
 type Props = {
   rank: number
@@ -29,11 +29,7 @@ export default function TableRow({
 
       {/* player */}
       <div className="self-center flex gap-3">
-        <img
-          className="rounded-full w-8"
-          src={playerAvatar}
-          alt=""
-        />
+        <img className="rounded-full w-8" src={playerAvatar} alt="" />
         <span className="self-center">{playerName}</span>
       </div>
 

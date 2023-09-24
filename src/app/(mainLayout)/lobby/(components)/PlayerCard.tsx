@@ -24,7 +24,7 @@ export default function PlayerCard({ className, playerName, RP: rankedPoints, le
 					<div className='text-sm text-slate-600 text-center'> lvl {level}</div>
 				</div>
 				<div className='flex justify-center gap-2 '>
-					<RP />
+					<RP className='text-primary' />
 					<div className='my-auto text-sm font-semibold'>{rankedPoints}</div>
 				</div>
 			</div>

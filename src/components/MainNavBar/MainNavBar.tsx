@@ -32,7 +32,6 @@ export default function MainNavBar({ coins, className }: Props) {
 			</div>
 			<SettingsButton
 				className="my-auto text-white hover:text-white/50 duration-500"
-				onClick={() => alert("asd")}
 			/>
 		</div>
 	)

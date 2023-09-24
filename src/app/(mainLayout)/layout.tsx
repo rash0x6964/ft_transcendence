@@ -1,5 +1,5 @@
 
-import "./globals.css"
+import "../globals.css"
 import type { Metadata } from "next"
 import { Lexend } from "next/font/google"
 import MainNavBar from "@/components/MainNavBar/MainNavBar"
@@ -29,22 +29,15 @@ export default function RootLayout({
 
 						<LeftBar className=" h-full w-fit   bg-secondary mx-2 py-6 shadow  mb-4 rounded-lg flex flex-col  justify-between" />
 						<div className=" flex-1 relative">
-							<div className="absolute w-full max-h-full overflow-y-auto">
+							<div className="absolute w-full h-full max-h-full overflow-y-auto">
 								{children}
 							</div>
 						</div>
 						<RightBar className="shadow  h-full   w-16 bg-secondary mx-2 mb-4 rounded-lg flex flex-col items-center gap-5 py-5" />
 					</div>
 				</div>
-
-
-
-
-
-
-
-
 			</body>
 		</html>
 	)
 }
+

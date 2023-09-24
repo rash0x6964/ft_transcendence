@@ -1,5 +1,4 @@
 import React from 'react'
-import { PropsWithChildren } from 'react'
 import Github from '../svgs/Github'
 import Intra from '../svgs/Intra'
 import Google from '../svgs/Google'

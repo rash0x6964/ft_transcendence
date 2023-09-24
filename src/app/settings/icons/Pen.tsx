@@ -1,4 +1,3 @@
-import React from "react"
 import PropWithClass from "@/types/PropWithClass"
 
 export default function test({ className }: PropWithClass) {

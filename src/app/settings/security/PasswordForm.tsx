@@ -5,7 +5,7 @@ import MainButton from "@/components/BaseComponents/MainButton"
 
 export default function PasswordForm() {
   return (
-    <div className="bg-secondary rounded-xl">
+    <div className="bg-secondary rounded-xl gradient-border-2 ">
       <p className="text-base p-5">Change Password</p>
       <div className="px-10 py-3">
         <Input

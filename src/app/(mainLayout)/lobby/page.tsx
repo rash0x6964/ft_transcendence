@@ -28,7 +28,7 @@ export default function page() {
 			</div>
 			<div className='flex flex-col flex-1 justify-around'>
 				<RadioGroup className='flex gap-4 mx-auto ' radios={radios} defaultVal='Unranked' glow={true} />
-				<GameModBar className='w-fit mx-auto ' />
+				<GameModBar className='w-fit mx-auto  bg-secondary' />
 				<div className='mx-auto'>
 					{!inQ && <MainButton glow={true} className='px-20 py-6 items-center text-lg font-semibold mx-auto self-end' >Find Game</MainButton>}
 					{inQ && <QueueTimer />}

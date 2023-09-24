@@ -44,3 +44,14 @@ body {
 	border-radius: 10px;
 	border: 1.5px solid transparent;
 }
+
+.gradient-border-2 {
+
+	background: linear-gradient(180deg, #0F1921 0%, #0F1921 100%) padding-box,
+		linear-gradient(140deg, #FFFFFF00 60%, #32393e 100%) border-box,
+		linear-gradient(300deg, #FFFFFF00 60%, #32393e 100%) border-box;
+
+	border-radius: 10px;
+	border: 1.5px solid transparent;
+}
+

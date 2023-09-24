@@ -15,7 +15,7 @@ type Props =
 export default function OpponentCard({ className, onClick }: Props) {
 	return (
 
-		<button onClick={onClick} className={`bg-gradient-to-b h-96 w-[15rem] from-backdrop to-mirage  transition-transform hover:opacity-70 hover:scale-105   pb-2  shadow-md border-slate-500 rounded-xl   gradient-border ${className}`}>
+		<button onClick={onClick} className={`drop-shadow-lg bg-gradient-to-b h-96 w-[15rem] from-backdrop to-mirage  transition-transform hover:opacity-70 hover:scale-105   pb-2  shadow-md border-slate-500 rounded-xl   gradient-border ${className}`}>
 			<div className='flex flex-col justify-between h-full'>
 				<div className='pt-32  '>
 					<div className='w-24 h-24 rounded-full border border-gray-500 mx-auto bg-backdrop flex justify-center' >

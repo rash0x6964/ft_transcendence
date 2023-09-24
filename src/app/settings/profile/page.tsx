@@ -8,7 +8,7 @@ import Avatar from "@/components/BaseComponents/Avatar"
 
 export default function page() {
   return (
-    <div className="bg-secondary rounded-xl">
+    <div className="bg-secondary rounded-xl gradient-border-2 drop-shadow-md">
       <p className="text-base p-5">Profile</p>
       <div className="relative">
         <img

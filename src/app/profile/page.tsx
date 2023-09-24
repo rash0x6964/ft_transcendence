@@ -1,5 +1,6 @@
 import Achievements from "./(components)/Achievements"
 import MatchHistory from "./(components)/MatchHistory"
+import PlayerInfoBar from "./(components)/PlayerInfoBar"
 
 // <div>
 {
@@ -19,9 +20,14 @@ import MatchHistory from "./(components)/MatchHistory"
 
 export default function page() {
   return (
-    <div className="flex">
-      <Achievements />
-      <MatchHistory />
-    </div>
+    <>
+      <div>
+        <PlayerInfoBar />
+      </div>
+      <div className="flex">
+        <Achievements />
+        <MatchHistory />
+      </div>
+    </>
   )
 }

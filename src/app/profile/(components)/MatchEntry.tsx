@@ -9,9 +9,9 @@ type Props = {
 export default function MatchEntry({ match }: Props) {
   return (
     <>
-      <div className="bg-secondary rounded-2xl m-4 flex gap-5 p-3 h-[90px] w-[1044px]">
+      <div className="bg-secondary rounded-2xl m-4 flex gap-5 p-3 h-[90px] min-w-[512px] max-w-[1044px]">
         <MatchInfo type={match.type} win={match.win} days={match.days} />
-        <ScoreBoard />
+        <ScoreBoard match={match} />
       </div>
     </>
   )

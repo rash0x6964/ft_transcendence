@@ -1,20 +1,30 @@
-export default function ScoreBoard() {
+import Match from "../(types)/Match"
+import Score from "./Score"
+
+type Props = {
+  match: Match
+}
+
+export default function ScoreBoard({ match }: Props) {
   return (
     <>
-      <div className="flex justify-between">
-        <div className="flex items-center">
+      <div className="flex flex-grow justify-around items-center">
+        <div className="mt-2">
           <img
             className="rounded-full max-h-[50px]"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBLE2R35SV62Enw03QHS5AY-LUr6HOhmHvrA&usqp=CAU"
+            src={match.p_1.url}
             alt=""
           />
+          <h4>{match.p_1.username}</h4>
         </div>
-        <div className="flex items-center">
+        <Score match={match} />
+        <div className="mt-2">
           <img
             className="rounded-full max-h-[50px]"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBLE2R35SV62Enw03QHS5AY-LUr6HOhmHvrA&usqp=CAU"
+            src={match.p_2.url}
             alt=""
           />
+          <h4>{match.p_2.username}</h4>
         </div>
       </div>
     </>

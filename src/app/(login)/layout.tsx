@@ -1,6 +1,8 @@
 import "../globals.css"
 import type { Metadata } from "next"
 import { Lexend } from "next/font/google"
+import Logo from "@/components/svgs/Logo"
+import Link from "next/link"
 
 const lexend = Lexend({ subsets: ["latin"] })
 
@@ -17,6 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={lexend.className + " flex flex-col items-center"}>
+        <Link href={"/"} className="self-start m-4">
+          <Logo className="text-primary" />
+        </Link>
         <div className="w-screen fixed h-screen  bg-gradient-to-br from-10% to-90% from-backdrop to-mirage -z-10">
           {children}
         </div>

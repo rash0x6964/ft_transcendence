@@ -9,6 +9,7 @@ import GameModBar from './(components)/GameModBar'
 import MainButton from '@/components/BaseComponents/MainButton'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 import QueueTimer from './(components)/QueueTimer'
+import Dialogue from '@/components/Dialogue/Dialogue'
 export default function page() {
 
 	let radios: string[] = ["Ranked", "Unranked"];
@@ -16,6 +17,7 @@ export default function page() {
 	let inQ: boolean = false;
 
 	return (
+
 		<div className=' container mx-auto flex flex-col   h-full  '>
 			<div className='h-[20%]'></div>
 			<div className='flex justify-center gap-4  '>

@@ -21,7 +21,7 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={lexend.className}>
 
-				<div className="w-screen fixed h-screen  bg-gradient-to-br from-10% to-90% from-backdrop to-mirage -z-10 "></div>
+				<div className="w-screen fixed h-screen  bg-gradient-to-br from-10% to-80% from-backdrop to-mirage -z-10 "></div>
 
 				<div className="  h-screen w-screen flex flex-col ">
 					<MainNavBar className=" w-screen" coins={8000} />

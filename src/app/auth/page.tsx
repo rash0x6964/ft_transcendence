@@ -3,7 +3,7 @@ import MainBtn from "@/components/BaseComponents/MainButton"
 import Input from "@/components/BaseComponents/Input"
 import AuthBtn from "@/components/BaseComponents/AuthButton"
 
-import { Audiowide } from 'next/font/google'
+import { Audiowide } from "next/font/google"
 
 import Lock from "@/components/svgs/Lock"
 import Mail from "@/components/svgs/Mail"
@@ -11,8 +11,11 @@ import Pen from "@/components/svgs/Pen"
 import Person from "@/components/svgs/Person"
 import Logo from "@/components/svgs/Logo"
 
-
-const audiowide = Audiowide({ weight:"400", subsets:["latin"], display:"swap"})
+const audiowide = Audiowide({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+})
 
 export default function page() {
   return (
@@ -27,21 +30,14 @@ export default function page() {
           icon={<Pen />}
           className="bg-big-stone w-[332px] min-w-[300px] h-11"
         />{" "}
-        <Input
-          placeholder="Username"
-          icon={<Person />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />{" "}
-        <Input
-          placeholder="Mail"
-          icon={<Mail />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />{" "}
-        <Input
-          placeholder="password"
-          icon={<Lock />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />
+        <div className="flex flex-col gap-1">
+          <Input
+            placeholder="password"
+            icon={<Lock />}
+            className="bg-big-stone w-[332px] min-w-[300px]  h-11"
+          />
+          <a className="font-light self-end text-[10px] text-primary" href="">Forgot password?</a>
+        </div>
         <MainBtn className="py-3"> Save</MainBtn>
         <div className="flex gap-1 justify-between">
           <span className="w-[143px] h-[1.5px] bg-slate-700 self-center"></span>
@@ -62,8 +58,8 @@ export default function page() {
             className="h-10 w-24 flex justify-center items-center"
           />
         </div>
-        <p className="text-sm mx-auto">
-          already have an account? <span className="text-primary">Sign in</span>
+        <p className="text-sm mx-auto font-light">
+          Don't have an account? <a href="/singUp" className="text-primary">Sign up</a>
         </p>
       </div>
     </div>

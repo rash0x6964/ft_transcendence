@@ -1,5 +1,5 @@
 import React from "react"
-import Lock from "../icons/Lock"
+import Lock from "../../../components/svgs/Lock"
 import Input from "@/components/BaseComponents/Input"
 import MainButton from "@/components/BaseComponents/MainButton"
 

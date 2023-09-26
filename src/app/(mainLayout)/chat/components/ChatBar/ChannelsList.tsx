@@ -7,7 +7,7 @@ type Prop = {
 
 export default function ChannelsList({ selectedId, handleClick }: Prop) {
   return (
-    <div className="flex flex-col gap-2    overflow-y-scroll">
+    <div className="flex flex-col gap-2 overflow-y-scroll">
       <ChannelBar
         id={11}
         handleClick={handleClick}
@@ -82,6 +82,26 @@ export default function ChannelsList({ selectedId, handleClick }: Prop) {
         id={18}
         handleClick={handleClick}
         isSelected={selectedId == 18}
+        channelName="MSAMN LOVERS XXL"
+        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
+        time="11:55 AM"
+        lastMessage="ana rachid ohibo msmn"
+        unread={20}
+      />
+      <ChannelBar
+        id={19}
+        handleClick={handleClick}
+        isSelected={selectedId == 19}
+        channelName="MSAMN LOVERS XXL"
+        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
+        time="11:55 AM"
+        lastMessage="ana rachid ohibo msmn"
+        unread={20}
+      />
+      <ChannelBar
+        id={19}
+        handleClick={handleClick}
+        isSelected={selectedId == 19}
         channelName="MSAMN LOVERS XXL"
         src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
         time="11:55 AM"

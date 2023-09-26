@@ -1,16 +1,13 @@
 'use client'
 import React, { useState } from 'react'
-import Avatar from '@/components/BaseComponents/Avatar'
 import PlayerCard from './(components)/PlayerCard'
 import OpponentCard from './(components)/OpponentCard'
 import SwordsLogo from './(components)/SwordsLogo'
-import GameModButton from './(components)/GameModButton'
 import GameModBar from './(components)/GameModBar'
 import MainButton from '@/components/BaseComponents/MainButton'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 import QueueTimer from './(components)/QueueTimer'
-import Dialogue from '@/components/Dialogue/Dialogue'
-export default function page() {
+export default function Page() {
 
 	let radios: string[] = ["Ranked", "Unranked"];
 	const [opponent, setOpponent] = useState<Object | null>({});

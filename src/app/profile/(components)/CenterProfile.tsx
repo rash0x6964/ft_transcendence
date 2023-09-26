@@ -4,9 +4,11 @@ export default function CenterProfile() {
 
   return (
     <>
-      <div className="flex flex-col items-center w-40 pr-5">
-        <img className="rounded-full" src={url} alt="Profile picture" />
-        <div className="font-semibold text-xl">rash0x6964</div>
+      <div className="relative -top-10">
+        <div className=" flex flex-col items-center w-40 pr-5">
+          <img className="rounded-full" src={url} alt="Profile picture" />
+          <div className="font-semibold text-xl">rash0x6964</div>
+        </div>
       </div>
     </>
   )

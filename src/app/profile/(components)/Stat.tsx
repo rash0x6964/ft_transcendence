@@ -1,6 +1,6 @@
 export default function Stat() {
   return (
-    <div className="flex flex-col items-center p-12">
+    <div className="flex flex-col items-center pt-12 pb-12">
       <p className="text-sm text-gray-600 font-semibold m-5 mt-2">
         Total games
       </p>

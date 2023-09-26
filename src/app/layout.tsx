@@ -1,4 +1,3 @@
-
 import "./globals.css"
 import type { Metadata } from "next"
 import { Lexend } from "next/font/google"
@@ -21,10 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={lexend.className + " h-screen flex flex-col"}>
         <div className="w-screen h-screen absolute bg-gradient-to-br from-40% bg-gradient-t from-backdrop to-mirage -z-10 "></div>
-        <MainNavBar  coins={8000} />
+        <MainNavBar coins={8000} />
         <div className="flex flex-1 justify-between">
           <LeftBar className=" bg-secondary mx-2 py-6 shadow  mb-4 rounded-lg flex flex-col  justify-between" />
-          <div className="bg-secondary-400 container  rounded-lg">
+          <div className="bg-secondary-400 container z-20 rounded-lg">
             {children}
           </div>
           <RightBar className="shadow w-16 bg-secondary mx-2 mb-4 rounded-lg flex flex-col items-center gap-5 py-5" />

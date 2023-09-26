@@ -22,11 +22,13 @@ export default function page() {
   return (
     <>
       <div className="relative">
-        <img
-          className="absolute -z-10 blur-sm object-cover w-full"
-          src="https://www.mobafire.com/images/champion/skins/landscape/yasuo-sea-dog-762x.jpg"
-          alt="backdrop"
-        />
+        <div className="m-10">
+          <img
+            className="rounded-[40px] w-[200%] h-44 -z-10 blur-sm object-cover"
+            src="https://www.mobafire.com/images/champion/skins/landscape/yasuo-sea-dog-762x.jpg"
+            alt="backdrop"
+          />
+        </div>
         <PlayerInfoBar />
       </div>
       <div className="flex">

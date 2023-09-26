@@ -1,12 +1,11 @@
-import React from "react"
-
 type Props = {
-	className: string
+  className: string
 }
 
-export default function Badge({className}:Props) {
+export default function Badge({ className }: Props) {
   return (
-    <svg className={className}
+    <svg
+      className={className}
       width="14"
       height="18"
       viewBox="0 0 14 18"

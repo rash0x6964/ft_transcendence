@@ -21,7 +21,12 @@ import PlayerInfoBar from "./(components)/PlayerInfoBar"
 export default function page() {
   return (
     <>
-      <div>
+      <div className="relative">
+        <img
+          className="absolute -z-10 blur-sm object-cover w-full"
+          src="https://www.mobafire.com/images/champion/skins/landscape/yasuo-sea-dog-762x.jpg"
+          alt="backdrop"
+        />
         <PlayerInfoBar />
       </div>
       <div className="flex">

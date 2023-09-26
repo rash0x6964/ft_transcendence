@@ -35,9 +35,9 @@ export default function Unfriend({className} : PropWithClass) {
         <path
           d="M22 8L17 13"
           stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </div>

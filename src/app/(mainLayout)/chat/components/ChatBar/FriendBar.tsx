@@ -37,7 +37,7 @@ export default function FriendBar({
       ></div>
       <Avatar src={src} alt={alt} className="w-12 h-12" />
       <div className="w-12 h-12 grow">
-        <p className="text-gray-300 text-base">{username}</p>
+        <p className="text-gray-300 text-base font-semibold">{username}</p>
         <p className="text-gray-600 text-sm">{lastMessage}</p>
       </div>
       <div className="h-full flex flex-col justify-between items-end">

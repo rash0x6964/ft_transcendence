@@ -1,6 +1,7 @@
 import React from 'react'
 import Swords from '@/components/svgs/Swords'
 import PropWithClass from '@/types/PropWithClass'
+
 export default function SwordsLogo({ className} :PropWithClass) {
   return (
 	<div className={className}>

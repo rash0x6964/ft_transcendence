@@ -37,14 +37,14 @@ export default function ChannelBar({
       ></div>
       <Avatar src={src} alt={alt} className="w-12 h-12" />
       <div className="w-12 h-12 grow">
-        <p className="text-gray-300 text-base">{channelName}</p>
+        <p className="text-gray-300 text-base font-semibold">{channelName}</p>
         <p className="text-gray-600 text-sm">{lastMessage}</p>
       </div>
       <div className="h-full flex flex-col justify-between items-end">
         <p className="text-gray-400 text-sm">{time}</p>
         <p
           className={
-            "bg-primary text-black text-xs rounded-full p-1 min-w-[20px] min-h-[20px] flex justify-center items-center" +
+            "bg-primary text-black text-xs rounded-full p-1 min-w-[20px] min-h-[20px] flex justify-center items-center font-semibold " +
             (unread ? "" : "hidden")
           }
         >

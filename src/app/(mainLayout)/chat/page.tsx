@@ -2,6 +2,7 @@ import React from 'react'
 import ChatBar from './components/ChatBar/ChatBar'
 import Chat from './components/Chat'
 import FriendInfo from './components/FriendInfo/FriendInfo'
+import ChannelInfo from './components/Chat/ChannelInfo/ChannelInfo'
 export default function Page() {
 	return (
 		<div className='w-full h-full flex gap-2'>
@@ -13,7 +14,7 @@ export default function Page() {
 
 			</div>
 			<div className=' h-full w-96'>
-				<FriendInfo />
+				<ChannelInfo />
 			</div>
 
 		</div>

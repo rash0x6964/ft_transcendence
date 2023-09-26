@@ -14,11 +14,13 @@ export default function Avatar({
   onClick,
 }: Props) {
   return (
-    <img
+    <Image
       onClick={onClick}
       className={`rounded-full  object-cover   drop-shadow-lg  ${className}`}
       src={src}
       alt={alt}
+	  width={250}
+	  height={250}
     />
   )
 }

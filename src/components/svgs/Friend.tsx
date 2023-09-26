@@ -1,4 +1,4 @@
-export default function () {
+export default function Friend() {
   return (
     <svg
       width="20"

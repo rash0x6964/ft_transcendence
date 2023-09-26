@@ -14,7 +14,7 @@ import Logo from "@/components/svgs/Logo"
 
 const audiowide = Audiowide({ weight:"400", subsets:["latin"], display:"swap"})
 
-export default function page() {
+export default function Page() {
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
       <div className="self-center">

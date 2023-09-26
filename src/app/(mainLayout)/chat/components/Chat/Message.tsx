@@ -5,7 +5,7 @@ import LobbyInvite from './Messages/LobbyInvite'
 import ChannelInvite from './Messages/ChannelInvite'
 import Attachment from './Messages/Attachment'
 import ImageAttachment from './Messages/ImageAttachment'
-import VideoAttachment from './Messages/videoAttachment'
+import VideoAttachment from './Messages/VideoAttachment'
 
 type Props =
 	{

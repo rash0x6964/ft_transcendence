@@ -1,6 +1,6 @@
 import React from 'react'
 import SvgProps from '@/types/SvgProps'
-export default function ({width,height,className}:SvgProps) {
+export default function Eye ({width,height,className}:SvgProps) {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

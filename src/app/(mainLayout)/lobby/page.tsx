@@ -7,7 +7,7 @@ import GameModBar from './(components)/GameModBar'
 import MainButton from '@/components/BaseComponents/MainButton'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 import QueueTimer from './(components)/QueueTimer'
-export default function page() {
+export default function Page() {
 
 	let radios: string[] = ["Ranked", "Unranked"];
 	const [opponent, setOpponent] = useState<Object | null>({});

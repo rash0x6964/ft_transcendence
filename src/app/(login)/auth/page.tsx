@@ -17,7 +17,7 @@ const audiowide = Audiowide({
   display: "swap",
 })
 
-export default function page() {
+export default function Page() {
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
       <div className="self-center">
@@ -59,7 +59,7 @@ export default function page() {
           />
         </div>
         <p className="text-sm mx-auto font-light">
-          Don't have an account? <a href="/singUp" className="text-primary">Sign up</a>
+          Don&apos;t have an account? <a href="/singUp" className="text-primary">Sign up</a>
         </p>
       </div>
     </div>

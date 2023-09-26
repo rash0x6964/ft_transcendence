@@ -19,7 +19,7 @@ export default function VideoAttachment({ className, fileName, src }: Props) {
 					<Eye width={16} height={16} />
 				</div>
 			</div>
-			<video controls src={src}></video>
+			<video  controls src={src}></video>
 
 		</div>
 	)

@@ -12,8 +12,8 @@ export default function Score({ match }: Props) {
   return (
     <>
       <div className="flex flex-col items-center">
-        <h4 className="p-1 text-xl font-extrabold">{`${score_one} - ${score_two}`}</h4>
-        <p className="text-xs font-bold text-gray-400">{minutes} min</p>
+        <h4 className="p-1 text-xl font-semibold">{`${score_one} - ${score_two}`}</h4>
+        <p className="text-xs font-semibold text-gray-400">{minutes} min</p>
       </div>
     </>
   )

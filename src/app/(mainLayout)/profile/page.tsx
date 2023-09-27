@@ -18,9 +18,9 @@ import PlayerInfoBar from "./(components)/PlayerInfoBar"
 //   profile
 // </div>
 
-export default function page() {
+export default function Page() {
   return (
-    <>
+    <div className=" flex flex-col h-full">
       <div className="relative">
         <div className="m-10">
           <img
@@ -31,10 +31,10 @@ export default function page() {
         </div>
         <PlayerInfoBar />
       </div>
-      <div className="flex">
+      <div className="flex flex-1  container mx-auto">
         <Achievements />
         <MatchHistory />
       </div>
-    </>
+    </div>
   )
 }

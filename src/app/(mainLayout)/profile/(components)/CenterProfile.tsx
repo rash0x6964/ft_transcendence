@@ -10,7 +10,7 @@ export default function CenterProfile() {
     <>
       <div className="relative -top-24">
         <div className=" flex flex-col items-center w-40 gap-4">
-          <Avatar src={url} className="rounded-3xl" />
+          <Avatar src={url} className="rounded-[22px]" />
           <div className="font-semibold text-xl">rash0x6964</div>
           <Elo className="-mb-12" RP={10050} />
         </div>

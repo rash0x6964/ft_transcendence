@@ -1,11 +1,18 @@
-'use client'
-import React, { MouseEventHandler ,MouseEvent} from 'react'
-import Settings from '../svgs/Settings'
+"use client"
+import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
+import Settings from "../svgs/Settings"
 
-export default function SettingsButton({ onClick, className }: { onClick?: () => void, className: string }) {
-	return (
-		<button className={className} onClick={onClick }>
-			<Settings className=" my-auto" width={25} height={25} />
-		</button>
-	)
+export default function SettingsButton({ className }: { className: string }) {
+  const pathname: string = usePathname()
+  const router = useRouter()
+  const handleClick: () => void = () => {
+    localStorage.setItem("pathBeforeSetting", pathname)
+    router.push("/settings/profile/")
+  }
+  return (
+    <button className={className} onClick={handleClick}>
+      <Settings className=" my-auto" width={25} height={25} />
+    </button>
+  )
 }

@@ -3,18 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 0, 0, 0;
+		--background-end-rgb: 0, 0, 0;
+	}
 }
+
 body {
-  @apply text-gray-300;
+	@apply text-gray-300;
 }
+
+
+
+/* Firefox */
+*::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
+}
+
+.gradient-border {
+
+	background: linear-gradient(180deg, #0A0E12 0%, #15222C 100%) padding-box,
+		linear-gradient(140deg, #FFFFFF00 60%, #32393e 100%) border-box,
+		linear-gradient(300deg, #FFFFFF00 60%, #32393e 100%) border-box;
+
+	border-radius: 10px;
+	border: 1.5px solid transparent;
+}
+
+.gradient-border-2 {
+
+	background: linear-gradient(180deg, #0F1921 0%, #0F1921 100%) padding-box,
+		linear-gradient(140deg, #FFFFFF00 60%, #32393e 100%) border-box,
+		linear-gradient(300deg, #FFFFFF00 60%, #32393e 100%) border-box;
+
+	border-radius: 10px;
+	border: 1.5px solid transparent;
+}
+

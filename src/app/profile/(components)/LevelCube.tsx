@@ -5,6 +5,7 @@ type Props = {
   percentage: number
   className?: string
 }
+
 export default function LevelCube({ percentage, level, className }: Props) {
   return (
     <div className={className}>

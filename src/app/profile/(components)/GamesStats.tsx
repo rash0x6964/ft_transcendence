@@ -4,8 +4,8 @@ import LevelCube from "./LevelCube"
 import Stat from "./Stat"
 
 export default function GamesStats() {
-  const level = 10
-  const percentage = 50
+  const level = 8
+  const percentage = 96
 
   return (
     <>

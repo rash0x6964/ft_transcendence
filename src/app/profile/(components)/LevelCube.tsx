@@ -24,7 +24,7 @@ export default function LevelCube({ percentage, level, className }: Props) {
             <div className="w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-primary border-r-[16px] border-r-transparent right-[-2px] mx-auto "></div>
           </div>
         </div>
-        <div className="w-96 h-4 bg-secondary-400 my-auto rounded relative">
+        <div className="w-[500px] h-4 bg-secondary-400 my-auto rounded relative">
           <div
             style={{ width: `${percentage}%` }}
             className={`bg-primary h-full rounded absolute blur-sm`}

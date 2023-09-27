@@ -9,6 +9,7 @@ export default function CreateChannelDialBox() {
   const options = ["Public", "Private"]
 
   return (
+    // <div className="rounded-xl p-[1px] bg-gradient-to-br from-gray-600 via-black to-gray-600">
     <div className="bg-secondary p-4 rounded-xl">
       <img
         className="rounded-full w-36 h-36 mx-auto m-12 mt-16 mr-40 ml-40"
@@ -38,5 +39,6 @@ export default function CreateChannelDialBox() {
         </MainButton>
       </div>
     </div>
+    // </div>
   )
 }

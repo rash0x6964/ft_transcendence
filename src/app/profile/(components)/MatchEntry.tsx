@@ -11,6 +11,7 @@ export default function MatchEntry({ match }: Props) {
     <>
       <div className="bg-secondary rounded-2xl m-4 flex gap-5 p-3 h-[90px] max-w-[1044px]">
         <MatchInfo type={match.type} win={match.win} days={match.days} />
+        <div className="bg-gray-700 h-16 my-auto w-[1px]"></div>
         <ScoreBoard match={match} />
       </div>
     </>

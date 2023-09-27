@@ -16,7 +16,7 @@ export default function Page() {
         </div>
         <PlayerInfoBar />
       </div>
-      <div className="flex flex-1  container mx-auto overflow-y-scroll">
+      <div className="flex  container mx-auto overflow-y-scroll">
         <Achievements />
         <MatchHistory />
       </div>

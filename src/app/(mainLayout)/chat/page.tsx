@@ -5,6 +5,7 @@ import FriendInfo from "./components/FriendInfo/FriendInfo"
 import ChannelInfo from "./components/Chat/ChannelInfo/ChannelInfo"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import CreateChannelDialBox from "./components/ChatBar/CreateChannelDialogueBox/CreateChannelDialBox"
+import FriendRequestsDialBox from "./components/ChatBar/CreateChannelDialogueBox/FriendRequestsDialBox"
 
 export default function Page() {
   return (
@@ -19,7 +20,8 @@ export default function Page() {
         <ChannelInfo />
       </div>
       <Dialogue closed={false}>
-        <CreateChannelDialBox />
+        {/* <CreateChannelDialBox /> */}
+        <FriendRequestsDialBox />
       </Dialogue>
     </div>
   )

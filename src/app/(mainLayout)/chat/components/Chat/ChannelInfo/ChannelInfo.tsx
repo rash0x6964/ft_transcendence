@@ -41,7 +41,7 @@ export default function ChannelInfo() {
 					playerName="rash0x6964"
 					playerState="In queue" />
 			</div>
-			<ContextMenu MenuRef={menuRef} clicked={true} pos={position} >
+			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
 				<MenuBtn title="Kick" />
 				<MenuBtn title="Mute" />

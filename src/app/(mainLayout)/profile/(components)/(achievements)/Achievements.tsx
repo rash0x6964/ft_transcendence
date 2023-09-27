@@ -21,15 +21,13 @@ export default function Achievements() {
   ]
 
   return (
-    <>
-      <div className="bg-secondary rounded-2xl h-fit max-w-lg m-10">
-        <SectionTitle text="Achievements" />
-        <div className="flex flex-wrap justify-center">
-          {achievements.map(achievement => (
-            <Achievement key={achievement.name} name={achievement.name} />
-          ))}
-        </div>
+    <div className="bg-secondary rounded-2xl h-fit max-w-lg m-10">
+      <SectionTitle text="Achievements" />
+      <div className="flex flex-wrap justify-center">
+        {achievements.map(achievement => (
+          <Achievement key={achievement.name} name={achievement.name} />
+        ))}
       </div>
-    </>
+    </div>
   )
 }

@@ -3,13 +3,7 @@ type Props = {
 }
 
 export default function Achievement({ name }: Props) {
-  return (
-    <>
-      <img
-        className="h-24 w-24 p-3 rounded-full"
-        src="https://png.pngtree.com/png-vector/20190429/ourmid/pngtree-vector-trophy-icon-png-image_997143.jpg"
-        alt={name}
-      />
-    </>
-  )
+  const url = "https://cdn-icons-png.flaticon.com/512/3791/3791606.png"
+
+  return <img className="h-24 w-24 p-3 rounded-full" src={url} alt={name} />
 }

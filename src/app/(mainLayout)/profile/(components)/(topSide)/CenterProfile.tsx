@@ -1,10 +1,8 @@
-import PlayerRP from "@/components/MainNavBar/PlayerRP"
 import Elo from "./Elo"
 import Avatar from "@/components/BaseComponents/Avatar"
 
 export default function CenterProfile() {
-  const url =
-    "https://steamavatar.io/img/14777429717elSu.jpg"
+  const url = "https://steamavatar.io/img/14777429717elSu.jpg"
 
   return (
     <>

@@ -1,4 +1,3 @@
-import PlayerLevel from "@/components/MainNavBar/PlayerLevel"
 import CenterProfile from "./CenterProfile"
 import LevelCube from "./LevelCube"
 import Stat from "./Stat"

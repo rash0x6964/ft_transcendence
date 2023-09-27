@@ -1,11 +1,10 @@
-import Achievements from "./(components)/Achievements"
-import MatchHistory from "./(components)/MatchHistory"
-import PlayerInfoBar from "./(components)/PlayerInfoBar"
-
+import PlayerInfoBar from "./(components)/(topSide)/PlayerInfoBar"
+import Achievements from "./(components)/(achievements)/Achievements"
+import MatchHistory from "./(components)/(matches)/MatchHistory"
 
 export default function Page() {
   return (
-    <div className=" flex flex-col h-full">
+    <div className="flex flex-col h-full">
       <div className="relative">
         <div className="m-10">
           <img
@@ -16,7 +15,7 @@ export default function Page() {
         </div>
         <PlayerInfoBar />
       </div>
-      <div className="flex  container mx-auto overflow-y-scroll">
+      <div className="flex container mx-auto overflow-y-scroll">
         <Achievements />
         <MatchHistory />
       </div>

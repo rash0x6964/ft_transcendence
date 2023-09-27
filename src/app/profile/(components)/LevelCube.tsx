@@ -10,16 +10,16 @@ export default function LevelCube({ percentage, level, className }: Props) {
     <div className={className}>
       <div className="flex flex-col items-center gap-8  ">
         <div className="w-16 h-16 relative  mr-4">
-          <div className="w-16 h-16 rotate-45 bg-secondary-400 absolute"></div>
+          <div className="w-16 h-16 rotate-45 bg-secondary-400 absolute border-white border-[1px]"></div>
           <div className="text-xl font-semibold absolute w-full mt-5 text-center">
             {" "}
             {level}{" "}
           </div>
-          <div className="w-full absolute -bottom-4 ">
+          <div className="w-full absolute -bottom-3 ">
             <div className="w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-primary border-r-[16px] border-r-transparent right-[-2px] mx-auto "></div>
           </div>
 
-          <div className="w-full absolute -bottom-4 blur-[2px] ">
+          <div className="w-full absolute -bottom-3 blur-[2px] ">
             <div className="w-0 h-0 border-l-[16px] border-l-transparent border-t-[16px] border-primary border-r-[16px] border-r-transparent right-[-2px] mx-auto "></div>
           </div>
         </div>

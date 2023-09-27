@@ -1,9 +1,0 @@
-.gradient-stop {
-  background: linear-gradient(
-    to right,
-    transparent,
-    transparent 80%,
-    cyan 20%,
-    cyan
-  );
-}

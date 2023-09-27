@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 type Props =
 	{
 		className?: string
-		style?: CSSProperties
+		pos: { x: number, y: number }
+		clicked: boolean
 		MenuRef: React.LegacyRef<HTMLDivElement>
 	}
 
@@ -20,16 +21,16 @@ export function MenuBtn({ title, onClick }: { title: string; onClick?: () => voi
 	)
 }
 
-export default function ContextMenu({ className, style, MenuRef, children }: Props & PropsWithChildren) {
+export default function ContextMenu({ className, MenuRef, children, pos, clicked }: Props & PropsWithChildren) {
 	return (
 		<div ref={MenuRef}
-			style={style}
-			className={"fixed top-0 left-0 flex flex-col p-3 w-fit bg-secondary rounded border border-gray-600  z-50 " + className}	>
+			style={{ top: pos.y, left: pos.x }}
+			className={`fixed top-0 left-0 flex flex-col p-3 w-fit bg-secondary rounded border border-gray-600  z-50    ${className} ${!clicked && "hidden"} `}	>
 			{children}
 		</div>
 	)
 }
-
+// utility
 export function getMenuPos(e: MouseEvent, menuRef: any): { x: number, y: number } {
 	let posX: number = e.clientX;
 	let posY: number = e.clientY;
@@ -43,12 +44,12 @@ export function getMenuPos(e: MouseEvent, menuRef: any): { x: number, y: number 
 	return { x: posX, y: posY }
 }
 
-
+// custom hook
 export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: React.Dispatch<React.SetStateAction<boolean>>] {
 	const [isClicked, setClicked] = useState<boolean>(false);
 	useEffect(() => {
 		let handler = (e: Event) => {
-			if (!menuRef.current?.contains(e.target as Node)) {
+			if (!menuRef.current?.contains(e.target)) {
 				setClicked(false)
 			}
 		}

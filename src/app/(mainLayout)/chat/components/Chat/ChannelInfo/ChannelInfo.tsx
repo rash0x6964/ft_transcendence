@@ -41,8 +41,8 @@ export default function ChannelInfo() {
 					playerName="rash0x6964"
 					playerState="In queue" />
 			</div>
-			<ContextMenu MenuRef={menuRef} style={{ top: position.y, left: position.x }} className={` ${!clicked && "hidden"} `} >
-				<MenuBtn onClick={()=>alert("yes")} title="Profile" />
+			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
+				<MenuBtn onClick={() => alert("yes")} title="Profile" />
 				<MenuBtn title="Kick" />
 				<MenuBtn title="Mute" />
 				<MenuBtn title="Ban" />

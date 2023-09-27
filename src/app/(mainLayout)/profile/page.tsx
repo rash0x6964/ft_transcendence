@@ -2,21 +2,6 @@ import Achievements from "./(components)/Achievements"
 import MatchHistory from "./(components)/MatchHistory"
 import PlayerInfoBar from "./(components)/PlayerInfoBar"
 
-// <div>
-{
-  /* <img
-  className="blur-sm object-cover w-full"
-  src="https://www.mobafire.com/images/champion/skins/landscape/yasuo-sea-dog-762x.jpg"
-  alt="backdrop"
-/> */
-}
-//   <img
-//     className="h-1/6 w-1/6"
-//     src="https://pxbar.com/wp-content/uploads/2023/09/anime-profile-pictures.jpg"
-//     alt="profile picture"
-//   />
-//   profile
-// </div>
 
 export default function Page() {
   return (
@@ -31,7 +16,7 @@ export default function Page() {
         </div>
         <PlayerInfoBar />
       </div>
-      <div className="flex flex-1  container mx-auto">
+      <div className="flex flex-1  container mx-auto overflow-y-scroll">
         <Achievements />
         <MatchHistory />
       </div>

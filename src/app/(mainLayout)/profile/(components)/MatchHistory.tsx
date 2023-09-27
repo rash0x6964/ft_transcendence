@@ -16,6 +16,9 @@ export default function MatchHistory() {
 		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
 		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
 		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
+		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
+		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
+		{ name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
 
 
 
@@ -23,14 +26,13 @@ export default function MatchHistory() {
 	]
 
 	return (
-		<div className="m-10 flex flex-grow flex-col   ">
+		<div className="m-10 flex-1 flex flex-grow  flex-col ">
 			<SectionTitle text="Match History" />
-			<div className="flex-1  ">
-				<div className="max-h-full   ">
+			<div className="flex-1  overflow-y-scroll">
 					{matches.map((match) => (
 						<MatchEntry key={match.name} match={match} />
 					))}
-				</div>
+		
 			</div>
 
 		</div>

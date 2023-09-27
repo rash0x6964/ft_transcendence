@@ -11,7 +11,7 @@ export default function ChannelInfo() {
 	const adminsCount = 4
 
 	const menuRef = useRef<HTMLDivElement>(null);
-	const [position, setPosition] = useState({ x: 0, y: 0 })
+	const [position, setPosition] = useState({ x: -500, y: -500 })
 	const [clicked, setClicked] = useContextMenu(menuRef);
 
 	const handleContextMenu = (e: MouseEvent<HTMLDivElement>, PlayerName: string) => {
@@ -41,7 +41,7 @@ export default function ChannelInfo() {
 					playerName="rash0x6964"
 					playerState="In queue" />
 			</div>
-			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
+			<ContextMenu MenuRef={menuRef} clicked={true} pos={position} >
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
 				<MenuBtn title="Kick" />
 				<MenuBtn title="Mute" />

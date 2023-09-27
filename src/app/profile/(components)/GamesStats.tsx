@@ -9,14 +9,14 @@ export default function GamesStats() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-around">
         <div className="flex">
+          <Stat />
           <Stat />
           <Stat />
         </div>
         <CenterProfile />
-        {/* <LevelCube /> */}
-        <PlayerLevel level={level} percentage={percentage} />
+        <LevelCube level={level} percentage={percentage} />
       </div>
     </>
   )

@@ -4,9 +4,9 @@ import ChannelMember from "./ChannelMember"
 
 export default function SearchPersonDialBox() {
   return (
-    <div className="bg-secondary p-4 rounded-xl">
+    <div className="bg-secondary p-4 rounded-xl flex flex-col gap-1 ">
       <Input
-        className="mb-4 w-96 h-11 bg-big-stone mx-auto"
+        className="mb-4 w-full h-11 bg-big-stone mx-auto"
         placeholder="Search"
         icon={<Search />}
       />

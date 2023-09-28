@@ -22,7 +22,7 @@ export default function Page() {
       <div className=" h-full w-96">
         <ChannelInfo />
       </div>
-      <Dialogue closed={true}>
+      <Dialogue closed={false}>
         {/* <CreateChannelDialBox /> */}
         {/* <FriendRequestsDialBox /> */}
         {/* <EditChannelDialBox /> */}

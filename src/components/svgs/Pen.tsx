@@ -1,6 +1,6 @@
 import PropWithClass from "@/types/PropWithClass"
 
-export default function test({ className }: PropWithClass) {
+export default function Pen({ className }: PropWithClass) {
   return (
     <svg
       width="24"

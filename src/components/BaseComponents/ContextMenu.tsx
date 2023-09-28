@@ -25,7 +25,7 @@ export default function ContextMenu({ className, MenuRef, children, pos, clicked
 	return (
 		<div ref={MenuRef}
 			style={{ top: pos.y, left: pos.x }}
-			className={`fixed top-0 left-0 flex flex-col p-3 w-fit bg-secondary rounded border border-gray-600  z-50    ${className} ${!clicked ? "-z-50" : "z-0"} `}	>
+			className={`fixed top-0 left-0 flex flex-col p-3 w-fit bg-secondary rounded border border-gray-600      ${className} ${!clicked ? "-z-50" : "z-0"} `}	>
 			{children}
 		</div>
 	)
@@ -49,6 +49,8 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 	const [isClicked, setClicked] = useState<boolean>(false);
 	useEffect(() => {
 		let handler = (e: Event) => {
+			console.log(menuRef);
+
 			if (!menuRef.current?.contains(e.target)) {
 				setClicked(false)
 			}

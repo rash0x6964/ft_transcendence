@@ -8,6 +8,7 @@ import FriendRequestsDialBox from "./components/ChatBar/DialogueBoxes/FriendRequ
 import CreateChannelDialBox from "./components/ChatBar/DialogueBoxes/CreateChannelDialBox"
 import EditChannelDialBox from "./components/ChatBar/DialogueBoxes/EditChannelDialBox"
 import SearchPersonDialBox from "./components/ChatBar/DialogueBoxes/SearchPersonDialBox"
+import JoinChannelDialBox from "./components/ChatBar/DialogueBoxes/JoinChannelDialBox"
 
 export default function Page() {
   return (
@@ -21,11 +22,12 @@ export default function Page() {
       <div className=" h-full w-96">
         <ChannelInfo />
       </div>
-      <Dialogue closed={false}>
+      <Dialogue closed={true}>
         {/* <CreateChannelDialBox /> */}
         {/* <FriendRequestsDialBox /> */}
         {/* <EditChannelDialBox /> */}
-        <SearchPersonDialBox />
+        {/* <SearchPersonDialBox /> */}
+        {/* <JoinChannelDialBox /> */}
       </Dialogue>
     </div>
   )

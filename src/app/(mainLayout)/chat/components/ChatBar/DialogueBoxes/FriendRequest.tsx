@@ -1,5 +1,4 @@
 import Check from "@/components/svgs/Check"
-import Cross from "@/components/svgs/Cross"
 import Cross2 from "@/components/svgs/Cross2"
 
 export default function FriendRequest() {

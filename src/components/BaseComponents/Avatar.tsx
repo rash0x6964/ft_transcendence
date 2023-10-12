@@ -18,7 +18,7 @@ export default function Avatar({
 	return (
 		<Image
 			onClick={onClick}
-			className={` ${!override && "rounded-full"}  object-cover   drop-shadow-lg  ${className}`}
+			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
 			src={src}
 			alt={alt}
 			width={250}

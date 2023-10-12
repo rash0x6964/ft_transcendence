@@ -11,9 +11,9 @@ export default function PlayerName({ name, src , className }: Props & PropWithCl
 		<div className={className}>
 			<div className="flex  gap-2 ">
 				<div className="w-[1px] h-[40px] mr-4 bg-slate-700 my-auto "></div>
-				<span className="text-sm my-auto">{name}</span>
+				<span className="text-sm my-auto mr-2">{name}</span>
 
-				<Avatar src={src} alt={name} className='w-12 h-12' />
+				<Avatar onClick={()=>{}} src={src} alt={name} className='w-12 h-12' />
 
 			</div>
 		</div>

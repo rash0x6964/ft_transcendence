@@ -1,5 +1,6 @@
 import Image from "next/image"
 import React from "react"
+import Avatar from "../BaseComponents/Avatar"
 
 type Props = {
   userName: string
@@ -9,7 +10,7 @@ type Props = {
 export default function Person({ userName, state }: Props) {
   return (
     <div className="w-9 relative flex flex-col items-center">
-      <img
+      <Avatar
         className="rounded-full border-2 w-9"
         src="https://steamavatar.io/img/147774149680437.jpg"
         alt="Avatar"

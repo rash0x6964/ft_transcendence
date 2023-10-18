@@ -19,7 +19,7 @@ export default function Avatar({
 		<Image
 			onClick={onClick}
 			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
-			src={src}
+			src="https://media.tenor.com/0hciLENrqi8AAAAC/neon-steam.gif"
 			alt={alt}
 			width={250}
 			height={250}

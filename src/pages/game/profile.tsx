@@ -4,11 +4,14 @@ import MatchHistory from "@/UI/game/profile/(matches)/MatchHistory";
 import { NextPageWithLayout } from "../_app";
 import { ReactElement } from "react";
 import Layout from "@/UI/Layout";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
 
 const Page: NextPageWithLayout = () => {
 
   return (
     <div className="flex flex-col h-full">
+		<HeadTitle>Profile | KiNCH3RO</HeadTitle>
+
       <div className="relative">
         <div className="m-10">
           <img

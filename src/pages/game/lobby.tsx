@@ -9,6 +9,7 @@ import { useState } from "react";
 import { NextPageWithLayout } from "../_app";
 import { ReactElement } from "react";
 import Layout from "@/UI/Layout";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
 
 const Page: NextPageWithLayout = () => {
 
@@ -20,6 +21,8 @@ const Page: NextPageWithLayout = () => {
 	return (
 
 		<div className=' container mx-auto flex flex-col   h-full  '>
+			<HeadTitle>Pong Fury | lobby</HeadTitle>
+
 			<div className='h-[20%]'></div>
 			<div className='flex justify-center gap-4  '>
 				<PlayerCard playerImage='https://steamavatar.io/img/14777429717elSu.jpg' playerName='KiNCH3RO' level={10} RP={10050} />

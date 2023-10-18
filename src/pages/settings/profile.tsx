@@ -9,10 +9,13 @@ import Change from "@/UI/settings/icons/Change"
 import { NextPageWithLayout } from "../_app"
 import SettingLayout from "@/UI/SettingLayout"
 import { ReactElement } from "react"
+import HeadTitle from "@/components/BaseComponents/HeadTitle"
 
 const Page: NextPageWithLayout = () => {
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 drop-shadow-md">
+		<HeadTitle>Setting | Profile</HeadTitle>
+
       <p className="text-base p-5">Profile</p>
       <div className="relative">
         <img

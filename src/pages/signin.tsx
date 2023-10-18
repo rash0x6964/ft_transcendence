@@ -7,13 +7,12 @@ import { Audiowide } from "next/font/google"
 
 import Lock from "@/components/svgs/Lock"
 import Pen from "@/components/svgs/Pen"
-import Person from "@/components/svgs/Person"
 import Logo from "@/components/svgs/Logo"
-import Layout from "@/UI/Layout"
 
 import AuthLayout from "@/UI/AuthLayout"
 import { NextPageWithLayout } from "./_app"
-
+import Head from "next/head"
+import HeadTitle from "@/components/BaseComponents/HeadTitle"
 const audiowide = Audiowide({
   weight: "400",
   subsets: ["latin"],
@@ -23,6 +22,7 @@ const audiowide = Audiowide({
 const Page: NextPageWithLayout = () => {
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
+		<HeadTitle>Pong Fury | Sign in</HeadTitle>
       <div className="self-center">
         <p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>
         <Logo className="mx-auto w-7 h-7" />

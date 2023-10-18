@@ -13,64 +13,67 @@ import Logo from "@/components/svgs/Logo"
 import Layout from "@/UI/Layout"
 import AuthLayout from "@/UI/AuthLayout"
 import { NextPageWithLayout } from "./_app"
+import HeadTitle from "@/components/BaseComponents/HeadTitle"
 
 
-const audiowide = Audiowide({ weight:"400", subsets:["latin"], display:"swap"})
+const audiowide = Audiowide({ weight: "400", subsets: ["latin"], display: "swap" })
 
 const Page: NextPageWithLayout = () => {
-  return (
-    <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
-      <div className="self-center">
-        <p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>
-        <Logo className="mx-auto w-7 h-7" />
-      </div>
-      <div className="flex flex-col gap-4">
-        <Input
-          placeholder="Full name"
-          icon={<Pen />}
-          className="bg-big-stone w-[332px] min-w-[300px] h-11"
-        />{" "}
-        <Input
-          placeholder="Username"
-          icon={<Person />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />{" "}
-        <Input
-          placeholder="Mail"
-          icon={<Mail />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />{" "}
-        <Input
-          placeholder="password"
-          icon={<Lock />}
-          className="bg-big-stone w-[332px] min-w-[300px]  h-11"
-        />
-        <MainBtn className="py-3"> Save</MainBtn>
-        <div className="flex gap-1 justify-between">
-          <span className="w-[143px] h-[1.5px] bg-slate-700 self-center"></span>
-          <p className="text-slate-700">OR</p>
-          <span className="w-[143px] h-[1.5px] bg-slate-700 self-center"></span>
-        </div>
-        <div className="flex justify-between">
-          <AuthBtn
-            provider="42intra"
-            className="h-10 w-24 flex justify-center items-center"
-          />
-          <AuthBtn
-            provider="Github"
-            className="h-10 w-24 flex justify-center items-center"
-          />
-          <AuthBtn
-            provider="Google"
-            className="h-10 w-24 flex justify-center items-center"
-          />
-        </div>
-        <p className="text-sm mx-auto font-light">
-          already have an account? <a href="/auth" className="text-primary">Sign in</a>
-        </p>
-      </div>
-    </div>
-  )
+	return (
+		<div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
+			<HeadTitle>Pong Fury | Sign up</HeadTitle>
+
+			<div className="self-center">
+				<p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>
+				<Logo className="mx-auto w-7 h-7" />
+			</div>
+			<div className="flex flex-col gap-4">
+				<Input
+					placeholder="Full name"
+					icon={<Pen />}
+					className="bg-big-stone w-[332px] min-w-[300px] h-11"
+				/>{" "}
+				<Input
+					placeholder="Username"
+					icon={<Person />}
+					className="bg-big-stone w-[332px] min-w-[300px]  h-11"
+				/>{" "}
+				<Input
+					placeholder="Mail"
+					icon={<Mail />}
+					className="bg-big-stone w-[332px] min-w-[300px]  h-11"
+				/>{" "}
+				<Input
+					placeholder="password"
+					icon={<Lock />}
+					className="bg-big-stone w-[332px] min-w-[300px]  h-11"
+				/>
+				<MainBtn className="py-3"> Save</MainBtn>
+				<div className="flex gap-1 justify-between">
+					<span className="w-[143px] h-[1.5px] bg-slate-700 self-center"></span>
+					<p className="text-slate-700">OR</p>
+					<span className="w-[143px] h-[1.5px] bg-slate-700 self-center"></span>
+				</div>
+				<div className="flex justify-between">
+					<AuthBtn
+						provider="42intra"
+						className="h-10 w-24 flex justify-center items-center"
+					/>
+					<AuthBtn
+						provider="Github"
+						className="h-10 w-24 flex justify-center items-center"
+					/>
+					<AuthBtn
+						provider="Google"
+						className="h-10 w-24 flex justify-center items-center"
+					/>
+				</div>
+				<p className="text-sm mx-auto font-light">
+					already have an account? <a href="/auth" className="text-primary">Sign in</a>
+				</p>
+			</div>
+		</div>
+	)
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {

@@ -4,11 +4,14 @@ import TableRow from "@/UI/game/leaderboard/TableRow";
 import { NextPageWithLayout } from "../_app";
 import { ReactElement } from "react";
 import Layout from "@/UI/Layout";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
 
 const Page: NextPageWithLayout = () => {
 
 	return (
 		<div className="mx-auto flex flex-col gap-5 container pt-24">
+			<HeadTitle>Pong Fury | Leadeboard</HeadTitle>
+
 			<div className="flex gap-5 justify-around mb-8">
 				<div></div>
 				<Podium

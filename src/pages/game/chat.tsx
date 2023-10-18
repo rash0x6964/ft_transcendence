@@ -5,12 +5,15 @@ import Chat from "@/UI/game/chat/Chat";
 import { NextPageWithLayout } from "../_app";
 import { ReactElement } from "react";
 import Layout from "@/UI/Layout";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
 
 
 const Page: NextPageWithLayout = () => {
 
   return (
     <div className="w-full h-full flex gap-2">
+		<HeadTitle>Pong Fury | Chat</HeadTitle>
+
       <div className="h-full w-96">
         <ChatBar />
       </div>

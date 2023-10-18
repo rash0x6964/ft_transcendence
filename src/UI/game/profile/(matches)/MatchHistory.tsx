@@ -1,5 +1,5 @@
-import Match from "../../(types)/Match"
-import Player from "../../(types)/Player"
+import Match from "@/types/Match"
+import Player from "@/types/Player"
 import MatchEntry from "./MatchEntry"
 import SectionTitle from "../SectionTitle"
 

@@ -1,4 +1,4 @@
-import Match from "../../(types)/Match"
+import Match from "@/types/Match"
 import Score from "./Score"
 import Avatar from "@/components/BaseComponents/Avatar"
 type Props = {

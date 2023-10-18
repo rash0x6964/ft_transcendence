@@ -1,4 +1,4 @@
-import SectionTitle from "@/app/(mainLayout)/profile/(components)/SectionTitle"
+import SectionTitle from "@/UI/game/profile/SectionTitle"
 import FriendRequest from "./FriendRequest"
 
 export default function FriendRequestsDialBox() {

@@ -1,4 +1,4 @@
-'use client'
+
 import React from "react"
 import { useState } from "react"
 import Sound from "../svgs/Sound"
@@ -20,19 +20,19 @@ export default function LeftBar({ className }: Props) {
 	let links = [
 		{
 			icon: <Menu />,
-			href: "/menu"
+			href: "/game/menu"
 		},
 		{
 			icon: <GameController />,
-			href: "/lobby"
+			href: "/game/lobby"
 		},
 		{
 			icon: <Chat />,
-			href: "/chat"
+			href: "/game/chat"
 		},
 		{
 			icon: <LeaderBoard />,
-			href: "/leaderboard"
+			href: "/game/leaderboard"
 		}
 	]
 	return (

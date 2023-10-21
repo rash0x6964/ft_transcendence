@@ -8,6 +8,7 @@ import Layout from "@/UI/Layout";
 import HeadTitle from "@/components/BaseComponents/HeadTitle";
 
 
+
 const Page: NextPageWithLayout = () => {
 
   return (

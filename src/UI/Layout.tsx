@@ -17,11 +17,12 @@ export default function Layout({ children }: PropsWithChildren) {
 
 					<LeftBar className=" h-full w-fit    bg-secondary mx-2 py-6 drop-shadow-lg  mb-4 rounded-lg flex flex-col  justify-between" />
 					<div className=" flex-1 relative">
+					{/* <div className="w-screen fixed top-0 left-0 h-screen z-50 bg-red-500"></div> */}
 						<div className="absolute w-full h-full max-h-full overflow-y-auto">
 							{children}
 						</div>
 					</div>
-					<RightBar className="shadow  h-full drop-shadow-lg   w-16 bg-secondary mx-2 mb-4 rounded-lg flex flex-col items-center gap-5 py-5" />
+					<RightBar className="  drop-shadow-lg   h-full     mx-2 mb-4  " />
 				</div>
 			</div>
 		</main>

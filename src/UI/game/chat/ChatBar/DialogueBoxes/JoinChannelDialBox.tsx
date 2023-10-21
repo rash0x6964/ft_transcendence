@@ -9,7 +9,7 @@ export default function JoinChannelDialBox() {
   const channelName = "Pong Pros"
 
   return (
-    <div className="bg-secondary p-4 rounded-xl">
+    <div className="gradient-border-2  p-4 rounded-xl">
       <div className="flex relative">
         <Avatar
           src="https://i.pinimg.com/1200x/03/91/26/03912644290f0186cbcd2053ee7e1279.jpg"

@@ -6,6 +6,11 @@ import { NextPageWithLayout } from "../_app";
 import { ReactElement } from "react";
 import Layout from "@/UI/Layout";
 import HeadTitle from "@/components/BaseComponents/HeadTitle";
+import FriendRequestsDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/FriendRequestsDialBox";
+import CreateChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/CreateChannelDialBox";
+import EditChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/EditChannelDialBox";
+import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox";
+import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPersonDialBox";
 
 
 
@@ -18,7 +23,7 @@ const Page: NextPageWithLayout = () => {
       <div className="h-full w-96">
         <ChatBar />
       </div>
-      <div className="flex-1 flex flex-col  h-full">
+      <div className="flex-1 flex flex-col   h-full">
         <Chat />
       </div>
       <div className=" h-full w-96">

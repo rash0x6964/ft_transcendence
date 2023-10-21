@@ -10,7 +10,7 @@ export default function CreateChannelDialBox() {
   const options = ["Public", "Private"]
 
   return (
-    <div className="bg-secondary p-4 rounded-xl ">
+    <div className="gradient-border-2  p-4 rounded-xl ">
       <div className="flex relative">
         <div className="rounded-full w-36 h-36 flex flex-col justify-center mx-auto m-12 mt-16 mr-40 ml-40  border-gray-500 border-2 bg-[#D9D9D9]">
           <Camera className="text-black mx-auto" width={50} height={50} />

@@ -49,8 +49,6 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 	const [isClicked, setClicked] = useState<boolean>(false);
 	useEffect(() => {
 		let handler = (e: Event) => {
-			console.log(menuRef);
-
 			if (!menuRef.current?.contains(e.target)) {
 				setClicked(false)
 			}

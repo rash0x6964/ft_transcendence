@@ -35,7 +35,7 @@ export default function FriendRequestsDialBox() {
 		})
 	}
 	return (
-		<div className="gradient-border-2 p-4 h-[50vh] min-w-[28rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
+		<div className="gradient-border-2 p-4 h-[50vh] min-w-[29rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
 			<SectionTitle className="text-sm" text="Friend Requests" />
 			{!isLoading && <div className="flex flex-col">
 				{

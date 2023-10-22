@@ -80,7 +80,7 @@ const Page: NextPageWithLayout = () => {
         </div>
         <p className="text-sm mx-auto font-light">
           already have an account?{" "}
-          <a href="/auth" className="text-primary">
+          <a href="/signin" className="text-primary">
             Sign in
           </a>
         </p>

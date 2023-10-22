@@ -16,10 +16,9 @@ const audiowide = Audiowide({
 })
 
 const Page: NextPageWithLayout = () => {
-
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
-		<HeadTitle>Pong Fury | Sign in</HeadTitle>
+      <HeadTitle>Pong Fury | Sign in</HeadTitle>
       <div className="self-center">
         <p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>
         <Logo className="mx-auto w-7 h-7" />
@@ -36,7 +35,9 @@ const Page: NextPageWithLayout = () => {
             icon={<Lock />}
             className="bg-big-stone w-[332px] min-w-[300px]  h-11"
           />
-          <a className="font-light self-end text-[10px] text-primary" href="">Forgot password?</a>
+          <a className="font-light self-end text-[10px] text-primary" href="">
+            Forgot password?
+          </a>
         </div>
         <MainBtn className="py-3"> Save</MainBtn>
         <div className="flex gap-1 justify-between">
@@ -59,20 +60,18 @@ const Page: NextPageWithLayout = () => {
           />
         </div>
         <p className="text-sm mx-auto font-light">
-          Don&apos;t have an account? <a href="/singUp" className="text-primary">Sign up</a>
+          Don&apos;t have an account?{" "}
+          <a href="/signup" className="text-primary">
+            Sign up
+          </a>
         </p>
       </div>
     </div>
   )
 }
 
-
 Page.getLayout = function getLayout(page: ReactElement) {
-	return (
-		<AuthLayout>
-			{page}
-		</AuthLayout>
-	)
+  return <AuthLayout>{page}</AuthLayout>
 }
 
 export default Page

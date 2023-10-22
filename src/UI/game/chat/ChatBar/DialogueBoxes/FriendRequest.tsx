@@ -2,24 +2,28 @@ import Check from "@/components/svgs/Check"
 import DialButton from "./DialButton"
 import Cross2 from "@/components/svgs/Cross2"
 
-export default function FriendRequest() {
-	const url = "https://steamavatar.io/img/1477742864kHhXM.jpg"
+type Props = {
+	senderData:any,
+	onAccept?: () => void,
+	onDecline?: () => void
+}
+export default function FriendRequest({senderData,onAccept,onDecline}:Props) {
+
 
 	return (
 		<div className="flex justify-between w-[28rem] mr-4">
 			<div className="flex ml-4">
-				<img className="m-2 w-10 h-10 rounded-full" src={url} alt="" />
-				<p className="text-sm my-auto">K1NCH3RO</p>
+				<img className="m-2 w-10 h-10 rounded-full" src={senderData.avatarUrl} alt={senderData.username} />
+				<p className="text-sm my-auto">{senderData.userName}</p>
 			</div>
 			<div className="flex my-auto gap-1">
-				<DialButton>
-					<Check width={16} height={16}/>
+				<DialButton onClick={onAccept}>
+					<Check width={16} height={16} />
 				</DialButton>
-				<DialButton>
+				<DialButton onClick={onDecline}>
 					<Cross2 width={16} height={16} />
 				</DialButton>
-				{/* <Check />
-				<Cross2 /> */}
+
 			</div>
 		</div>
 	)

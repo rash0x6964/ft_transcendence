@@ -19,7 +19,7 @@ export default function Dialogue({
 			<div onClick={onBackDropClick} className=" z-10  fixed bg-backdrop/90 w-screen h-screen flex flex-col justify-center ">
 
 			</div>
-			<div className="mx-auto  z-20 ">{children}</div>
+			<div className="mx-auto  z-20 ">{!closed && children}</div>
 
 
 		</div>

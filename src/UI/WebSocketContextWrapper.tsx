@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useEffect, useMemo, useState } from "react";
+import { PropsWithChildren, createContext, useEffect, useMemo } from "react";
 import io, { Socket } from "socket.io-client"
 import env from "@/environment/environment";
 

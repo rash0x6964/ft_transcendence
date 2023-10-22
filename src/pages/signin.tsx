@@ -2,16 +2,12 @@ import React, { ReactElement } from "react"
 import MainBtn from "@/components/BaseComponents/MainButton"
 import Input from "@/components/BaseComponents/Input"
 import AuthBtn from "@/components/BaseComponents/AuthButton"
-
 import { Audiowide } from "next/font/google"
-
 import Lock from "@/components/svgs/Lock"
 import Pen from "@/components/svgs/Pen"
 import Logo from "@/components/svgs/Logo"
-
 import AuthLayout from "@/UI/AuthLayout"
 import { NextPageWithLayout } from "./_app"
-import Head from "next/head"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 const audiowide = Audiowide({
   weight: "400",
@@ -20,6 +16,7 @@ const audiowide = Audiowide({
 })
 
 const Page: NextPageWithLayout = () => {
+
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
 		<HeadTitle>Pong Fury | Sign in</HeadTitle>
@@ -49,15 +46,15 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div className="flex justify-between">
           <AuthBtn
-            provider="42intra"
+            provider="fortytwo"
             className="h-10 w-24 flex justify-center items-center"
           />
           <AuthBtn
-            provider="Github"
+            provider="github"
             className="h-10 w-24 flex justify-center items-center"
           />
           <AuthBtn
-            provider="Google"
+            provider="google"
             className="h-10 w-24 flex justify-center items-center"
           />
         </div>

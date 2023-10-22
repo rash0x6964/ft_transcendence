@@ -1,5 +1,6 @@
 import env from "@/environment/environment";
 import axios from "axios";
+import { getJwtCookie } from "./CookiesService";
 
 const HttpClient = axios.create(
 	{
@@ -11,7 +12,7 @@ const HttpClient = axios.create(
 
 HttpClient.interceptors.request.use(function (config) {
 	//to be changed, local storage just for testing purposes
-	config.headers["Authorization"] = `Bearer ${localStorage.getItem(env.jwtTokenKey)}`
+	config.headers["Authorization"] = `Bearer ${getJwtCookie()}`
 	return config;
 }, function (error) {
 	// Do something with request error

@@ -1,19 +1,27 @@
 import Image from "next/image"
 import React from "react"
 import Avatar from "../BaseComponents/Avatar"
-
+import { MouseEvent } from "react"
 type Props = {
-	userName: string
-	connected: boolean
+	userName?: string
+	connected: boolean,
+	src?: string,
+	onContextMenu:(e:MouseEvent<HTMLDivElement>) => void
 }
 
-export default function Person({ userName, connected }: Props) {
+
+export default function Person({onContextMenu, src, userName, connected }: Props) {
+
+	const handleMouseEvent = (e: MouseEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		onContextMenu(e);
+	};
 	return (
-		<div className="w-9 relative flex flex-col items-center">
+		<div onContextMenu={handleMouseEvent} className="w-9 relative flex flex-col items-center">
 			<Avatar
-				className="rounded-full border w-9"
-				src="https://steamavatar.io/img/147774149680437.jpg"
-				alt="Avatar"
+				className="rounded-full border-2 w-9"
+				src={src || ""}
+				alt={userName}
 			/>
 
 			{connected && <div
@@ -22,7 +30,7 @@ export default function Person({ userName, connected }: Props) {
 				}
 			></div>}
 
-			<span className="text-xs">{userName}</span>
+			<span className="text-xs truncate ... max-w-full">{userName}</span>
 		</div>
 	)
 }

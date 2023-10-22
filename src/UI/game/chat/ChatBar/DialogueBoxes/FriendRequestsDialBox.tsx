@@ -2,38 +2,44 @@ import SectionTitle from "@/UI/game/profile/SectionTitle"
 import FriendRequest from "./FriendRequest"
 import { useEffect, useState } from "react"
 import Loader from "@/components/BaseComponents/Loader";
-import FriendRequestService from "@/services/FriendService";
-
+import FriendRequestService from "@/services/FriendRequest.service";
+import FriendRequests from "@/models/FriendRequest.model";
 export default function FriendRequestsDialBox() {
-	const [requests, setRequests] = useState([]);
+	const [requests, setRequests] = useState<FriendRequests[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		FriendRequestService.get().then(data => {
-
-			console.log(data);
+		FriendRequestService.getRequests().then(data => {
 			setIsLoading(false);
 			setRequests(data.data);
 		}).catch(err => {
-
+			setIsLoading(false);
 		})
 
 	}, [])
 
-	const handleAccept = () => {
-
+	const handleAccept = (data: FriendRequests) => {
+		FriendRequestService.acceptRequest(data).then((data) => {
+			alert("succes")
+		}).catch((err) => {
+			alert("error")
+		})
 	}
 
 
-	const handleDecline = () => {
-
+	const handleDecline = (data: FriendRequests) => {
+		FriendRequestService.deleteRequest(data).then((data) => {
+			alert("success")
+		}).catch((err) => {
+			alert("error")
+		})
 	}
 	return (
 		<div className="gradient-border-2 p-4 h-[50vh] min-w-[28rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
 			<SectionTitle className="text-sm" text="Friend Requests" />
 			{!isLoading && <div className="flex flex-col">
 				{
-					requests.map((data: any) => <FriendRequest senderData={data.sender} />)
+					requests.map((data: FriendRequests) => <FriendRequest onDecline={() => handleDecline(data)} onAccept={() => handleAccept(data)} senderData={data.sender} />)
 				}
 
 			</div>

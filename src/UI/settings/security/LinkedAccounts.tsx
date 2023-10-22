@@ -8,21 +8,21 @@ export default function LinkedAccounts() {
       <p className="text-base p-5">Linked Accounts</p>
       <div className="flex justify-between mx-8 mb-4 ">
         <AuthButton
-          provider="42intra"
+          provider="fortytwo"
           className="h-10 w-24 flex justify-center items-center"
         />
         <Linked />
       </div>
       <div className="flex justify-between mx-8 mb-4 ">
         <AuthButton
-          provider="Github"
+          provider="github"
           className="h-10 w-24 flex justify-center items-center"
         />
         <Link />
       </div>
       <div className="flex justify-between mx-8 mb-6">
         <AuthButton
-          provider="Google"
+          provider="google"
           className="h-10 w-24 flex justify-center items-center"
         />
         <Link />

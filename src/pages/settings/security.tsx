@@ -5,12 +5,10 @@ import { NextPageWithLayout } from "../_app"
 import SettingLayout from "@/UI/SettingLayout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 
-
 const Page: NextPageWithLayout = () => {
   return (
     <>
-		<HeadTitle>Setting | Security</HeadTitle>
-
+      <HeadTitle>Setting | Security</HeadTitle>
       <PasswordForm />
       <LinkedAccounts />
     </>
@@ -18,11 +16,7 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return (
-		<SettingLayout>
-			{page}
-		</SettingLayout>
-	)
+  return <SettingLayout>{page}</SettingLayout>
 }
 
 export default Page

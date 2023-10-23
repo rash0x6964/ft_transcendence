@@ -25,7 +25,7 @@ const Page: NextPageWithLayout = () => {
   const [password, setPassword] = useState("")
   const router = useRouter()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault()
     let userSchema = object({
       username: string().min(3).max(20).required(),
@@ -65,7 +65,7 @@ const Page: NextPageWithLayout = () => {
             placeholder="Username"
             icon={<Pen />}
             value={username}
-            handleChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             className="bg-big-stone w-[332px] min-w-[300px] h-11"
           />{" "}
           <div className="flex flex-col gap-1">
@@ -74,7 +74,7 @@ const Page: NextPageWithLayout = () => {
               icon={<Lock />}
               type="password"
               value={password}
-              handleChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               className="bg-big-stone w-[332px] min-w-[300px]  h-11"
             />
             <a className="font-light self-end text-[10px] text-primary" href="">

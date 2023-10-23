@@ -29,7 +29,7 @@ const Page: NextPageWithLayout = () => {
   const [fullname, setFullname] = useState("")
   const router = useRouter()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault()
     let userSchema = object({
       username: string().min(3).max(20).required(),
@@ -75,14 +75,14 @@ const Page: NextPageWithLayout = () => {
             placeholder="Full name"
             icon={<Pen />}
             value={fullname}
-            handleChange={(e) => setFullname(e.target.value)}
+            onChange={(e) => setFullname(e.target.value)}
             className="bg-big-stone w-[332px] min-w-[300px] h-11"
           />{" "}
           <Input
             placeholder="Username"
             icon={<Person />}
             value={username}
-            handleChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             className="bg-big-stone w-[332px] min-w-[300px]  h-11"
           />{" "}
           <Input
@@ -90,7 +90,7 @@ const Page: NextPageWithLayout = () => {
             icon={<Mail />}
             type="mail"
             value={email}
-            handleChange={(e) => setMail(e.target.value)}
+            onChange={(e) => setMail(e.target.value)}
             className="bg-big-stone w-[332px] min-w-[300px]  h-11"
           />{" "}
           <Input
@@ -98,7 +98,7 @@ const Page: NextPageWithLayout = () => {
             icon={<Lock />}
             type="password"
             value={password}
-            handleChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-big-stone w-[332px] min-w-[300px]  h-11"
           />
           <MainBtn className="py-3" onClick={handleSubmit} type="submit">

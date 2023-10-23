@@ -6,6 +6,8 @@ type Props = {
   type?: string
   className?: string
   icon?: React.ReactNode
+  value?: string
+  handleChange?: (e:any) => void
 }
 
 export default function Input({
@@ -13,13 +15,19 @@ export default function Input({
   className,
   type = "text",
   icon,
+  value,
+  handleChange,
 }: Props) {
   return (
-    <div className={`rounded-xl text-sm font-normal flex  justify-between  w-80 px-5 ${className}`}>
+    <div
+      className={`rounded-xl text-sm font-normal flex  justify-between  w-80 px-5 ${className}`}
+    >
       <input
         className="  appearance-none my-auto h-fit outline-none text-slate-300 bg-transparent placeholder-slate-700"
         placeholder={placeholder}
         type={type}
+        value={value}
+        onChange={handleChange}
       />
       <div className=" my-auto">{icon || <Test />}</div>
     </div>

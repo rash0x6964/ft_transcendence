@@ -1,19 +1,23 @@
+
 import React, { PropsWithChildren } from "react"
 type Props = {
   onClick?: (a: any) => void
   glow?: Boolean
   className?: string
+  type?: "button" | "submit" | "reset" | undefined
 }
 export default function MainButton({
   onClick,
   glow = false,
   children,
   className,
+  type
 }: Props & PropsWithChildren) {
   return (
     <button
       className={` relative  group bg-primary duration-300 hover:bg-primary/70   text-sm font-semibold  text-secondary rounded-md text-center  ${className}`}
       onClick={onClick}
+	  type={type}
     >
       {glow && (
         <div

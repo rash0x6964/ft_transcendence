@@ -25,7 +25,7 @@ const Page: NextPageWithLayout = () => {
   const [password, setPassword] = useState("")
   const router = useRouter()
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     let userSchema = object({
       username: string().min(3).max(20).required(),
@@ -48,8 +48,8 @@ const Page: NextPageWithLayout = () => {
       const { access_token } = await signIn(parsedUser)
       setJwtCookie(access_token)
       router.push("/")
-    } catch (err) {
-      console.log(err)
+    } catch (err: any) {
+      console.log(err.response.data)
     }
   }
   return (
@@ -93,14 +93,19 @@ const Page: NextPageWithLayout = () => {
           <div className="flex justify-between">
             <AuthBtn
               provider="fortytwo"
+			  link={true}
               className="h-10 w-24 flex justify-center items-center"
             />
             <AuthBtn
               provider="github"
+			  link={true}
+
               className="h-10 w-24 flex justify-center items-center"
             />
             <AuthBtn
               provider="google"
+			  link={true}
+
               className="h-10 w-24 flex justify-center items-center"
             />
           </div>

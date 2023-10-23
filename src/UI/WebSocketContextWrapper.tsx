@@ -1,28 +1,29 @@
 import { PropsWithChildren, createContext, useEffect, useMemo } from "react";
 import io, { Socket } from "socket.io-client"
 import env from "@/environment/environment";
+import { getJwtCookie } from "@/services/CookiesService";
 
 export const WebSocketContext = createContext<Socket | null>(null);
 
 export default function WebSocketContextProvider({ children }: PropsWithChildren) {
-	const socket = useMemo(() => io(env.socketEndPoint), [])
-	console.log(process.env.DB_HOST)
+	const socket = useMemo(() => io(env.socketEndPoint, {
+		query:
+		{
+			userId: getJwtCookie()
+		}
+	}), [])
 	useEffect(() => {
 		if (socket) {
 			const onConnect = () => {
-				console.log("connected " + socket.id); // x8WIv7-mJelg7on_ALbx
+				socket.emit("connected", { token: getJwtCookie() });
 			};
 
-			const onDisconnect = () => {
-				console.log("disconnected " + socket.id); // undefined
-			}
+
 			socket.on("connect", onConnect);
 
-			socket.on("disconnect", onDisconnect);
 
 			return () => {
 				socket.off("connected", onConnect);
-				socket.off("disconnected", onDisconnect);
 			}
 		}
 

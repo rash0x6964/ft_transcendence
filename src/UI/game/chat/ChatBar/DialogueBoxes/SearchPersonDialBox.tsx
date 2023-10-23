@@ -1,13 +1,17 @@
 import Input from "@/components/BaseComponents/Input"
 import Search from "@/components/svgs/Search"
 import ChannelMember from "./ChannelMember"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import User from "@/models/User.model";
 import Loader from "@/components/BaseComponents/Loader";
 import UserService from "@/services/User.Service";
 import { time } from "console";
 import FriendRequestService from "@/services/FriendRequest.service";
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
+import { getJwtCookie } from "@/services/CookiesService";
 export default function SearchPersonDialBox() {
+
+	const socket = useContext(WebSocketContext)
 	const [val, setVal] = useState("");
 	const [users, setUsers] = useState<User[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +41,7 @@ export default function SearchPersonDialBox() {
 
 	const handleSendRequest = (receiverID: string) => {
 		FriendRequestService.sendRequest(receiverID).then((data) => {
-			alert("success");
+			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data.data });
 		}).catch(err => {
 			alert("err");
 		})
@@ -53,8 +57,8 @@ export default function SearchPersonDialBox() {
 
 			{isLoading && <Loader className="mx-auto scale-50" />}
 
-			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember onSendRequest={()=> handleSendRequest(data.id)}
-			className="animate__animated animate__fadeIn" src={data.avatarUrl} userName={data.userName} />)}
+			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember onSendRequest={() => handleSendRequest(data.id)}
+				className="animate__animated animate__fadeIn" src={data.avatarUrl} userName={data.userName} />)}
 
 
 

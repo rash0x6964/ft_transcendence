@@ -20,7 +20,7 @@ const Page: NextPageWithLayout = () => {
 
 	return (
 
-		<div className=' container mx-auto flex flex-col   h-full  '>
+		<div className='animate__animated animate__fadeIn container mx-auto flex flex-col   h-full  '>
 			<HeadTitle>Pong Fury | lobby</HeadTitle>
 
 			<div className='h-[20%]'></div>

@@ -24,9 +24,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page)
 
 	return (
-		<WebSocketContextProvider>
-			{getLayout(<Component {...pageProps} />)}
-		</WebSocketContextProvider>
+			getLayout(<Component {...pageProps} />)
 	)
 }
 

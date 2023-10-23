@@ -17,7 +17,7 @@ import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPers
 const Page: NextPageWithLayout = () => {
 
   return (
-    <div className="w-full h-full flex gap-2">
+    <div className="w-full  h-full flex gap-2">
 		<HeadTitle>Pong Fury | Chat</HeadTitle>
 
       <div className="h-full w-96">
@@ -31,9 +31,7 @@ const Page: NextPageWithLayout = () => {
       </div>
       <Dialogue closed={true}>
         {/* <CreateChannelDialBox /> */}
-        {/* <FriendRequestsDialBox /> */}
         {/* <EditChannelDialBox /> */}
-        {/* <SearchPersonDialBox /> */}
         {/* <JoinChannelDialBox /> */}
       </Dialogue>
     </div>

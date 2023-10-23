@@ -1,12 +1,16 @@
 import SectionTitle from "@/UI/game/profile/SectionTitle"
 import FriendRequest from "./FriendRequest"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Loader from "@/components/BaseComponents/Loader";
 import FriendRequestService from "@/services/FriendRequest.service";
 import FriendRequests from "@/models/FriendRequest.model";
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
+import { getJwtCookie } from "@/services/CookiesService";
 export default function FriendRequestsDialBox() {
+	const socket = useContext(WebSocketContext);
 	const [requests, setRequests] = useState<FriendRequests[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [refresh, setRefresh] = useState(false)
 
 	useEffect(() => {
 		FriendRequestService.getRequests().then(data => {
@@ -16,20 +20,36 @@ export default function FriendRequestsDialBox() {
 			setIsLoading(false);
 		})
 
+	}, [refresh])
+
+	useEffect(() => {
+		const onFriendReqAction = () => {
+			alert("yes")
+			setRefresh(prevState => !prevState)
+		}
+
+		socket?.on("friendReqAction", onFriendReqAction)
+		return () => {
+			socket?.off("friendReqAction", onFriendReqAction)
+		}
 	}, [])
 
+
+
 	const handleAccept = (data: FriendRequests) => {
-		FriendRequestService.acceptRequest(data).then((data) => {
-			alert("succes")
-		}).catch((err) => {
-			alert("error")
-		})
+		socket?.emit("friendAction", { token: getJwtCookie(), data });
+		socket?.emit("friendReqAction", { token: getJwtCookie(), data });
+		// FriendRequestService.acceptRequest(dto).then(() => {
+
+		// }).catch((err) => {
+		// 	alert("error")
+		// })
 	}
 
 
 	const handleDecline = (data: FriendRequests) => {
-		FriendRequestService.deleteRequest(data).then((data) => {
-			alert("success")
+		FriendRequestService.deleteRequest(data).then(() => {
+			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data });
 		}).catch((err) => {
 			alert("error")
 		})

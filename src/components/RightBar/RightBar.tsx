@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import Person from "./Person"
 import FriendIcon from "../svgs/Friend"
 import Friend from "../svgs/Friend"
@@ -12,6 +12,7 @@ import FriendService from "@/services/Friend.service"
 import FriendStatus from "@/models/FriendStatus.model"
 import ContextMenu, { MenuBtn, getMenuPos, useContextMenu } from "../BaseComponents/ContextMenu"
 import { MouseEvent } from "react"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 type Props = {
 	className?: string
 }
@@ -37,8 +38,8 @@ function isMuted(data: FriendStatus | null): boolean {
 }
 
 export default function RightBar({ className }: Props) {
+	const socket = useContext(WebSocketContext)
 
-	const [friendList, setFriendList] = useState<FriendStatus[]>([])
 	const [dialogueClosed, setDialogueClosed] = useState(true);
 	const [dialogueClosedFriends, setDialogueClosedFriends] = useState(true);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -46,6 +47,8 @@ export default function RightBar({ className }: Props) {
 	const [clicked, setClicked] = useContextMenu(menuRef);
 	const [data, setSelectedData] = useState<FriendStatus | null>(null);
 
+	const [friendList, setFriendList] = useState<FriendStatus[]>([])
+	const [refresh, setRefresh] = useState(false);
 
 	useEffect(() => {
 		FriendService.getFriendList().then((data) => {
@@ -53,6 +56,43 @@ export default function RightBar({ className }: Props) {
 		}).catch(err => {
 
 		})
+	}, [refresh])
+
+
+	useEffect(() => {
+		const onConnect = (userId: string) => {
+			setFriendList((prevStatus: FriendStatus[]) => {
+				return prevStatus.map((data: FriendStatus) => {
+					if (data.friend && data.friend.id == userId)
+						data.friend.onlineStatus = true;
+					return data;
+				})
+			})
+		}
+
+		const onDisconnect = (userId: string) => {
+			setFriendList((prevStatus: FriendStatus[]) => {
+				return prevStatus.map((data: FriendStatus) => {
+					if (data.friend && data.friend.id == userId)
+						data.friend.onlineStatus = false;
+					return data;
+				})
+			})
+		}
+
+		const onFriendAction = () => {
+			setRefresh(prevState => !prevState);
+		}
+
+		socket?.on("connected", onConnect);
+		socket?.on("disconnected", onDisconnect);
+		socket?.on("friendAction", onFriendAction);
+		return () => {
+			socket?.off("connected", onConnect)
+			socket?.off("connected", onDisconnect)
+			socket?.off("friendAction", onFriendAction);
+
+		}
 	}, [])
 
 	const handleContextMenu = (e: MouseEvent<HTMLDivElement>, data: FriendStatus) => {
@@ -127,9 +167,9 @@ export default function RightBar({ className }: Props) {
 						<div className="w-[29px] h-[1px] bg-slate-700"></div>
 						<div className="flex flex-col gap-2">
 
-							{friendList.map(data => <Person onContextMenu={(e) => {
+							{friendList.map(data => <Person key={data.friend?.id} onContextMenu={(e) => {
 								handleContextMenu(e, data);
-							}} src={data.friend?.avatarUrl} userName={data.friend?.userName} connected={true} />)}
+							}} src={data.friend?.avatarUrl} userName={data.friend?.userName} connected={data.friend?.onlineStatus || false} />)}
 
 						</div>
 

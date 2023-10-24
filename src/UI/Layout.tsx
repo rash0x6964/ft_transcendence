@@ -5,7 +5,8 @@ import React, { PropsWithChildren, useEffect } from "react"
 import { Lexend } from "next/font/google"
 import AuthProvider from "./AuthProvider"
 import WebSocketContextProvider from "./WebSocketContextWrapper"
-
+import Notification from "@/components/BaseComponents/Notification"
+import NotificationProvider from "./NotificationProvider"
 const lexend = Lexend({ subsets: ["latin"] })
 export default function Layout({ children }: PropsWithChildren) {
 	return (
@@ -28,8 +29,8 @@ export default function Layout({ children }: PropsWithChildren) {
 						</div>
 					</div>
 				</main>
-			</WebSocketContextProvider >
 
+			</WebSocketContextProvider >
 		</AuthProvider >
 	)
 }

@@ -24,7 +24,9 @@ export default function WebSocketContextProvider({ children }: PropsWithChildren
 
 
 			return () => {
+
 				socket.off("connected", onConnect);
+				socket.disconnect()
 			}
 		}
 

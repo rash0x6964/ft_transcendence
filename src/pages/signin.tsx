@@ -49,7 +49,7 @@ const Page: NextPageWithLayout = () => {
       setJwtCookie(access_token)
       router.push("/")
     } catch (err: any) {
-      console.log(err.response.data)
+      //   console.log(err.response.data)
     }
   }
   return (
@@ -93,19 +93,17 @@ const Page: NextPageWithLayout = () => {
           <div className="flex justify-between">
             <AuthBtn
               provider="fortytwo"
-			  link={true}
+              link={true}
               className="h-10 w-24 flex justify-center items-center"
             />
             <AuthBtn
               provider="github"
-			  link={true}
-
+              link={true}
               className="h-10 w-24 flex justify-center items-center"
             />
             <AuthBtn
               provider="google"
-			  link={true}
-
+              link={true}
               className="h-10 w-24 flex justify-center items-center"
             />
           </div>

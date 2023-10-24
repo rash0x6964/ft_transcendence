@@ -27,7 +27,23 @@ export default function Notification({ className, notifData }: Props) {
 				</div>
 			</div>
 		)
+	else if (notifData.type == "success")
+		return (
+			<div className={`bg-backdrop w-[26rem]  py-2 px-4 rounded-lg  border border-green-500 fixed z-[100] transition-all  right-0 mb-2 mr-20 ${className}`}>
+				<div className="w-full h-full ">
+					<div className="flex justify-between mb-2">
+						<div className="text-sm text-gray-500">{notifData.title}</div>
+						<Bell className="text-green-500" width={20} height={20} />
+
+					</div>
+					<div className="flex ">
+						<div className="my-auto">{notifData.message}</div>
+
+					</div>
+				</div>
+			</div>)
 	else
+
 		return (
 			<div className={`bg-backdrop w-[26rem]  py-2 px-4 rounded-lg  border border-primary fixed z-[100] transition-all  right-0 mb-2 mr-20 ${className}`}>
 				<div className="w-full h-full ">

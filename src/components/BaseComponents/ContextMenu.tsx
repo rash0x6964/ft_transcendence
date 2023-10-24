@@ -14,7 +14,7 @@ export function MenuBtn({ title, onClick }: { title: string; onClick?: () => voi
 	return (
 		<div
 			className="flex cursor-pointer flex-col p-3 bg-secondary rounded duration-300 py-3 w-36 hover:bg-primary hover:text-secondary font-light text-gray-400 text-xs"
-			onClick={onClick}
+			onClick={(onClick)}
 		>
 			{title}
 		</div>

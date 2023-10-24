@@ -15,6 +15,8 @@ import { MouseEvent } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
+import { getJwtCookie } from "@/services/CookiesService"
+import { handleBlock, handleFriendRemove, handleMute, handleUnMute, handleUnblock, useRightBarSocket } from "./Helpers/RightBarHandlers"
 type Props = {
 	className?: string
 }
@@ -41,6 +43,7 @@ function isMuted(data: FriendStatus | null): boolean {
 
 export default function RightBar({ className }: Props) {
 	const socket = useContext(WebSocketContext)
+	const notify: (data: NotifData) => void = useContext(NotifcationContext);
 
 	const [dialogueClosed, setDialogueClosed] = useState(true);
 	const [dialogueClosedFriends, setDialogueClosedFriends] = useState(true);
@@ -49,114 +52,16 @@ export default function RightBar({ className }: Props) {
 	const [clicked, setClicked] = useContextMenu(menuRef);
 	const [selectedData, setSelectedData] = useState<FriendStatus | null>(null);
 
-	const [friendList, setFriendList] = useState<FriendStatus[]>([])
-	const [refresh, setRefresh] = useState(false);
+	const [friendList, setFriendList] = useRightBarSocket(socket);
 
 
-	const notify: (data: NotifData) => void = useContext(NotifcationContext);
-	useEffect(() => {
-		FriendService.getFriendList().then((data) => {
-			setFriendList(data.data);
-		}).catch(err => {
-
-		})
-	}, [refresh])
 
 
-	useEffect(() => {
-		const onConnect = (userId: string) => {
-			setFriendList((prevStatus: FriendStatus[]) => {
-				return prevStatus.map((data: FriendStatus) => {
-					if (data.friend && data.friend.id == userId)
-						data.friend.onlineStatus = true;
-					return data;
-				})
-			})
-		}
-
-		const onDisconnect = (userId: string) => {
-			setFriendList((prevStatus: FriendStatus[]) => {
-				return prevStatus.map((data: FriendStatus) => {
-					if (data.friend && data.friend.id == userId)
-						data.friend.onlineStatus = false;
-					return data;
-				})
-			})
-		}
-
-		const onFriendAction = () => {
-			setRefresh(prevState => !prevState);
-		}
-
-
-		socket?.on("connected", onConnect);
-		socket?.on("disconnected", onDisconnect);
-		socket?.on("friendAction", onFriendAction);
-		return () => {
-			socket?.off("connected", onConnect)
-			socket?.off("connected", onDisconnect)
-			socket?.off("friendAction", onFriendAction);
-
-
-		}
-	}, [])
 
 	const handleContextMenu = (e: MouseEvent<HTMLDivElement>, data: FriendStatus) => {
 		setSelectedData(data);
 		setClicked(true);
 		setPosition(getMenuPos(e, menuRef));
-	}
-	const handleBlock = () => {
-		if (!selectedData)
-			return
-
-		FriendService.blockUser(selectedData).then((data) => {
-			alert("success")
-		}).catch(err => {
-			alert("error")
-		})
-	}
-
-	const handleUnblock = () => {
-		if (!selectedData)
-			return
-		FriendService.unBlockUser(selectedData).then((data) => {
-			alert("success")
-		}).catch(err => {
-			alert("error")
-		})
-	}
-
-	const handleMute = () => {
-		if (!selectedData)
-			return
-		FriendService.blockUser(selectedData).then((data) => {
-			alert("success")
-		}).catch(err => {
-			alert("error")
-		})
-	}
-
-	const handleUnMute = () => {
-		if (!selectedData)
-			return
-		FriendService.unBlockUser(selectedData).then((data) => {
-			alert("success")
-		}).catch(err => {
-			alert("error")
-		})
-	}
-
-	const handleFriendRemove = () => {
-		if (!selectedData)
-			return
-		FriendService.removeFriend(selectedData).then(() => {
-			socket?.emit("friendAction", { token: getJwtCookie(), data: selectedData });
-		}
-		).catch(err => {
-
-		})
-
 	}
 
 	return (
@@ -165,11 +70,11 @@ export default function RightBar({ className }: Props) {
 				{isBlocked(selectedData)}
 				<MenuBtn onClick={() => alert("yes")} title="Send Message" />
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
-				{!isBlocked(selectedData) && <MenuBtn onClick={handleBlock} title="Block" />}
-				{isBlocked(selectedData) && <MenuBtn onClick={handleUnblock} title="unBlock" />}
-				{!isMuted(selectedData) && <MenuBtn onClick={handleMute} title="Mute" />}
-				{isMuted(selectedData) && <MenuBtn onClick={handleUnMute} title="unMute" />}
-				{<MenuBtn onClick={handleFriendRemove} title="Unfriend" />}
+				{!isBlocked(selectedData) && <MenuBtn onClick={() => handleBlock(selectedData)} title="Block" />}
+				{isBlocked(selectedData) && <MenuBtn onClick={() => handleUnblock(selectedData)} title="unBlock" />}
+				{!isMuted(selectedData) && <MenuBtn onClick={() => handleMute(selectedData)} title="Mute" />}
+				{isMuted(selectedData) && <MenuBtn onClick={() => handleUnMute(selectedData)} title="unMute" />}
+				{<MenuBtn onClick={() => handleFriendRemove(selectedData, socket)} title="Unfriend" />}
 			</ContextMenu>
 			<Dialogue onBackDropClick={() => setDialogueClosed(true)} closed={dialogueClosed}>
 				<FriendRequestsDialBox />

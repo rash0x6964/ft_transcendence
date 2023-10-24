@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, type ReactElement, type ReactNode, u
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import "@/globals.css"
+import 'animate.css';
+
 import dynamic from 'next/dynamic'
 import WebSocketContextProvider from '@/UI/WebSocketContextWrapper'
 import io from 'socket.io-client'
@@ -22,9 +24,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page)
 
 	return (
-		<WebSocketContextProvider>
-			{getLayout(<Component {...pageProps} />)}
-		</WebSocketContextProvider>
+			getLayout(<Component {...pageProps} />)
 	)
 }
 

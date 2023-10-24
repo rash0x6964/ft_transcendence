@@ -10,7 +10,7 @@ export default function EditChannelDialBox() {
   const options = ["Public", "Private"]
 
   return (
-    <div className="bg-secondary p-4 rounded-xl">
+    <div className="gradient-border-2  p-4 rounded-xl">
       <div className="flex relative">
         <div className="">
           <Avatar

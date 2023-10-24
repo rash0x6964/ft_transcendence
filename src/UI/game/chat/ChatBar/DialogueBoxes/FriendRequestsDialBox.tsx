@@ -24,12 +24,12 @@ export default function FriendRequestsDialBox() {
 
 	useEffect(() => {
 		const onFriendReqAction = () => {
-			alert("yes")
 			setRefresh(prevState => !prevState)
 		}
 
 		socket?.on("friendReqAction", onFriendReqAction)
 		return () => {
+
 			socket?.off("friendReqAction", onFriendReqAction)
 		}
 	}, [])
@@ -37,19 +37,20 @@ export default function FriendRequestsDialBox() {
 
 
 	const handleAccept = (data: FriendRequests) => {
-		socket?.emit("friendAction", { token: getJwtCookie(), data });
-		socket?.emit("friendReqAction", { token: getJwtCookie(), data });
-		// FriendRequestService.acceptRequest(dto).then(() => {
-
-		// }).catch((err) => {
-		// 	alert("error")
-		// })
+		FriendRequestService.acceptRequest(data).then(() => {
+			socket?.emit("friendAction", { token: getJwtCookie(), data });
+			socket?.emit("friendReqAction", { token: getJwtCookie(), data });
+			setRefresh(prevState => !prevState)
+		}).catch((err) => {
+			alert("error")
+		})
 	}
 
 
 	const handleDecline = (data: FriendRequests) => {
 		FriendRequestService.deleteRequest(data).then(() => {
 			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data });
+			setRefresh(prevState => !prevState)
 		}).catch((err) => {
 			alert("error")
 		})
@@ -59,7 +60,7 @@ export default function FriendRequestsDialBox() {
 			<SectionTitle className="text-sm" text="Friend Requests" />
 			{!isLoading && <div className="flex flex-col">
 				{
-					requests.map((data: FriendRequests) => <FriendRequest onDecline={() => handleDecline(data)} onAccept={() => handleAccept(data)} senderData={data.sender} />)
+					requests.map((data: FriendRequests) => <FriendRequest key={data.senderID} onDecline={() => handleDecline(data)} onAccept={() => handleAccept(data)} senderData={data.sender} />)
 				}
 
 			</div>

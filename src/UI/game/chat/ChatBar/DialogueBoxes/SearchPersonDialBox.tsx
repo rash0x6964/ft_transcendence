@@ -57,7 +57,7 @@ export default function SearchPersonDialBox() {
 
 			{isLoading && <Loader className="mx-auto scale-50" />}
 
-			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember onSendRequest={() => handleSendRequest(data.id)}
+			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember key={data.id} onSendRequest={() => handleSendRequest(data.id)}
 				className="animate__animated animate__fadeIn" src={data.avatarUrl} userName={data.userName} />)}
 
 

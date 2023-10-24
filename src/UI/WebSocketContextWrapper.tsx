@@ -7,6 +7,7 @@ export const WebSocketContext = createContext<Socket | null>(null);
 
 export default function WebSocketContextProvider({ children }: PropsWithChildren) {
 	const socket = useMemo(() => io(env.socketEndPoint, {
+		transports: ["websocket"],
 		query:
 		{
 			userId: getJwtCookie()

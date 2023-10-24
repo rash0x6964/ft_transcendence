@@ -84,6 +84,7 @@ export default function RightBar({ className }: Props) {
 			setRefresh(prevState => !prevState);
 		}
 
+
 		socket?.on("connected", onConnect);
 		socket?.on("disconnected", onDisconnect);
 		socket?.on("friendAction", onFriendAction);
@@ -91,6 +92,7 @@ export default function RightBar({ className }: Props) {
 			socket?.off("connected", onConnect)
 			socket?.off("connected", onDisconnect)
 			socket?.off("friendAction", onFriendAction);
+
 
 		}
 	}, [])

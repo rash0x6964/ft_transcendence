@@ -13,6 +13,8 @@ import FriendStatus from "@/models/FriendStatus.model"
 import ContextMenu, { MenuBtn, getMenuPos, useContextMenu } from "../BaseComponents/ContextMenu"
 import { MouseEvent } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import NotifData from "@/types/NotifData"
 type Props = {
 	className?: string
 }
@@ -50,6 +52,8 @@ export default function RightBar({ className }: Props) {
 	const [friendList, setFriendList] = useState<FriendStatus[]>([])
 	const [refresh, setRefresh] = useState(false);
 
+
+	const notify: (data: NotifData) => void = useContext(NotifcationContext);
 	useEffect(() => {
 		FriendService.getFriendList().then((data) => {
 			setFriendList(data.data);

@@ -32,36 +32,35 @@ const Page: NextPageWithLayout = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault()
 
-		let userSchema = object({
-			username: string().min(3).max(20).required(),
-			fullname: string().min(3).max(20).required(),
-			email: string().email().required(),
-			password: string().min(10).required(),
-		})
-		let parsedUser
-		try {
-			parsedUser = userSchema.validateSync(
-				{
-					username,
-					email,
-					password,
-					fullname,
-				},
-				{ strict: true }
-			)
-		} catch (err) {
-			console.log(err)
-			return
-		}
-		try {
-			const { access_token } = await signUp(parsedUser)
-			setJwtCookie(access_token)
-			router.push("/")
-		} catch (err: any) {
-			if (err.response)
-				console.log(err.response.data)
-		}
-	}
+    let userSchema = object({
+      username: string().min(3).max(20).required(),
+      fullname: string().min(3).max(20).required(),
+      email: string().email().required(),
+      password: string().min(8).required(),
+    })
+    let parsedUser
+    try {
+      parsedUser = userSchema.validateSync(
+        {
+          username,
+          email,
+          password,
+          fullname,
+        },
+        { strict: true }
+      )
+    } catch (err) {
+      console.log(err)
+      return
+    }
+    try {
+      const { access_token } = await signUp(parsedUser)
+      setJwtCookie(access_token)
+      router.push("/")
+    } catch (err: any) {
+      console.log(err.response.data)
+    }
+  }
 
 	return (
 		<div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">

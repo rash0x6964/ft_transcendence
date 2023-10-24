@@ -1,5 +1,5 @@
 export default interface NotifData {
-	type?: "notif" | "error"
+	type?: "notif" | "error" | "success"
 	message: string
 	title: string
 	imgSrc?: string

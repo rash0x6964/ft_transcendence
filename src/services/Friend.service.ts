@@ -27,6 +27,9 @@ class FriendService {
 		return HttpClient.patch(`${this.endPoint}/unMuteUser`, { senderID, receiverID })
 	}
 
+	removeFriend({ senderID, receiverID }: { senderID: string, receiverID: string }) {
+		return HttpClient.delete(`${this.endPoint}?receiverID=${receiverID}&senderID=${senderID}`);
+	}
 
 }
 

@@ -13,6 +13,7 @@ import FriendStatus from "@/models/FriendStatus.model"
 import ContextMenu, { MenuBtn, getMenuPos, useContextMenu } from "../BaseComponents/ContextMenu"
 import { MouseEvent } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import { getJwtCookie } from "@/services/CookiesService"
 type Props = {
 	className?: string
 }
@@ -45,7 +46,7 @@ export default function RightBar({ className }: Props) {
 	const menuRef = useRef<HTMLDivElement>(null);
 	const [position, setPosition] = useState({ x: -500, y: -500 })
 	const [clicked, setClicked] = useContextMenu(menuRef);
-	const [data, setSelectedData] = useState<FriendStatus | null>(null);
+	const [selectedData, setSelectedData] = useState<FriendStatus | null>(null);
 
 	const [friendList, setFriendList] = useState<FriendStatus[]>([])
 	const [refresh, setRefresh] = useState(false);
@@ -103,55 +104,69 @@ export default function RightBar({ className }: Props) {
 		setPosition(getMenuPos(e, menuRef));
 	}
 	const handleBlock = () => {
-		if (data) {
-			FriendService.blockUser(data).then((data) => {
-				alert("success")
-			}).catch(err => {
-				alert("error")
-			})
-		}
+		if (!selectedData)
+			return
+
+		FriendService.blockUser(selectedData).then((data) => {
+			alert("success")
+		}).catch(err => {
+			alert("error")
+		})
 	}
 
 	const handleUnblock = () => {
-		if (data) {
-			FriendService.unBlockUser(data).then((data) => {
-				alert("success")
-			}).catch(err => {
-				alert("error")
-			})
-		}
+		if (!selectedData)
+			return
+		FriendService.unBlockUser(selectedData).then((data) => {
+			alert("success")
+		}).catch(err => {
+			alert("error")
+		})
 	}
 
 	const handleMute = () => {
-		if (data) {
-			FriendService.blockUser(data).then((data) => {
-				alert("success")
-			}).catch(err => {
-				alert("error")
-			})
-		}
+		if (!selectedData)
+			return
+		FriendService.blockUser(selectedData).then((data) => {
+			alert("success")
+		}).catch(err => {
+			alert("error")
+		})
 	}
 
 	const handleUnMute = () => {
-		if (data) {
-			FriendService.unBlockUser(data).then((data) => {
-				alert("success")
-			}).catch(err => {
-				alert("error")
-			})
+		if (!selectedData)
+			return
+		FriendService.unBlockUser(selectedData).then((data) => {
+			alert("success")
+		}).catch(err => {
+			alert("error")
+		})
+	}
+
+	const handleFriendRemove = () => {
+		if (!selectedData)
+			return
+		FriendService.removeFriend(selectedData).then(() => {
+			socket?.emit("friendAction", { token: getJwtCookie(), data: selectedData });
 		}
+		).catch(err => {
+
+		})
+
 	}
 
 	return (
 		<>
 			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
-				{isBlocked(data)}
+				{isBlocked(selectedData)}
 				<MenuBtn onClick={() => alert("yes")} title="Send Message" />
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
-				{!isBlocked(data) && <MenuBtn onClick={handleBlock} title="Block" />}
-				{isBlocked(data) && <MenuBtn onClick={handleUnblock} title="unBlock" />}
-				{!isMuted(data) && <MenuBtn onClick={handleMute} title="Mute" />}
-				{isMuted(data) && <MenuBtn onClick={handleUnMute} title="unMute" />}
+				{!isBlocked(selectedData) && <MenuBtn onClick={handleBlock} title="Block" />}
+				{isBlocked(selectedData) && <MenuBtn onClick={handleUnblock} title="unBlock" />}
+				{!isMuted(selectedData) && <MenuBtn onClick={handleMute} title="Mute" />}
+				{isMuted(selectedData) && <MenuBtn onClick={handleUnMute} title="unMute" />}
+				{<MenuBtn onClick={handleFriendRemove} title="Unfriend" />}
 			</ContextMenu>
 			<Dialogue onBackDropClick={() => setDialogueClosed(true)} closed={dialogueClosed}>
 				<FriendRequestsDialBox />

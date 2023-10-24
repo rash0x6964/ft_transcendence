@@ -29,7 +29,7 @@ const Page: NextPageWithLayout = () => {
     e.preventDefault()
     let userSchema = object({
       username: string().min(3).max(20).required(),
-      password: string().min(10).required(),
+      password: string().min(8).required(),
     })
     let parsedUser
     try {

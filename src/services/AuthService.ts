@@ -1,5 +1,3 @@
-import env from "@/environment/environment"
-import axios from "axios"
 import { HttpClient } from "./HttpClient"
 
 export const signUp = (signUpData: any) => {

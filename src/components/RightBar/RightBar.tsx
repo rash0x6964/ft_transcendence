@@ -48,8 +48,7 @@ export default function RightBar({ className }: Props) {
 	const [dialogueClosed, setDialogueClosed] = useState(true);
 	const [dialogueClosedFriends, setDialogueClosedFriends] = useState(true);
 	const menuRef = useRef<HTMLDivElement>(null);
-	const [position, setPosition] = useState({ x: -500, y: -500 })
-	const [clicked, setClicked] = useContextMenu(menuRef);
+	const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef);
 	const [selectedData, setSelectedData] = useState<FriendStatus | null>(null);
 
 	const [friendList, setFriendList] = useRightBarSocket(socket);
@@ -67,14 +66,13 @@ export default function RightBar({ className }: Props) {
 	return (
 		<>
 			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
-				{isBlocked(selectedData)}
 				<MenuBtn onClick={() => alert("yes")} title="Send Message" />
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
-				{!isBlocked(selectedData) && <MenuBtn onClick={() => handleBlock(selectedData)} title="Block" />}
-				{isBlocked(selectedData) && <MenuBtn onClick={() => handleUnblock(selectedData)} title="unBlock" />}
-				{!isMuted(selectedData) && <MenuBtn onClick={() => handleMute(selectedData)} title="Mute" />}
-				{isMuted(selectedData) && <MenuBtn onClick={() => handleUnMute(selectedData)} title="unMute" />}
-				{<MenuBtn onClick={() => handleFriendRemove(selectedData, socket)} title="Unfriend" />}
+				{!isBlocked(selectedData) && <MenuBtn onClick={() => { handleBlock(selectedData) }} title="Block" />}
+				{isBlocked(selectedData) && <MenuBtn onClick={() => { handleUnblock(selectedData) }} title="unBlock" />}
+				{!isMuted(selectedData) && <MenuBtn onClick={() => { handleMute(selectedData) }} title="Mute" />}
+				{isMuted(selectedData) && <MenuBtn onClick={() => { handleUnMute(selectedData) }} title="unMute" />}
+				{<MenuBtn onClick={() => { handleFriendRemove(selectedData, socket) }} title="Unfriend" />}
 			</ContextMenu>
 			<Dialogue onBackDropClick={() => setDialogueClosed(true)} closed={dialogueClosed}>
 				<FriendRequestsDialBox />

@@ -50,8 +50,11 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 	const [isClicked, setClicked] = useState<boolean>(false);
 	const [position, setPosition] = useState({ x: -500, y: -500 })
 	useEffect(() => {
-		let handler = (e: Event) => {
-			if (!menuRef.current?.contains(e.target)) {
+		let handler = (e: any) => {
+			console.log(e.target);
+			if (menuRef.current != e.target) {
+				if (e.target && e.target.click)
+					e.target.click();
 				setClicked(false)
 			}
 		}

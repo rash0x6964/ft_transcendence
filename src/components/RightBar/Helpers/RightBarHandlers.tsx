@@ -59,6 +59,27 @@ export const handleFriendRemove = (selectedData: FriendStatus | null, socket: So
 
 }
 
+export function isBlocked(data: FriendStatus | null): boolean {
+	if (data == null)
+		return false;
+	if (data.isSender)
+		return (data.blockStatus == "SENDER" || data.blockStatus == "BOTH")
+	if (!data.isSender)
+		return (data.blockStatus == "RECEIVER" || data.blockStatus == "BOTH")
+	return false;
+}
+
+export function isMuted(data: FriendStatus | null): boolean {
+	if (data == null)
+		return false;
+	if (data.isSender)
+		return (data.muteStatus == "SENDER" || data.muteStatus == "BOTH")
+	if (!data.isSender)
+		return (data.muteStatus == "RECEIVER" || data.muteStatus == "BOTH")
+	return false;
+}
+
+
 
 export function useRightBarSocket(socket: Socket | null): [friendList: FriendStatus[], setFriendList: React.Dispatch<React.SetStateAction<FriendStatus[]>>] {
 	const [friendList, setFriendList] = useState<FriendStatus[]>([])

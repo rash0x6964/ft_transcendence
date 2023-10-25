@@ -16,30 +16,11 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
 import { getJwtCookie } from "@/services/CookiesService"
-import { handleBlock, handleFriendRemove, handleMute, handleUnMute, handleUnblock, useRightBarSocket } from "./Helpers/RightBarHandlers"
+import { handleBlock, handleFriendRemove, handleMute, handleUnMute, handleUnblock, isBlocked, isMuted, useRightBarSocket } from "./Helpers/RightBarHandlers"
 type Props = {
 	className?: string
 }
 
-function isBlocked(data: FriendStatus | null): boolean {
-	if (data == null)
-		return false;
-	if (data.isSender)
-		return (data.blockStatus == "SENDER" || data.blockStatus == "BOTH")
-	if (!data.isSender)
-		return (data.blockStatus == "RECEIVER" || data.blockStatus == "BOTH")
-	return false;
-}
-
-function isMuted(data: FriendStatus | null): boolean {
-	if (data == null)
-		return false;
-	if (data.isSender)
-		return (data.muteStatus == "SENDER" || data.muteStatus == "BOTH")
-	if (!data.isSender)
-		return (data.muteStatus == "RECEIVER" || data.muteStatus == "BOTH")
-	return false;
-}
 
 export default function RightBar({ className }: Props) {
 	const socket = useContext(WebSocketContext)

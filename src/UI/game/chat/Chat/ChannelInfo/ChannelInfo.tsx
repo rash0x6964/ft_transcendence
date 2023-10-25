@@ -11,8 +11,7 @@ export default function ChannelInfo() {
 	const adminsCount = 4
 
 	const menuRef = useRef<HTMLDivElement>(null);
-	const [position, setPosition] = useState({ x: -500, y: -500 })
-	const [clicked, setClicked] = useContextMenu(menuRef);
+	const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef);
 
 	const handleContextMenu = (e: MouseEvent<HTMLDivElement>, PlayerName: string) => {
 		setClicked(true);

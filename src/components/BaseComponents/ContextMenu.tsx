@@ -45,8 +45,10 @@ export function getMenuPos(e: MouseEvent, menuRef: any): { x: number, y: number 
 }
 
 // custom hook
-export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: React.Dispatch<React.SetStateAction<boolean>>] {
+export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: React.Dispatch<React.SetStateAction<boolean>>,
+	position: { x: number, y: number }, setPosition: React.Dispatch<React.SetStateAction<{ x: number, y: number }>>] {
 	const [isClicked, setClicked] = useState<boolean>(false);
+	const [position, setPosition] = useState({ x: -500, y: -500 })
 	useEffect(() => {
 		let handler = (e: Event) => {
 			if (!menuRef.current?.contains(e.target)) {
@@ -59,5 +61,5 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 		}
 	}, [])
 
-	return [isClicked, setClicked];
+	return [isClicked, setClicked, position, setPosition];
 }

@@ -1,11 +1,5 @@
+import Message from "./Message.model";
 
-interface Message {
-	id: number;
-	senderID: string;
-	directmessageID: number;
-	channelID: string;
-	content: string;
-}
 
 interface ChannelUser {
 	userID: string;
@@ -25,4 +19,4 @@ interface Channel {
 	message: Message[];
 }
 
-export type { Channel, ChannelUser, Message };
+export type { Channel, ChannelUser };

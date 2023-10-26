@@ -8,8 +8,8 @@ type Prop = {
   time: string
   isOnline: boolean
   isSelected: boolean
-  id: number
-  handleClick: (id: number) => void
+  id: string
+  handleClick: (id: string) => void
 }
 
 export default function FriendBar({
@@ -38,7 +38,7 @@ export default function FriendBar({
       <Avatar src={src} alt={alt} className="w-12 h-12" />
       <div className="w-12 h-12 grow">
         <p className="text-gray-300 text-base font-semibold">{username}</p>
-        <p className="text-gray-600 text-sm">{lastMessage}</p>
+        <p className="text-gray-600 text-sm truncate">{lastMessage}</p>
       </div>
       <div className="h-full flex flex-col justify-between items-end">
         <p className="text-gray-400 text-sm">{time}</p>

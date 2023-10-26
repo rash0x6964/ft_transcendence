@@ -1,123 +1,55 @@
+import { useContext, useEffect, useState } from "react"
 import ChannelBar from "./ChannelBar"
+import ChannelSevice from "@/services/Channel.sevice"
+import { Channel } from "@/models/Channel.model"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 
 type Prop = {
-  selectedId: number
-  handleClick: (id: number) => void
+  selectedId: string,
+  handleClick: (id: string) => void
 }
 
-export default function ChannelsList({ selectedId, handleClick }: Prop) {
+
+export default function ChannelsList({ selectedId, handleClick}: Prop) {
+  const socket = useContext(WebSocketContext);
+  const [channelList, setChannelList] = useState<Channel[]>([]);
+
+  useEffect(() => {
+    ChannelSevice.getChannelList().then((data) => {
+      setChannelList(data.data)
+    }).catch(err => {
+
+    })
+  }, [])
+
+  const join_Leave = () => {
+    setChannelList([])
+  }
+
+  useEffect(() => {
+    socket?.on("join/leave", join_Leave);
+    return () => {
+      socket?.off("join/leave", join_Leave);
+    }
+  }, [])
+
   return (
     <div className="flex flex-col gap-2 overflow-y-scroll">
-      <ChannelBar
-        id={11}
-        handleClick={handleClick}
-        isSelected={selectedId == 11}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={12}
-        handleClick={handleClick}
-        isSelected={selectedId == 12}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={13}
-        handleClick={handleClick}
-        isSelected={selectedId == 13}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={14}
-        handleClick={handleClick}
-        isSelected={selectedId == 14}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={15}
-        handleClick={handleClick}
-        isSelected={selectedId == 15}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={16}
-        handleClick={handleClick}
-        isSelected={selectedId == 16}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={17}
-        handleClick={handleClick}
-        isSelected={selectedId == 17}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={18}
-        handleClick={handleClick}
-        isSelected={selectedId == 18}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={19}
-        handleClick={handleClick}
-        isSelected={selectedId == 19}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={19}
-        handleClick={handleClick}
-        isSelected={selectedId == 19}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
-      <ChannelBar
-        id={19}
-        handleClick={handleClick}
-        isSelected={selectedId == 19}
-        channelName="MSAMN LOVERS XXL"
-        src="https://yt3.googleusercontent.com/MFE5n8IwcXBzXu4BDPlXW7V1iVTnxKsFNd3c2QJEN3on0bmtwjYsiL0fJw7AMNH9gS9ItKj90d8=s900-c-k-c0x00ffffff-no-rj"
-        time="11:55 AM"
-        lastMessage="ana rachid ohibo msmn"
-        unread={20}
-      />
+      {
+        channelList.map((data) => {
+          return <ChannelBar
+            key={data.id}
+            id={data.id}
+            channelName={data.name}
+            handleClick={handleClick}
+            isSelected={selectedId == data.id}
+            lastMessage={data.message[0]?.content}
+            src={data.imageUrl}
+            time={"21:30"}
+            unread={20}
+          />
+        })
+      }
     </div>
   )
 }

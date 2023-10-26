@@ -3,7 +3,7 @@ import ChatBar from "@/UI/game/chat/ChatBar/ChatBar";
 import Dialogue from "@/components/Dialogue/Dialogue";
 import Chat from "@/UI/game/chat/Chat";
 import { NextPageWithLayout } from "../_app";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import Layout from "@/UI/Layout";
 import HeadTitle from "@/components/BaseComponents/HeadTitle";
 import FriendRequestsDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/FriendRequestsDialBox";
@@ -12,16 +12,16 @@ import EditChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/EditChannel
 import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox";
 import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPersonDialBox";
 
-
-
 const Page: NextPageWithLayout = () => {
+  const [cahnnelID, setChannelID] = useState<string | number>("");
+  const [DMsgID, setDMsgID] = useState<string | number>("");
 
   return (
     <div className="w-full  h-full flex gap-2">
-		<HeadTitle>Pong Fury | Chat</HeadTitle>
+      <HeadTitle>Pong Fury | Chat</HeadTitle>
 
       <div className="h-full w-96">
-        <ChatBar />
+        <ChatBar onDirMsgSelected={alert} onChannelSelected={alert} />
       </div>
       <div className="flex-1 flex flex-col   h-full">
         <Chat />
@@ -35,17 +35,11 @@ const Page: NextPageWithLayout = () => {
         {/* <JoinChannelDialBox /> */}
       </Dialogue>
     </div>
-  )
-}
-
+  );
+};
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return (
-		<Layout>
-			{page}
-		</Layout>
-	)
-}
+  return <Layout>{page}</Layout>;
+};
 
-
-export default Page
+export default Page;

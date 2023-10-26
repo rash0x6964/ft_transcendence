@@ -13,7 +13,7 @@ type Props =
 export function MenuBtn({ title, onClick }: { title: string; onClick?: () => void }) {
 	return (
 		<div
-			className="flex cursor-pointer flex-col p-3 bg-secondary rounded duration-300 py-3 w-36 hover:bg-primary hover:text-secondary font-light text-gray-400 text-xs"
+			className="CONTEXT_BUTTON flex cursor-pointer flex-col p-3 bg-secondary rounded duration-300 py-3 w-36 hover:bg-primary hover:text-secondary font-light text-gray-400 text-xs"
 			onClick={(onClick)}
 		>
 			{title}
@@ -52,9 +52,14 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 	useEffect(() => {
 		let handler = (e: any) => {
 			if (menuRef.current != e.target) {
-				if (e.target && e.target.click)
-					e.target.click();
-				setClicked(false)
+				{
+					if (e.target && e.target.click && e.target.classList.contains("CONTEXT_BUTTON")) {
+						e.target.click()
+						setClicked(false)
+					} else
+						setClicked(false);
+
+				}
 			}
 		}
 		document.addEventListener("mousedown", handler);

@@ -10,7 +10,7 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
 	{
 		message: "wow",
 		title: "xD",
-		imgSrc: "sd"
+
 	}
 
 	const notifTime = 3000;
@@ -18,7 +18,6 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
 	const [styleData, setStyleData] = useState("-bottom-64")
 	const [queuedNotif, setQueueNotification] = useState(0);
 	const notify = (data: NotifData) => {
-		console.log(queuedNotif)
 		if (queuedNotif > 0) {
 
 			setTimeout(() => {

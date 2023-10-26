@@ -5,8 +5,11 @@ import Camera from "@/components/svgs/Camera"
 import Lock from "@/components/svgs/Lock"
 import Plus from "@/components/svgs/Plus"
 import TVIcn from "@/components/svgs/TVIcn"
+import { useState } from "react"
 
 export default function CreateChannelDialBox() {
+
+  const [visibility, setVisibility] = useState("Public");
   const options = ["Public", "Private"]
 
   return (
@@ -32,6 +35,7 @@ export default function CreateChannelDialBox() {
       <RadioGroup
         defaultVal="Public"
         radios={options}
+        onChange={(value)=> setVisibility(value)}
         className="flex justify-center gap-10"
       />
       <div className="flex justify-center mt-20">

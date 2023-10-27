@@ -19,7 +19,7 @@ export default function Input({
 }: Props) {
 
 	const handleKeyEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.code == 'Enter')
+		if (e.key == 'Enter')
 			onKeyEnter && onKeyEnter();
 	}
 	return (

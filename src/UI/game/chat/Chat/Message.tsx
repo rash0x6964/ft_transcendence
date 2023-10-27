@@ -17,7 +17,7 @@ type Props = {
 export default function Message({ avatar, mine, message }: Props) {
 	if (message?.attachment)
 		return (
-			<div className={`flex gap-3 ${!mine && "flex-row-reverse"} `}>
+			<div className={`flex  gap-3 ${!mine && "flex-row-reverse"} `}>
 				{avatar && <div className="flex flex-col  ">
 					<Avatar
 						className="w-12 h-12 mb-2"
@@ -68,10 +68,10 @@ export default function Message({ avatar, mine, message }: Props) {
 				<span className="text-[10px] text-gray-600 ">10:45 AM</span>
 			</div>}
 			{!avatar && <div className="w-12"></div>}
-			<div className="flex flex-col gap-2 max-w-[40%] ">
+			<div className="flex flex-col gap-2 max-w-[40%]  ">
 				{avatar && <div className={mine ? "self-start" : "self-end"}>{message?.sender?.userName}</div>}
 				<Normal
-					className={`  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
+					className={`  max-w-full break-words  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
 						}`}
 				>
 					{message?.content}

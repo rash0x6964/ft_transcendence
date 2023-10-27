@@ -5,15 +5,16 @@ import MessageModel from '@/models/Message.model'
 type Props =
 	{
 		messages: MessageModel[],
-		className?: string
+		className?: string,
+		chatRef: React.LegacyRef<HTMLDivElement>
 	}
-export default function MainChat({ className, messages }: Props) {
+export default function MainChat({ className, messages, chatRef }: Props) {
 	useEffect(() => {
 
 
 	})
 	return (
-		<div className={` bg-secondary   rounded-xl drop-shadow-lg flex flex-col gap-3 p-5 overflow-y-auto ${className}`}>
+		<div ref={chatRef} className={` bg-secondary   rounded-xl drop-shadow-lg flex flex-col gap-3 p-5 overflow-y-auto ${className}`}>
 
 			{messages.map((message, index) => {
 				let displayAvatar = index == 0 || message.senderID != messages[index - 1].senderID;

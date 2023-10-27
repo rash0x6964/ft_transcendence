@@ -13,33 +13,33 @@ import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannel
 import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPersonDialBox";
 
 const Page: NextPageWithLayout = () => {
-  const [cahnnelID, setChannelID] = useState<string | number>("");
-  const [DMsgID, setDMsgID] = useState<string | number>("");
+	const [cahnnelID, setChannelID] = useState<string | number>("");
+	const [DMsgID, setDMsgID] = useState<string | number>("");
 
-  return (
-    <div className="w-full  h-full flex gap-2">
-      <HeadTitle>Pong Fury | Chat</HeadTitle>
+	return (
+		<div className="w-full  h-full flex gap-2">
+			<HeadTitle>Pong Fury | Chat</HeadTitle>
 
-      <div className="h-full w-96">
-        <ChatBar onDirMsgSelected={alert} onChannelSelected={alert} />
-      </div>
-      <div className="flex-1 flex flex-col   h-full">
-        <Chat />
-      </div>
-      <div className=" h-full w-96">
-        <ChannelInfo />
-      </div>
-      <Dialogue closed={true}>
-        {/* <CreateChannelDialBox /> */}
-        {/* <EditChannelDialBox /> */}
-        {/* <JoinChannelDialBox /> */}
-      </Dialogue>
-    </div>
-  );
+			<div className="h-full w-96">
+				<ChatBar onDirMsgSelected={alert} onChannelSelected={alert} />
+			</div>
+			<div className="flex-1 flex flex-col   h-full">
+				<Chat />
+			</div>
+			<div className=" h-full w-96">
+				<ChannelInfo />
+			</div>
+			<Dialogue closed={true}>
+				{/* <CreateChannelDialBox /> */}
+				{/* <EditChannelDialBox /> */}
+				{/* <JoinChannelDialBox /> */}
+			</Dialogue>
+		</div>
+	);
 };
 
 Page.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+	return <Layout>{page}</Layout>;
 };
 
 export default Page;

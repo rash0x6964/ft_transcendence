@@ -1,12 +1,13 @@
 import Image from "next/image"
 
 type Props = {
-  className?: string
-  src: string
-  alt?: string
-  onClick?: () => void
-  override?: boolean
+
   OnError?: (e: any) => void
+	className?: string
+	src?: string
+	alt?: string
+	onClick?: () => void,
+	override?: boolean
 }
 
 export default function Avatar({
@@ -17,16 +18,15 @@ export default function Avatar({
   override = false,
   OnError,
 }: Props) {
-  return (
-    <Image
-      onClick={onClick}
-      className={` ${!override && "rounded-full"} ${
-        onClick && " transition-opacity cursor-pointer hover:opacity-50"
-      }  object-cover   drop-shadow-lg  ${className}`}
-      src={src}
-      alt={alt}
-      width={250}
-      height={250}
-    />
-  )
+
+	return (
+		<Image
+			onClick={onClick}
+			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
+			src={src || "https://steamavatar.io/img/1477742944DNm1y.jpg"}
+			alt={alt}
+			width={250}
+			height={250}
+		/>
+	)
 }

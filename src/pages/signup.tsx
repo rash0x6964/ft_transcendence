@@ -58,7 +58,7 @@ const Page: NextPageWithLayout = () => {
       setJwtCookie(access_token)
       router.push("/")
     } catch (err: any) {
-      console.log(err.response.data)
+      console.log(err)
     }
   }
 

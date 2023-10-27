@@ -4,9 +4,9 @@ import { getJwtCookie } from "./CookiesService"
 import { useRouter } from "next/router"
 
 const HttpClient = axios.create({
-  baseURL: env.endPoint,
-  timeout: 1000,
-  headers: { "Content-Type": "application/json" },
+	baseURL: env.endPoint,
+	timeout: 5000,
+	headers: { "Content-Type": "application/json" },
 })
 
 HttpClient.interceptors.request.use(
@@ -29,6 +29,7 @@ HttpClient.interceptors.response.use(
       document.location = "/signup"
     else return Promise.reject(error)
   }
+
 )
 
 export { HttpClient }

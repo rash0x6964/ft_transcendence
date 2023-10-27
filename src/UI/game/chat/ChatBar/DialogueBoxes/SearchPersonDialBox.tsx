@@ -9,15 +9,20 @@ import { time } from "console";
 import FriendRequestService from "@/services/FriendRequest.service";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
 import { getJwtCookie } from "@/services/CookiesService";
+import { AxiosError } from "axios";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 export default function SearchPersonDialBox() {
 
 	const socket = useContext(WebSocketContext)
 	const [val, setVal] = useState("");
 	const [users, setUsers] = useState<User[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const notify = useContext(NotifcationContext);
 	useEffect(() => {
-		if (val == "")
+		if (val == "") {
+			setIsLoading(false);
 			return;
+		}
 		setIsLoading(true);
 		const timeout = setTimeout(() => {
 			UserService.findByName(val).then((data) => {
@@ -42,8 +47,19 @@ export default function SearchPersonDialBox() {
 	const handleSendRequest = (receiverID: string) => {
 		FriendRequestService.sendRequest(receiverID).then((data) => {
 			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data.data });
-		}).catch(err => {
-			alert("err");
+			notify({
+				message: "Friend Request sent",
+				title: "Friend Request",
+			})
+		}).catch((err: AxiosError<AxiosError, any>) => {
+			if (!err.response)
+				return;
+			if (err.response.status == 409)
+				notify({
+					message: err.response?.data.message,
+					title: "Notice",
+					type: "notice"
+				})
 		})
 	}
 
@@ -57,7 +73,7 @@ export default function SearchPersonDialBox() {
 
 			{isLoading && <Loader className="mx-auto scale-50" />}
 
-			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember key={data.id} onSendRequest={() => handleSendRequest(data.id)}
+			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember onMessage={() => alert("yes")} key={data.id} onSendRequest={() => handleSendRequest(data.id)}
 				className="animate__animated animate__fadeIn" src={data.avatarUrl} userName={data.userName} />)}
 
 

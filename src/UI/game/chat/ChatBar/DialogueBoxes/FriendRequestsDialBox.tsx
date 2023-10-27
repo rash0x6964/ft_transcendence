@@ -38,8 +38,7 @@ export default function FriendRequestsDialBox() {
 
 	const handleAccept = (data: FriendRequests) => {
 		FriendRequestService.acceptRequest(data).then(() => {
-			socket?.emit("friendAction", { token: getJwtCookie(), data });
-			socket?.emit("friendReqAction", { token: getJwtCookie(), data });
+			socket?.emit("friendAction", { token: getJwtCookie(), data }).emit("friendReqAction", { token: getJwtCookie(), data });
 			setRefresh(prevState => !prevState)
 		}).catch((err) => {
 			alert("error")

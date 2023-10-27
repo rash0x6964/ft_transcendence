@@ -7,6 +7,7 @@ import 'animate.css';
 import dynamic from 'next/dynamic'
 import WebSocketContextProvider from '@/UI/WebSocketContextWrapper'
 import io from 'socket.io-client'
+import NotificationProvider from '@/UI/NotificationProvider';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode
@@ -24,7 +25,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout = Component.getLayout ?? ((page) => page)
 
 	return (
-			getLayout(<Component {...pageProps} />)
+		<NotificationProvider>
+			{getLayout(<Component {...pageProps} />)}
+		</NotificationProvider>
+
+
 	)
 }
 

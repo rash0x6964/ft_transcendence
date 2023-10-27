@@ -13,8 +13,8 @@ type Props =
 export function MenuBtn({ title, onClick }: { title: string; onClick?: () => void }) {
 	return (
 		<div
-			className="flex cursor-pointer flex-col p-3 bg-secondary rounded duration-300 py-3 w-36 hover:bg-primary hover:text-secondary font-light text-gray-400 text-xs"
-			onClick={onClick}
+			className="CONTEXT_BUTTON flex cursor-pointer flex-col p-3 bg-secondary rounded duration-300 py-3 w-36 hover:bg-primary hover:text-secondary font-light text-gray-400 text-xs"
+			onClick={(onClick)}
 		>
 			{title}
 		</div>
@@ -45,12 +45,21 @@ export function getMenuPos(e: MouseEvent, menuRef: any): { x: number, y: number 
 }
 
 // custom hook
-export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: React.Dispatch<React.SetStateAction<boolean>>] {
+export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: React.Dispatch<React.SetStateAction<boolean>>,
+	position: { x: number, y: number }, setPosition: React.Dispatch<React.SetStateAction<{ x: number, y: number }>>] {
 	const [isClicked, setClicked] = useState<boolean>(false);
+	const [position, setPosition] = useState({ x: -500, y: -500 })
 	useEffect(() => {
-		let handler = (e: Event) => {
-			if (!menuRef.current?.contains(e.target)) {
-				setClicked(false)
+		let handler = (e: any) => {
+			if (menuRef.current != e.target) {
+				{
+					if (e.target && e.target.click && e.target.classList.contains("CONTEXT_BUTTON")) {
+						e.target.click()
+						setClicked(false)
+					} else
+						setClicked(false);
+
+				}
 			}
 		}
 		document.addEventListener("mousedown", handler);
@@ -59,5 +68,5 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 		}
 	}, [])
 
-	return [isClicked, setClicked];
+	return [isClicked, setClicked, position, setPosition];
 }

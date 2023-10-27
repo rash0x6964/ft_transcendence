@@ -23,8 +23,7 @@ const Page: NextPageWithLayout = () => {
 	const [selected, setSelected] = useState<DirectMessage | Channel>();
 
 	const isChannel = () => {
-		let obj: any = selected;
-		return obj?.visibility != undefined;
+		return (selected as Channel)?.visibility != undefined;
 	};
 
 	useEffect(() => {

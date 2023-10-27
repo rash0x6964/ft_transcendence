@@ -29,18 +29,22 @@ const Page: NextPageWithLayout = () => {
 
 	useEffect(() => {
 		DMService.getDMList()
-			.then((data) => {
+			.then(({ data }: { data: DirectMessage[] }) => {
 				console.log(data);
+				setDMList(data);
+				if (data.length > 0)
+					setSelected(data[0]);
 
-				setDMList(data.data);
 			})
 			.catch((err) => {
 				//error
 			});
 
 		ChannelSevice.getChannelList()
-			.then((data) => {
-				setChannelList(data.data);
+			.then(({ data }: { data: Channel[] }) => {
+				setChannelList(data);
+				if (data.length > 0 && !selected)
+					setSelected(data[0]);
 			})
 			.catch((err) => {
 				//error

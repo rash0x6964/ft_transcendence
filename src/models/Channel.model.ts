@@ -1,10 +1,22 @@
+import DirectMessage from "./DM.model";
+import User from "./User.model";
+
+interface Attachment {
+
+}
 
 interface Message {
-	id: number;
-	senderID: string;
-	directmessageID: number;
-	channelID: string;
-	content: string;
+	id: string,
+	sender: User,
+	senderID: string,
+	directmessage?: DirectMessage,
+	directmessageID?: string,
+	channel?: Channel,
+	channelID?: string,
+	content: string,
+	attachment?: Attachment,
+	createdAt: Date,
+	updatedAt: Date,
 }
 
 interface ChannelUser {

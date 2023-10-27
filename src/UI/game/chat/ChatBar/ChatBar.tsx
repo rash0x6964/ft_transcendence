@@ -4,32 +4,34 @@ import ChannelSeparator from "./ChannelSeparator";
 import ChannelsList from "./ChannelsList";
 import FriendsList from "./FriendsList";
 import TopBar from "./TopBar";
+import DirectMessage from "@/models/DM.model";
+import { Channel } from "@/models/Channel.model";
+
 
 type Props = {
-  onChannelSelected: (data: string | number) => void;
-  onDirMsgSelected: (data: string | number) => void;
+  selectedId: string,
+  DMList?: DirectMessage[];
+  channelList?: Channel[];
+  clickOnDm: (id: string) => void;
+  clickOnChannel: (id: string) => void;
 };
 
 export default function ChatBar({
-  onChannelSelected,
-  onDirMsgSelected,
+  DMList,
+  channelList,
+  selectedId,
+  clickOnDm,
+  clickOnChannel,
 }: Props) {
-  const [selectedId, setSelectedId] = useState("");
-  const clickOnChannel = (id: string) => {
-    setSelectedId(id);
-    onChannelSelected(id);
-  };
-  const clickOnDm = (id: string) => {
-    setSelectedId(id);
-    onDirMsgSelected(id);
-  };
+
+
 
   return (
     <div className="flex flex-col h-full">
       <TopBar />
-      <FriendsList selectedId={selectedId} handleClick={clickOnDm} />
+      <FriendsList selectedId={selectedId} handleClick={clickOnDm} DMList={DMList}/>
       <ChannelSeparator />
-      <ChannelsList selectedId={selectedId} handleClick={clickOnChannel} />
+      <ChannelsList selectedId={selectedId} handleClick={clickOnChannel} channelList={channelList}/>
     </div>
   );
 }

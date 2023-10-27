@@ -13,6 +13,7 @@ import { object, string } from "yup"
 import { signIn } from "@/services/AuthService"
 import { setJwtCookie } from "@/services/CookiesService"
 import { useRouter } from "next/navigation"
+import { AxiosError } from "axios"
 
 const audiowide = Audiowide({
   weight: "400",
@@ -49,7 +50,7 @@ const Page: NextPageWithLayout = () => {
       setJwtCookie(access_token)
       router.push("/")
     } catch (err: any) {
-      //   console.log(err.response.data)
+      console.log(err)
     }
   }
   return (

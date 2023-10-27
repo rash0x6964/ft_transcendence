@@ -2,13 +2,12 @@ import React, { useState } from "react"
 import Lock from "../../../components/svgs/Lock"
 import Input from "@/components/BaseComponents/Input"
 import MainButton from "@/components/BaseComponents/MainButton"
-import { HttpClient } from "@/services/HttpClient"
-import { updatePassword } from "@/services/UpdateService"
+import { updatePassword } from "@/services/UsersService"
 
 export default function PasswordForm() {
-  const [password, setPassword] = useState("")
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [password, setPassword] = useState<string>("")
+  const [newPassword, setNewPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
@@ -17,7 +16,7 @@ export default function PasswordForm() {
     if (newPassword.length < 8) return
     try {
       const user = await updatePassword({ password, newPassword })
-	  console.log(user)
+      console.log(user)
     } catch (err) {
       console.log(err)
     }

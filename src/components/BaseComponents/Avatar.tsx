@@ -1,28 +1,33 @@
 import Image from "next/image"
 
 type Props = {
-	className?: string
-	src: string
-	alt?: string
-	onClick?: () => void,
-	override?: boolean
+  className?: string
+  src: string
+  alt?: string
+  onClick?: () => void
+  override?: boolean
+  OnError?: (e: any) => void
 }
 
 export default function Avatar({
-	className,
-	src,
-	alt = "haha",
-	onClick,
-	override = false
+  className,
+  src,
+  alt = "haha",
+  onClick,
+  override = false,
+  OnError,
 }: Props) {
-	return (
-		<Image
-			onClick={onClick}
-			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
-			src="https://media.tenor.com/0hciLENrqi8AAAAC/neon-steam.gif"
-			alt={alt}
-			width={250}
-			height={250}
-		/>
-	)
+  return (
+    <Image
+      onClick={onClick}
+      className={` ${!override && "rounded-full"} ${
+        onClick && " transition-opacity cursor-pointer hover:opacity-50"
+      }  object-cover   drop-shadow-lg  ${className}`}
+      src={src}
+      alt={alt}
+      width={250}
+      height={250}
+	  onError={OnError}
+    />
+  )
 }

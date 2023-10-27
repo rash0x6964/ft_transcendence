@@ -30,6 +30,8 @@ const Page: NextPageWithLayout = () => {
 	useEffect(() => {
 		DMService.getDMList()
 			.then((data) => {
+				console.log(data);
+
 				setDMList(data.data);
 			})
 			.catch((err) => {

@@ -1,4 +1,4 @@
-import { Message } from "./Channel.model";
+import Message from "./Message.model";
 import User from "./User.model";
 
 export default interface DirectMessage {
@@ -9,7 +9,7 @@ export default interface DirectMessage {
 	receiver?: User;
 	message?: Message;
 
-	isSender?:boolean
-	friend?:User;
+	isSender?: boolean
+	friend?: User;
 }
 

@@ -16,15 +16,16 @@ import { useRouter } from "next/navigation"
 import { AxiosError } from "axios"
 
 const audiowide = Audiowide({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
+	weight: "400",
+	subsets: ["latin"],
+	display: "swap",
 })
 
 const Page: NextPageWithLayout = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const router = useRouter()
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
+	const router = useRouter()
+
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
@@ -121,7 +122,7 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>
+	return <AuthLayout>{page}</AuthLayout>
 }
 
 export default Page

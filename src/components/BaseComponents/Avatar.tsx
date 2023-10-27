@@ -17,7 +17,6 @@ export default function Avatar({
   override = false,
   OnError,
 }: Props) {
-<<<<<<< HEAD
   return (
     <Image
       onClick={onClick}
@@ -28,19 +27,6 @@ export default function Avatar({
       alt={alt}
       width={250}
       height={250}
-	  onError={OnError}
     />
   )
-=======
-	return (
-		<Image
-			onClick={onClick}
-			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
-			src={src}
-			alt={alt}
-			width={250}
-			height={250}
-		/>
-	)
->>>>>>> cc62baeb6f78e26450e61d784940caf19c9c3a8e
 }

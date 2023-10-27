@@ -8,8 +8,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const curentPath = usePathname()
   const router = useRouter()
 
-  if (!getInfoCookie() && curentPath == "authCallback") router.push("/signup")
-  else if (!getJwtCookie() && !publicRoutes.includes(curentPath))
+  if (!getJwtCookie() && !publicRoutes.includes(curentPath))
     router.push("/signin")
   return <>{children} </>
 }

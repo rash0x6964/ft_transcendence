@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 
 const HttpClient = axios.create({
   baseURL: env.endPoint,
-  timeout: 1000,
+  // timeout: 1000,
   headers: { "Content-Type": "application/json" },
 })
 

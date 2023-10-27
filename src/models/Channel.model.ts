@@ -1,4 +1,5 @@
 import Message from "./Message.model";
+import User from "./User.model";
 
 
 interface ChannelUser {
@@ -7,6 +8,9 @@ interface ChannelUser {
 	role: "OWNER" | "ADMINISTRATOR" | "MEMBER";
 	status: "FREE" | "MUTED" | "BANNED";
 	duration: bigint;
+
+	user?: User
+	channel?: Channel
 }
 
 interface Channel {

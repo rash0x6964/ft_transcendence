@@ -29,7 +29,6 @@ const Page: NextPageWithLayout = () => {
 	useEffect(() => {
 		DMService.getDMList()
 			.then(({ data }: { data: DirectMessage[] }) => {
-				console.log(data);
 				setDMList(data);
 				if (data.length > 0)
 					setSelected(data[0]);
@@ -76,8 +75,8 @@ const Page: NextPageWithLayout = () => {
 				<Chat />
 			</div>
 			<div className=" h-full w-96">
-				{isChannel() && <ChannelInfo />}
-				{!isChannel() && <FriendInfo />}
+				{isChannel() && <ChannelInfo channelID={selected?.id??""}/>}
+				{!isChannel() && <FriendInfo friend={(selected as DirectMessage)?.friend}/>}
 			</div>
 
 			<Dialogue closed={true}>

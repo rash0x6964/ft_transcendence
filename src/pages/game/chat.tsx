@@ -73,7 +73,7 @@ const Page: NextPageWithLayout = () => {
 				/>
 			</div>
 			<div className="flex-1 flex flex-col   h-full">
-				<Chat />
+				<Chat channelData={selected} />
 			</div>
 			<div className=" h-full w-96">
 				{isChannel() && <ChannelInfo />}

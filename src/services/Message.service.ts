@@ -1,5 +1,6 @@
 import Message from "@/models/Message.model";
 import { HttpClient } from "./HttpClient";
+import Attachment from "@/models/Attachment.model";
 
 
 
@@ -16,16 +17,19 @@ class FriendService {
 		return HttpClient.get(`${this.endPoint}?dmID=${DmID}`);
 	}
 
-	sendDmMessage(val: string, dmID: string) {
+	sendDmMessage(val: string, dmID: string, attachment: Attachment | undefined = undefined) {
 
 
 		let data =
 		{
 			content: val,
 			dmMessage: true,
-			directmessageID: dmID
+			directmessageID: dmID,
+			attachment: attachment
 
 		}
+
+
 		return HttpClient.post(`${this.endPoint}`, data);
 	}
 

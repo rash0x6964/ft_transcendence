@@ -7,8 +7,8 @@ type Props =
 		className?: string,
 		msg: string,
 		self: boolean,
-		src: string,
-		playerName: string
+		src?: string,
+		playerName?: string
 		onProfileClick?: () => void,
 	}
 export default function Header({ className, msg, playerName, self, src, onProfileClick }: Props) {

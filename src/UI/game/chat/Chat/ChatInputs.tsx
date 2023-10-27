@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ChatInput from "./ChatInput";
 import Input from "./ChatInput";
 import Sword from "@/components/svgs/Sword";
@@ -7,7 +7,7 @@ import Send from "@/components/svgs/Send";
 type Props = {
 	onChallenge?: () => void;
 	onSend?: (value: string) => void;
-	onFile?: () => void;
+	onFile?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	className?: string;
 };
 export default function ChatInputs({
@@ -17,6 +17,7 @@ export default function ChatInputs({
 	className,
 }: Props) {
 	const [content, setContent] = useState("");
+	const fileRef = useRef<HTMLInputElement>(null);
 
 	const handleSend = () => {
 		if (content == "")
@@ -24,6 +25,9 @@ export default function ChatInputs({
 		onSend && onSend(content);
 		setContent("");
 	}
+
+
+
 	return (
 		<div className={`flex gap-2 ${className}`}>
 			<Input
@@ -44,9 +48,10 @@ export default function ChatInputs({
 				/>
 			</button>
 			<button
-				onClick={onFile}
+				onClick={() => fileRef && fileRef.current?.click()}
 				className="h-16 w-16 drop-shadow-lg bg-secondary rounded-xl group"
 			>
+				<input onChange={onFile} ref={fileRef} className="hidden" type="file" />
 				<AddFile
 					className="mx-auto group-hover:scale-125 transition-transform"
 					width={24}

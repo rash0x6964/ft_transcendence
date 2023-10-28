@@ -4,6 +4,7 @@ import PropWithClass from '@/types/PropWithClass'
 import File from '@/components/svgs/File'
 import DownloadFile from '@/components/svgs/DownloadFile'
 import fileSizePipe from '@/pipes/fileSize.pipe'
+import saveAs from 'file-saver'
 
 type Props =
 	{
@@ -23,9 +24,9 @@ export default function Message({ className, url, fileName, fileSize }: Props) {
 					<div className='text-gray-600 '>{fileSizePipe(fileSize)}</div>
 				</div>
 			</div>
-			<a className='hover:opacity-80 duration-500 ' href={url}>
+			<div onClick={() => saveAs(url, fileName)} className='hover:opacity-80 duration-500  cursor-pointer'  >
 				<DownloadFile className='text-white' width={30} height={30} />
-			</a>
+			</div>
 		</div>
 	)
 }

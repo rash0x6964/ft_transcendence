@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Header from "./Chat/Header";
 import ChatInputs from "./Chat/ChatInputs";
 import MainChat from "./Chat/MainChat";
@@ -59,11 +59,11 @@ export default function Chat({ channelData }: Props) {
 
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!channelData)
 			return;
 		if (chatRef.current)
-			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
+			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "instant" })
 	}, [messages])
 
 	useEffect(() => {

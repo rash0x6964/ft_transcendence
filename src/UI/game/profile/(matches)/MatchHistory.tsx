@@ -2,8 +2,12 @@ import Match from "@/types/Match"
 import Player from "@/types/Player"
 import MatchEntry from "./MatchEntry"
 import SectionTitle from "../SectionTitle"
+import { useEffect, useState } from "react"
+import matchService from "@/services/MatchService"
 
 export default function MatchHistory() {
+  const [match, setMatch] = useState(new Array<Match>())
+
   const url =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBLE2R35SV62Enw03QHS5AY-LUr6HOhmHvrA&usqp=CAU"
   const p_1: Player = { username: "samini", url }
@@ -21,11 +25,20 @@ export default function MatchHistory() {
     { name: "five", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const matches = await matchService.getAllMatches()
+      // setMatch(matchService.getMatchProps(matches))
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className="m-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
-        {matches.map(match => (
+        {matches.map((match) => (
           <MatchEntry key={match.name} match={match} />
         ))}
       </div>

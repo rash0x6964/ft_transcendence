@@ -8,4 +8,6 @@ class ProfileService {
   }
 }
 
-export default new ProfileService()
+const profileService = new ProfileService()
+
+export default profileService

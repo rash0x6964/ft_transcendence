@@ -8,6 +8,7 @@ import ImageAttachment from "./Messages/ImageAttachment";
 import VideoAttachment from "./Messages/VideoAttachment";
 import Message from "@/models/Message.model";
 import datePipe from "@/pipes/date.pipes";
+import UrlPipe from "@/pipes/url.pipe";
 
 type Props = {
 	avatar: boolean,
@@ -75,7 +76,7 @@ export default function Message({ avatar, mine, message }: Props) {
 					className={`  max-w-full break-words  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
 						}`}
 				>
-					{message?.content}
+					<UrlPipe message={message?.content} />
 				</Normal>
 				{/* <LobbyInvite
 					className={`w-96  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"

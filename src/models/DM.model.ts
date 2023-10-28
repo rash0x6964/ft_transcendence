@@ -8,7 +8,8 @@ export default interface DirectMessage {
 	sender?: User;
 	receiver?: User;
 	message?: Message;
-
+	blockStatus: "BOTH" | "NONE" | "SENDER" | "RECEIVER";
+	muteStatus: "BOTH" | "NONE" | "SENDER" | "RECEIVER";
 	isSender?: boolean
 	friend?: User;
 }

@@ -81,11 +81,11 @@ export default function Chat({ channelData }: Props) {
 
 	}
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (!channelData)
 			return;
 		if (chatRef.current)
-			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "instant" })
+			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
 	}, [messages])
 
 	useEffect(() => {

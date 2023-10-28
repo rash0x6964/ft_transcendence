@@ -1,7 +1,7 @@
 import DownloadFile from '@/components/svgs/DownloadFile'
 import Eye from '@/components/svgs/Eye'
 import saveAs from 'file-saver'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 
 type Props =
 	{
@@ -11,6 +11,8 @@ type Props =
 	}
 
 export default function VideoAttachment({ className, fileName, src }: Props) {
+	const [load, setLoad] = useState(false);
+
 	return (
 		<div className={`bg-mirage font-light text-sm border relative rounded-md  border-gray-600 p-1  ${className}`}>
 			<div className='absolute w-full p-3 justify-between bg-backdrop/80 top-0 left-0 rounded-t flex items-center'>
@@ -25,7 +27,7 @@ export default function VideoAttachment({ className, fileName, src }: Props) {
 					</a>
 				</div>
 			</div>
-			<video controls src={src}></video>
+			<video className={`w-full  ${!load ? "h-96" : "h-auto"} `} onLoad={() => setLoad(true)} controls src={src}></video>
 
 		</div>
 	)

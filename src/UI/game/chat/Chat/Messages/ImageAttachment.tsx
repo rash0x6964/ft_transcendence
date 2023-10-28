@@ -2,7 +2,7 @@ import DownloadFile from "@/components/svgs/DownloadFile"
 import Eye from "@/components/svgs/Eye"
 import axios from "axios"
 import Image from "next/image"
-import React, { PropsWithChildren } from "react"
+import React, { PropsWithChildren, useState } from "react"
 import { saveAs } from 'file-saver';
 
 type Props = {
@@ -12,6 +12,7 @@ type Props = {
 }
 
 export default function ImageAttachment({ className, fileName, src }: Props) {
+	const [load, setLoad] = useState(false);
 
 	return (
 		<div
@@ -30,7 +31,7 @@ export default function ImageAttachment({ className, fileName, src }: Props) {
 					</a>
 				</div>
 			</div>
-			<img className="w-full h-auto" src={src} alt={fileName} />
+			<img onLoad={() => setLoad(true)} loading="lazy" className={`w-full  ${!load ? "h-96" : "h-auto"} `} src={src} alt={fileName} />
 		</div>
 	)
 }

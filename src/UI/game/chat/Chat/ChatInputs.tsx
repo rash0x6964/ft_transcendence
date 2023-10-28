@@ -5,12 +5,14 @@ import Sword from "@/components/svgs/Sword";
 import AddFile from "@/components/svgs/AddFile";
 import Send from "@/components/svgs/Send";
 type Props = {
+	uploading: boolean;
 	onChallenge?: () => void;
 	onSend?: (value: string) => void;
 	onFile?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	className?: string;
 };
 export default function ChatInputs({
+	uploading,
 	onChallenge,
 	onSend,
 	onFile,
@@ -47,7 +49,7 @@ export default function ChatInputs({
 					height={24}
 				/>
 			</button>
-			<button
+			{!uploading && <button
 				onClick={() => fileRef && fileRef.current?.click()}
 				className="h-16 w-16 drop-shadow-lg bg-secondary rounded-xl group"
 			>
@@ -57,7 +59,15 @@ export default function ChatInputs({
 					width={24}
 					height={24}
 				/>
-			</button>
+			</button>}
+
+			{uploading && <div
+				onClick={() => fileRef && fileRef.current?.click()}
+				className="h-16 w-16 drop-shadow-lg bg-secondary rounded-xl group flex flex-col justify-center"
+			>
+				<span className="loader  scale-50 mx-auto"></span>
+			</div>}
+
 			<button
 				onClick={handleSend}
 				className="h-16 w-16 drop-shadow-lg bg-secondary rounded-xl group"

@@ -10,6 +10,7 @@ import { Channel } from "@/models/Channel.model";
 import UploadService from "@/services/Upload.service";
 import Attachment from "@/models/Attachment.model";
 import DirectMessage from "@/models/DM.model";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
 
 type Props =
@@ -18,7 +19,15 @@ type Props =
 	}
 export default function Chat({ channelData }: Props) {
 	const socket = useContext(WebSocketContext);
+	const notify = useContext(NotifcationContext);
+
 	const [messages, setMessages] = useState<Message[]>([]);
+	const [loaders, setLoaders] = useState(
+		{
+			loadingMsgs: false,
+			uploading: false,
+		}
+	)
 
 	const isChannel = () => (channelData as Channel)?.visibility != undefined;
 
@@ -40,19 +49,32 @@ export default function Chat({ channelData }: Props) {
 			})
 
 
-
 	}
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let formData = new FormData();
 
 		if (!e.target.files || e.target.files.length <= 0)
 			return;
+		if (e.target.files[0].size > 1000 * 1000 * 10) {
+			notify({
+				message: "file is larger then 10 MB",
+				type: "notice",
+				title: "file upload"
+			})
+			return;
+		}
 		formData.append("file", e.target.files[0], e.target.files[0].name);
-		UploadService.uploadFiles("messages", formData).then(({ data }: { data: Attachment[] }) => {
+
+
+		let upDir: "messages" | "channels" = isChannel() ? "channels" : "messages"
+		setLoaders(prevState => { return { ...prevState, uploading: true } })
+		UploadService.uploadFiles(upDir, formData).then(({ data }: { data: Attachment[] }) => {
+			setLoaders(prevState => { return { ...prevState, uploading: false } })
 			handleSend("", data[0]);
 
 		}).catch(err => {
-			alert("err")
+			setLoaders(prevState => { return { ...prevState, uploading: false } })
+
 
 		})
 
@@ -87,20 +109,27 @@ export default function Chat({ channelData }: Props) {
 	}, [channelData])
 
 	useEffect(() => {
-		console.log(channelData);
 
 		if (!channelData)
 			return;
+		setLoaders(prevState => { return { ...prevState, loadingMsgs: true } })
 		if (!isChannel())
 			MessageService.getDmMessages(channelData.id).then((data) => {
+				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 				setMessages(data.data);
+			}).catch(err => {
+				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+
 			})
 		else if (isChannel())
 			MessageService.getChannelMessage(channelData.id).then((data) => {
+				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+
 				setMessages(data.data);
+			}).catch(err => {
+				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+
 			})
-		else
-			setMessages([]);
 	}, [channelData])
 
 
@@ -121,8 +150,8 @@ export default function Chat({ channelData }: Props) {
 				msg={messages.length > 0 ? messages[messages.length - 1].content : ""}
 				src={(channelData as DirectMessage)?.friend?.avatarUrl}
 			/>}
-			<MainChat chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
-			<ChatInputs onFile={handleFileChange} onSend={handleSend} />
+			<MainChat loading={loaders.loadingMsgs} chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
+			<ChatInputs uploading={loaders.uploading} onFile={handleFileChange} onSend={handleSend} />
 		</div>
 	);
 }

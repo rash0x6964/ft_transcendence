@@ -1,21 +1,16 @@
+import Layout from "@/UI/Layout";
+import Chat from "@/UI/game/chat/Chat";
 import ChannelInfo from "@/UI/game/chat/Chat/ChannelInfo/ChannelInfo";
 import ChatBar from "@/UI/game/chat/ChatBar/ChatBar";
-import Dialogue from "@/components/Dialogue/Dialogue";
-import Chat from "@/UI/game/chat/Chat";
-import { NextPageWithLayout } from "../_app";
-import { ReactElement, useEffect, useState } from "react";
-import Layout from "@/UI/Layout";
-import HeadTitle from "@/components/BaseComponents/HeadTitle";
-import FriendRequestsDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/FriendRequestsDialBox";
-import CreateChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/CreateChannelDialBox";
-import EditChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/EditChannelDialBox";
-import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox";
-import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPersonDialBox";
-import DirectMessage from "@/models/DM.model";
-import DMService from "@/services/DMService";
-import { Channel } from "@/models/Channel.model";
-import ChannelSevice from "@/services/Channel.sevice";
 import FriendInfo from "@/UI/game/chat/FriendInfo/FriendInfo";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
+import Dialogue from "@/components/Dialogue/Dialogue";
+import { Channel } from "@/models/Channel.model";
+import DirectMessage from "@/models/DM.model";
+import ChannelSevice from "@/services/Channel.sevice";
+import DMService from "@/services/DMService";
+import { ReactElement, useEffect, useState } from "react";
+import { NextPageWithLayout } from "../_app";
 
 const Page: NextPageWithLayout = () => {
 	const [channelList, setChannelList] = useState<Channel[]>([]);

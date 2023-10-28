@@ -70,14 +70,15 @@ export default function Message({ avatar, mine, message }: Props) {
 				<span className="text-[10px] text-gray-600 ">{message && datePipe(message?.createdAt)}</span>
 			</div>}
 			{!avatar && <div className="w-12"></div>}
-			<div className="flex flex-col gap-2 max-w-[40%]  ">
+			<div className="flex flex-col gap-2 w-[40%]">
 				{avatar && <div className={mine ? "self-start" : "self-end"}>{message?.sender?.userName}</div>}
 				<Normal
-					className={`  max-w-full break-words  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
+					className={`  max-w-full break-all  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
 						}`}
 				>
 					<UrlPipe message={message?.content} />
 				</Normal>
+
 				{/* <LobbyInvite
 					className={`w-96  ${mine ? "rounded-tl-none self-start" : "self-end rounded-tr-none"
 						}`}

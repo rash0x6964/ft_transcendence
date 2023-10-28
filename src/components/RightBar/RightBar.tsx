@@ -49,10 +49,7 @@ export default function RightBar({ className }: Props) {
 			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
 				<MenuBtn onClick={() => alert("yes")} title="Send Message" />
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
-				{!isBlocked(selectedData) && <MenuBtn onClick={() => { handleBlock(selectedData) }} title="Block" />}
-				{isBlocked(selectedData) && <MenuBtn onClick={() => { handleUnblock(selectedData) }} title="unBlock" />}
-				{!isMuted(selectedData) && <MenuBtn onClick={() => { handleMute(selectedData) }} title="Mute" />}
-				{isMuted(selectedData) && <MenuBtn onClick={() => { handleUnMute(selectedData) }} title="unMute" />}
+
 				{<MenuBtn onClick={() => { handleFriendRemove(selectedData, socket) }} title="Unfriend" />}
 			</ContextMenu>
 			<Dialogue onBackDropClick={() => setDialogueClosed(true)} closed={dialogueClosed}>

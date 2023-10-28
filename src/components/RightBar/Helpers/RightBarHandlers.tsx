@@ -5,12 +5,13 @@ import FriendStatus from "@/models/FriendStatus.model";
 import { Socket } from "socket.io-client";
 import { useContext, useEffect, useState } from "react";
 import { NotifcationContext } from "@/UI/NotificationProvider";
-
+import DMService from "@/services/DMService";
+import DirectMessage from "@/models/DM.model";
 export const handleBlock = (selectedData: FriendStatus | null) => {
 	if (!selectedData)
 		return
 
-	FriendService.blockUser(selectedData).then((data) => {
+	DMService.blockUser(selectedData).then((data) => {
 		alert("success")
 	}).catch(err => {
 		alert("error")
@@ -20,7 +21,7 @@ export const handleBlock = (selectedData: FriendStatus | null) => {
 export const handleUnblock = (selectedData: FriendStatus | null) => {
 	if (!selectedData)
 		return
-	FriendService.unBlockUser(selectedData).then((data) => {
+	DMService.unBlockUser(selectedData).then((data) => {
 		alert("success")
 	}).catch(err => {
 		alert("error")
@@ -30,7 +31,7 @@ export const handleUnblock = (selectedData: FriendStatus | null) => {
 export const handleMute = (selectedData: FriendStatus | null) => {
 	if (!selectedData)
 		return
-	FriendService.blockUser(selectedData).then((data) => {
+	DMService.blockUser(selectedData).then((data) => {
 		alert("success")
 	}).catch(err => {
 		alert("error")
@@ -40,7 +41,7 @@ export const handleMute = (selectedData: FriendStatus | null) => {
 export const handleUnMute = (selectedData: FriendStatus | null) => {
 	if (!selectedData)
 		return
-	FriendService.unBlockUser(selectedData).then((data) => {
+	DMService.unBlockUser(selectedData).then((data) => {
 		alert("success")
 	}).catch(err => {
 		alert("error")
@@ -59,7 +60,7 @@ export const handleFriendRemove = (selectedData: FriendStatus | null, socket: So
 
 }
 
-export function isBlocked(data: FriendStatus | null): boolean {
+export function isBlocked(data: DirectMessage | null): boolean {
 	if (data == null)
 		return false;
 	if (data.isSender)
@@ -69,7 +70,7 @@ export function isBlocked(data: FriendStatus | null): boolean {
 	return false;
 }
 
-export function isMuted(data: FriendStatus | null): boolean {
+export function isMuted(data: DirectMessage | null): boolean {
 	if (data == null)
 		return false;
 	if (data.isSender)

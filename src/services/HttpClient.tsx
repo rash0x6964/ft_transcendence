@@ -10,27 +10,26 @@ const HttpClient = axios.create({
 })
 
 HttpClient.interceptors.request.use(
-	function (config) {
-		//to be changed, local storage just for testing purposes
-		config.headers["Authorization"] = `Bearer ${getJwtCookie()}`
-		return config
-	},
-	function (error) {
-		// Do something with request error
-		console.log(error)
-		return Promise.reject(error)
-	}
+  function (config) {
+    config.headers["Authorization"] = `Bearer ${getJwtCookie()}`
+    return config
+  },
+  function (error) {
+    console.log(error)
+    return Promise.reject(error)
+  }
 )
 
 HttpClient.interceptors.response.use(
-	function (response) {
-		return response
-	},
-	function (error) {
+  function (response) {
+    return response
+  },
+  function (error) {
+    if (error.response && error.response.status == "401")
+      document.location = "/signup"
+    else return Promise.reject(error)
+  }
 
-		if (error.response && error.response.status == "401") document.location = "/signup"
-		else return Promise.reject(error)
-	}
 )
 
 export { HttpClient }

@@ -29,10 +29,18 @@ export default function Chat({ channelData }: Props) {
 		if (!isChannel() && channelData)
 			MessageService.sendDmMessage(val, channelData.id, attachement).then(data => {
 				socket?.emit("privateMessage", { token: getJwtCookie(), data: data.data });
-
 			}).catch(err => {
 
 			})
+		if (isChannel() && channelData)
+			MessageService.sendChannelMessage(val, channelData.id, attachement).then(data => {
+				socket?.emit("channelMessage", { token: getJwtCookie(), data: data.data });
+			}).catch(err => {
+
+			})
+
+
+
 	}
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let formData = new FormData();
@@ -52,29 +60,47 @@ export default function Chat({ channelData }: Props) {
 	}
 
 	useEffect(() => {
+		if (!channelData)
+			return;
 		if (chatRef.current)
 			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
 	}, [messages])
 
 	useEffect(() => {
+		if (!channelData)
+			return;
 		let handler = (data: Message) => {
+
 			if (!isChannel() && (channelData as DirectMessage).id != data.directmessageID)
 				return;
 			setMessages((prevState) => [...prevState, data])
 
 		}
 		socket?.on("privateMessage", handler)
+		socket?.on("channelMessage", handler);
 
 		return () => {
 			socket?.off("privateMessage", handler)
+			socket?.off("channelMessage", handler);
+
 		}
-	}, [])
+	}, [channelData])
 
 	useEffect(() => {
-		if (!isChannel() && channelData)
+		console.log(channelData);
+
+		if (!channelData)
+			return;
+		if (!isChannel())
 			MessageService.getDmMessages(channelData.id).then((data) => {
 				setMessages(data.data);
 			})
+		else if (isChannel())
+			MessageService.getChannelMessage(channelData.id).then((data) => {
+				setMessages(data.data);
+			})
+		else
+			setMessages([]);
 	}, [channelData])
 
 

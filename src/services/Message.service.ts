@@ -33,6 +33,23 @@ class FriendService {
 		return HttpClient.post(`${this.endPoint}`, data);
 	}
 
+	sendChannelMessage(val: string, channelID: string, attachment: Attachment | undefined = undefined) {
+
+
+		let data =
+		{
+			dmMessage: false,
+			content: val,
+			channelID: channelID,
+			attachment: attachment
+
+		}
+
+
+		return HttpClient.post(`${this.endPoint}`, data);
+	}
+
+
 }
 
 export default new FriendService()

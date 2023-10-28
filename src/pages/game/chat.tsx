@@ -29,7 +29,6 @@ const Page: NextPageWithLayout = () => {
 	useEffect(() => {
 		DMService.getDMList()
 			.then(({ data }: { data: DirectMessage[] }) => {
-				console.log(data);
 				setDMList(data);
 				if (data.length > 0)
 					setSelected(data[0]);
@@ -42,7 +41,7 @@ const Page: NextPageWithLayout = () => {
 		ChannelSevice.getChannelList()
 			.then(({ data }: { data: Channel[] }) => {
 				setChannelList(data);
-				if (data.length > 0 && !selected)
+				if (data.length > 0 && selected != undefined)
 					setSelected(data[0]);
 			})
 			.catch((err) => {

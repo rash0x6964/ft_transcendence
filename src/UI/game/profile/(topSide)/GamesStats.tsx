@@ -1,9 +1,14 @@
+import Profile from "@/models/Profile.model"
 import CenterProfile from "./CenterProfile"
 import LevelCube from "./LevelCube"
 import Stat from "./Stat"
 
-export default function GamesStats() {
-  const level = 8
+type Props = {
+  profile: Profile
+}
+
+export default function GamesStats({ profile }: Props) {
+  const level = profile.level
   const percentage = 96
 
   return (

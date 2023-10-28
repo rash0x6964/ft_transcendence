@@ -1,6 +1,8 @@
 import Image from "next/image"
 
 type Props = {
+
+  OnError?: (e: any) => void
 	className?: string
 	src?: string
 	alt?: string
@@ -9,12 +11,14 @@ type Props = {
 }
 
 export default function Avatar({
-	className,
-	src,
-	alt = "haha",
-	onClick,
-	override = false
+  className,
+  src,
+  alt = "haha",
+  onClick,
+  override = false,
+  OnError,
 }: Props) {
+
 	return (
 		<Image
 			onClick={onClick}

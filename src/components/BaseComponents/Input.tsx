@@ -7,7 +7,7 @@ type Props = {
   className?: string
   icon?: React.ReactNode
   onChange?:(e:React.ChangeEvent<HTMLInputElement>) => void
-  value?:string
+  value:string
   autoFocus?:boolean
 }
 
@@ -17,7 +17,7 @@ export default function Input({
   type = "text",
   icon,
   onChange,
-  value,
+  value = "",
   autoFocus
 }: Props) {
   return (

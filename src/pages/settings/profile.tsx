@@ -29,8 +29,8 @@ const Page: NextPageWithLayout = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     let userSchema = object({
-      userName: string().min(3).max(20),
-      fullName: string().min(3).max(20),
+      userName: string().min(3).max(60),
+      fullName: string().min(3).max(60),
       email: string().email(),
     })
     let parsedUser
@@ -62,7 +62,11 @@ const Page: NextPageWithLayout = () => {
       setFallback(false)
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log(err)
+        notify({
+          message: err.response?.data?.message,
+          title: "Validation Error",
+          type: "error",
+        })
       }
     }
   }
@@ -80,10 +84,13 @@ const Page: NextPageWithLayout = () => {
       const res = await uploadPhoto(formdata, e.target.name)
       const user = await updatePhoto(res[0].url, e.target.name)
       setUser(user)
-      setFallback(false)
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log(err)
+        notify({
+          message: err.response?.data?.message,
+          title: "Validation Error",
+          type: "error",
+        })
       }
     }
   }
@@ -93,13 +100,6 @@ const Page: NextPageWithLayout = () => {
     setFullname(currentUser.fullName)
     setUsername(currentUser.userName)
     setMail(currentUser.email)
-  }
-  const reloadBanner = (e) => {
-    if (fallback || !user) return
-    setTimeout(() => {
-      e.target.src = user.bannerUrl
-    }, 200)
-    setFallback(true)
   }
 
   useEffect(() => {
@@ -121,7 +121,6 @@ const Page: NextPageWithLayout = () => {
           src={user?.bannerUrl ?? env.defaultBanner}
           alt="W3Schools.com"
           className="w-[680px] h-32  object-cover  mx-auto rounded-xl border-2"
-          onError={reloadBanner}
         />
         <div className="relative -top-3 left-[735px] w-[22px] h-[22px]">
           <Change className="cursor-pointer" />

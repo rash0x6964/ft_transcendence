@@ -17,15 +17,6 @@ export default function Avatar({
   onClick,
   override = false,
 }: Props) {
-  const [fallback, setFallback] = useState<boolean>(false)
-
-  const setDefaultAvatar = (e) => {
-    if (fallback) return
-    setTimeout(() => {
-      e.target.src = env.defaultAvatar
-    }, 200)
-    setFallback(true)
-  }
 
   return (
     <Image
@@ -37,7 +28,6 @@ export default function Avatar({
       alt={alt}
       width={250}
       height={250}
-      onError={setDefaultAvatar}
     />
   )
 }

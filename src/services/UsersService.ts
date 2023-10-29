@@ -46,3 +46,7 @@ export const addProvider = (data: ProviderToken) => {
     (res) => res.data
   )
 }
+
+export const getById = (id: string) => {
+  return HttpClient.get(`${env.endPoint}/users/${id}`).then((res) => res.data)
+}

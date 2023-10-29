@@ -17,22 +17,26 @@ type Props =
 	{
 		channelData: DirectMessage | Channel | undefined;
 	}
+
 export default function Chat({ channelData }: Props) {
 	const socket = useContext(WebSocketContext);
 	const notify = useContext(NotifcationContext);
+	const chatRef = useRef<HTMLDivElement>(null);
+	const isChannel = () => (channelData as Channel)?.visibility != undefined;
+
 
 	const [messages, setMessages] = useState<Message[]>([]);
+	const [sent, setSent] = useState(false);
 	const [loaders, setLoaders] = useState(
 		{
 			loadingMsgs: false,
 			uploading: false,
+			paginating: false
 		}
 	)
 
-	const isChannel = () => (channelData as Channel)?.visibility != undefined;
 
 
-	const chatRef = useRef<HTMLDivElement>(null);
 
 	const handleSend = (val: string, attachement: Attachment | undefined = undefined) => {
 		if (!isChannel() && channelData)
@@ -77,16 +81,44 @@ export default function Chat({ channelData }: Props) {
 
 
 		})
+	}
 
+	const handlePaginate = async () => {
+
+
+		if (!channelData)
+			return
+
+		setLoaders(prevState => { return { ...prevState, paginating: true } })
+		//delay because the animation is too flashy
+		await new Promise((x => setTimeout(x, 500)));
+		if (!isChannel())
+			MessageService.getDmMessages(channelData.id, messages.length).then(({ data }: { data: Message[] }) => {
+				setMessages(prevState => [...data.reverse(), ...prevState]);
+				setLoaders(prevState => { return { ...prevState, paginating: false } })
+			}).catch(err => {
+				setLoaders(prevState => { return { ...prevState, paginating: false } })
+
+			})
+		else if (isChannel())
+			MessageService.getChannelMessage(channelData.id, messages.length).then(({ data }: { data: Message[] }) => {
+
+				setMessages(prevState => [...data.reverse(), ...prevState]);
+				setLoaders(prevState => { return { ...prevState, paginating: false } })
+
+			}).catch(err => {
+				setLoaders(prevState => { return { ...prevState, paginating: false } })
+
+			})
 
 	}
 
 	useEffect(() => {
-		if (!channelData)
+		if (!channelData || loaders.paginating)
 			return;
 		if (chatRef.current)
 			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
-	}, [messages])
+	}, [sent])
 
 	useEffect(() => {
 		if (!channelData)
@@ -96,7 +128,7 @@ export default function Chat({ channelData }: Props) {
 			if (!isChannel() && (channelData as DirectMessage).id != data.directmessageID)
 				return;
 			setMessages((prevState) => [...prevState, data])
-
+			setSent(prevState => !prevState)
 		}
 		socket?.on("privateMessage", handler)
 		socket?.on("channelMessage", handler);
@@ -114,18 +146,22 @@ export default function Chat({ channelData }: Props) {
 			return;
 		setLoaders(prevState => { return { ...prevState, loadingMsgs: true } })
 		if (!isChannel())
-			MessageService.getDmMessages(channelData.id).then((data) => {
+			MessageService.getDmMessages(channelData.id).then(({ data }: { data: Message[] }) => {
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
-				setMessages(data.data);
+				setMessages(data.reverse());
+				setSent(prevState => !prevState)
+
 			}).catch(err => {
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 
 			})
 		else if (isChannel())
-			MessageService.getChannelMessage(channelData.id).then((data) => {
+			MessageService.getChannelMessage(channelData.id).then(({ data }: { data: Message[] }) => {
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 
-				setMessages(data.data);
+				setMessages(data.reverse());
+				setSent(prevState => !prevState)
+
 			}).catch(err => {
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 
@@ -150,7 +186,7 @@ export default function Chat({ channelData }: Props) {
 				msg={messages.length > 0 ? messages[messages.length - 1].content : ""}
 				src={(channelData as DirectMessage)?.friend?.avatarUrl}
 			/>}
-			<MainChat loading={loaders.loadingMsgs} chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
+			<MainChat onPaginate={handlePaginate} paginating={loaders.paginating} loading={loaders.loadingMsgs} chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
 			<ChatInputs uploading={loaders.uploading} onFile={handleFileChange} onSend={handleSend} />
 		</div>
 	);

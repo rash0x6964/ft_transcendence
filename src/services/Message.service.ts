@@ -9,12 +9,12 @@ class FriendService {
 
 	private endPoint = "/message"
 
-	getChannelMessage(channelID: string) {
-		return HttpClient.get(`${this.endPoint}?channelID=${channelID}`);
+	getChannelMessage(channelID: string, offset: number = 0, limit: number = 20) {
+		return HttpClient.get(`${this.endPoint}?channelID=${channelID}&offset=${offset}&limit=${limit}`);
 	}
 
-	getDmMessages(DmID: string) {
-		return HttpClient.get(`${this.endPoint}?dmID=${DmID}`);
+	getDmMessages(DmID: string, offset: number = 0, limit: number = 20) {
+		return HttpClient.get(`${this.endPoint}?dmID=${DmID}&offset=${offset}&limit=${limit}`);
 	}
 
 	sendDmMessage(val: string, dmID: string, attachment: Attachment | undefined = undefined) {

@@ -85,7 +85,7 @@ export default function Chat({ channelData }: Props) {
 
 	const handlePaginate = async () => {
 
-
+		return;
 		if (!channelData)
 			return
 
@@ -152,6 +152,8 @@ export default function Chat({ channelData }: Props) {
 				setSent(prevState => !prevState)
 
 			}).catch(err => {
+				setMessages([]);
+
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 
 			})
@@ -163,6 +165,8 @@ export default function Chat({ channelData }: Props) {
 				setSent(prevState => !prevState)
 
 			}).catch(err => {
+				setMessages([]);
+
 				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
 
 			})

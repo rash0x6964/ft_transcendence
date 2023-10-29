@@ -37,7 +37,6 @@ export default function Chat({ channelData }: Props) {
 
 
 	const handleSend = (val: string, attachement: Attachment | undefined = undefined) => {
-
 		if (!channelData)
 			return;
 		let emitEvent = isChannel() ? "channelMessage" : "privateMessage";
@@ -49,9 +48,8 @@ export default function Chat({ channelData }: Props) {
 
 
 	}
+
 	const handleFileChange = (formData: FormData) => {
-
-
 		let upDir: "messages" | "channels" = isChannel() ? "channels" : "messages"
 		setLoaders(prevState => { return { ...prevState, uploading: true } })
 		UploadService.uploadFiles(upDir, formData).then(({ data }: { data: Attachment[] }) => {
@@ -60,19 +58,15 @@ export default function Chat({ channelData }: Props) {
 
 		}).catch(err => {
 			setLoaders(prevState => { return { ...prevState, uploading: false } })
-
-
 		})
 	}
 
-	const handlePaginate = async () => {
+	const handlePaginate = () => {
 
 		if (!channelData)
 			return
-
 		setLoaders(prevState => { return { ...prevState, paginating: true } })
 		//delay because the animation is too flashy
-		await new Promise((x => setTimeout(x, 500)));
 		MessageService.getMessages(channelData.id, isChannel(), messages.length).then(({ data }: { data: Message[] }) => {
 			setLoaders(prevState => { return { ...prevState, paginating: false } })
 			if (!channelCheck(data))
@@ -116,11 +110,10 @@ export default function Chat({ channelData }: Props) {
 
 		if (!channelData)
 			return;
+
 		setLoaders(prevState => { return { ...prevState, loadingMsgs: true } })
 		MessageService.getMessages(channelData.id, isChannel()).then(({ data }: { data: Message[] }) => {
 			setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
-			if (!channelCheck(data))
-				return;
 			setMessages(data.reverse());
 			setSent(prevState => !prevState)
 

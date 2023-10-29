@@ -1,13 +1,13 @@
 import Image from "next/image"
+import { useState } from "react"
+import env from "@/environment/environment"
 
 type Props = {
-
-  OnError?: (e: any) => void
-	className?: string
-	src?: string
-	alt?: string
-	onClick?: () => void,
-	override?: boolean
+  className?: string
+  src?: string
+  alt?: string
+  onClick?: () => void
+  override?: boolean
 }
 
 export default function Avatar({
@@ -16,17 +16,28 @@ export default function Avatar({
   alt = "haha",
   onClick,
   override = false,
-  OnError,
 }: Props) {
+  const [fallback, setFallback] = useState<boolean>(false)
 
-	return (
-		<Image
-			onClick={onClick}
-			className={` ${!override && "rounded-full"} ${onClick && ' transition-opacity cursor-pointer hover:opacity-50'}  object-cover   drop-shadow-lg  ${className}`}
-			src={src || "https://steamavatar.io/img/1477742944DNm1y.jpg"}
-			alt={alt}
-			width={250}
-			height={250}
-		/>
-	)
+  const setDefaultAvatar = (e) => {
+    if (fallback) return
+    setTimeout(() => {
+      e.target.src = env.defaultAvatar
+    }, 200)
+    setFallback(true)
+  }
+
+  return (
+    <Image
+      onClick={onClick}
+      className={` ${!override && "rounded-full"} ${
+        onClick && " transition-opacity cursor-pointer hover:opacity-50"
+      }  object-cover   drop-shadow-lg  ${className}`}
+      src={src || "https://steamavatar.io/img/1477742944DNm1y.jpg"}
+      alt={alt}
+      width={250}
+      height={250}
+      onError={setDefaultAvatar}
+    />
+  )
 }

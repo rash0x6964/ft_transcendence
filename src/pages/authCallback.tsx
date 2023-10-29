@@ -18,21 +18,25 @@ const Page: NextPage = () => {
   const providerCookie = getProvdierCookie()
 
   const signIn = () => {
+	console.log("in")
     setJwtCookie(infoCookie)
     deleteInfoCookie()
     router.replace("/")
   }
   const linkAccount = () => {
+	console.log("link")
+
     deleteProviderCookie()
     addProvider({ providerInfoToken: providerCookie })
       .then((res) => {})
       .catch((err) => {
         console.log(err)
       })
-    router.replace("/settings/security")
   }
 
   const signUp = () => {
+	console.log("up")
+
     deleteProviderCookie()
     createByProvider({ providerInfoToken: providerCookie })
       .then((res) => {
@@ -50,7 +54,9 @@ const Page: NextPage = () => {
         signUp()
       } else router.replace("/signup")
     } else {
-      linkAccount()
+      if (providerCookie) linkAccount()
+      else deleteInfoCookie()
+      router.replace("/settings/security")
     }
   }, [])
 

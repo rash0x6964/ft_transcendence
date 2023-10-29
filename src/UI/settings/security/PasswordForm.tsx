@@ -1,24 +1,33 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import Lock from "../../../components/svgs/Lock"
 import Input from "@/components/BaseComponents/Input"
 import MainButton from "@/components/BaseComponents/MainButton"
 import { updatePassword } from "@/services/UsersService"
+import NotifData from "@/types/NotifData"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import axios from "axios"
 
 export default function PasswordForm() {
   const [password, setPassword] = useState<string>("")
   const [newPassword, setNewPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     if (!password || !newPassword) return
-    if (newPassword !== confirmPassword) return
-    if (newPassword.length < 8) return
+    if (newPassword !== confirmPassword)
+      return notify({
+        message: "new password is not matching",
+        title: "Validation Error",
+        type: "error",
+      })
     try {
-      const user = await updatePassword({ password, newPassword })
-      console.log(user)
+      await updatePassword({ password, newPassword })
     } catch (err) {
-      console.log(err)
+      if (axios.isAxiosError(err)) {
+        console.log(err)
+      }
     }
   }
 

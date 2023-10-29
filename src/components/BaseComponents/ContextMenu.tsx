@@ -63,7 +63,7 @@ export function useContextMenu(menuRef: any): [isClicked: boolean, setClicked: R
 			}
 		}
 		document.addEventListener("mousedown", handler);
-		() => {
+		return () => {
 			document.removeEventListener("mousedown", handler)
 		}
 	}, [])

@@ -1,14 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import ChatInput from "./ChatInput";
 import Input from "./ChatInput";
 import Sword from "@/components/svgs/Sword";
 import AddFile from "@/components/svgs/AddFile";
 import Send from "@/components/svgs/Send";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 type Props = {
 	uploading: boolean;
 	onChallenge?: () => void;
 	onSend?: (value: string) => void;
-	onFile?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onFile?: (formData: FormData) => void;
 	className?: string;
 };
 export default function ChatInputs({
@@ -20,6 +21,7 @@ export default function ChatInputs({
 }: Props) {
 	const [content, setContent] = useState("");
 	const fileRef = useRef<HTMLInputElement>(null);
+	const notify = useContext(NotifcationContext);
 
 	const handleSend = () => {
 		if (content == "")
@@ -28,7 +30,24 @@ export default function ChatInputs({
 		setContent("");
 	}
 
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		let formData = new FormData();
 
+		if (!e.target.files || e.target.files.length <= 0)
+			return;
+		if (e.target.files[0].size > 1000 * 1000 * 10) {
+			notify({
+				message: "file is larger then 10 MB",
+				type: "notice",
+				title: "file upload"
+			})
+			return;
+		}
+		formData.append("file", e.target.files[0], e.target.files[0].name);
+
+		onFile && onFile(formData);
+
+	}
 
 	return (
 		<div className={`flex gap-2 ${className}`}>
@@ -53,7 +72,7 @@ export default function ChatInputs({
 				onClick={() => fileRef && fileRef.current?.click()}
 				className="h-16 w-16 drop-shadow-lg bg-secondary rounded-xl group"
 			>
-				<input onChange={onFile} ref={fileRef} className="hidden" type="file" />
+				<input onChange={handleFileChange} ref={fileRef} className="hidden" type="file" />
 				<AddFile
 					className="mx-auto group-hover:scale-125 transition-transform"
 					width={24}

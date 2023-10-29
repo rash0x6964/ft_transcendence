@@ -20,10 +20,10 @@ type Props =
 
 export default function Chat({ channelData }: Props) {
 	const socket = useContext(WebSocketContext);
-	const notify = useContext(NotifcationContext);
 	const chatRef = useRef<HTMLDivElement>(null);
 	const isChannel = () => (channelData as Channel)?.visibility != undefined;
-
+	const channelCheck = (messages: Message[]) => messages.length > 0 && (messages[0].channelID ?? messages[0].directmessageID) == channelData?.id;
+	const channelCheckM = (message: Message) => (message.channelID ?? message.directmessageID) == channelData?.id;
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [sent, setSent] = useState(false);
@@ -36,38 +36,20 @@ export default function Chat({ channelData }: Props) {
 	)
 
 
-
-
 	const handleSend = (val: string, attachement: Attachment | undefined = undefined) => {
-		if (!isChannel() && channelData)
-			MessageService.sendDmMessage(val, channelData.id, attachement).then(data => {
-				socket?.emit("privateMessage", { token: getJwtCookie(), data: data.data });
-			}).catch(err => {
 
-			})
-		if (isChannel() && channelData)
-			MessageService.sendChannelMessage(val, channelData.id, attachement).then(data => {
-				socket?.emit("channelMessage", { token: getJwtCookie(), data: data.data });
-			}).catch(err => {
+		if (!channelData)
+			return;
+		let emitEvent = isChannel() ? "channelMessage" : "privateMessage";
+		MessageService.sendMessage(val, channelData.id, isChannel(), attachement).then(data => {
+			socket?.emit(emitEvent, { token: getJwtCookie(), data: data.data });
+		}).catch(err => {
 
-			})
+		})
 
 
 	}
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let formData = new FormData();
-
-		if (!e.target.files || e.target.files.length <= 0)
-			return;
-		if (e.target.files[0].size > 1000 * 1000 * 10) {
-			notify({
-				message: "file is larger then 10 MB",
-				type: "notice",
-				title: "file upload"
-			})
-			return;
-		}
-		formData.append("file", e.target.files[0], e.target.files[0].name);
+	const handleFileChange = (formData: FormData) => {
 
 
 		let upDir: "messages" | "channels" = isChannel() ? "channels" : "messages"
@@ -91,25 +73,15 @@ export default function Chat({ channelData }: Props) {
 		setLoaders(prevState => { return { ...prevState, paginating: true } })
 		//delay because the animation is too flashy
 		await new Promise((x => setTimeout(x, 500)));
-		if (!isChannel())
-			MessageService.getDmMessages(channelData.id, messages.length).then(({ data }: { data: Message[] }) => {
-				setMessages(prevState => [...data.reverse(), ...prevState]);
-				setLoaders(prevState => { return { ...prevState, paginating: false } })
-			}).catch(err => {
-				setLoaders(prevState => { return { ...prevState, paginating: false } })
+		MessageService.getMessages(channelData.id, isChannel(), messages.length).then(({ data }: { data: Message[] }) => {
+			setLoaders(prevState => { return { ...prevState, paginating: false } })
+			if (!channelCheck(data))
+				return
+			setMessages(prevState => [...data.reverse(), ...prevState]);
+		}).catch(err => {
+			setLoaders(prevState => { return { ...prevState, paginating: false } })
 
-			})
-		else if (isChannel())
-			MessageService.getChannelMessage(channelData.id, messages.length).then(({ data }: { data: Message[] }) => {
-
-				setMessages(prevState => [...data.reverse(), ...prevState]);
-				setLoaders(prevState => { return { ...prevState, paginating: false } })
-
-			}).catch(err => {
-				setLoaders(prevState => { return { ...prevState, paginating: false } })
-
-			})
-
+		})
 	}
 
 	useEffect(() => {
@@ -124,7 +96,8 @@ export default function Chat({ channelData }: Props) {
 			return;
 		let handler = (data: Message) => {
 
-			if (!isChannel() && (channelData as DirectMessage).id != data.directmessageID)
+
+			if (!channelCheckM(data))
 				return;
 			setMessages((prevState) => [...prevState, data])
 			setSent(prevState => !prevState)
@@ -144,31 +117,19 @@ export default function Chat({ channelData }: Props) {
 		if (!channelData)
 			return;
 		setLoaders(prevState => { return { ...prevState, loadingMsgs: true } })
-		if (!isChannel())
-			MessageService.getDmMessages(channelData.id).then(({ data }: { data: Message[] }) => {
-				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
-				setMessages(data.reverse());
-				setSent(prevState => !prevState)
+		MessageService.getMessages(channelData.id, isChannel()).then(({ data }: { data: Message[] }) => {
+			setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+			if (!channelCheck(data))
+				return;
+			setMessages(data.reverse());
+			setSent(prevState => !prevState)
 
-			}).catch(err => {
-				setMessages([]);
+		}).catch(err => {
+			setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+			setMessages([]);
 
-				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+		})
 
-			})
-		else if (isChannel())
-			MessageService.getChannelMessage(channelData.id).then(({ data }: { data: Message[] }) => {
-				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
-
-				setMessages(data.reverse());
-				setSent(prevState => !prevState)
-
-			}).catch(err => {
-				setMessages([]);
-
-				setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
-
-			})
 	}, [channelData])
 
 

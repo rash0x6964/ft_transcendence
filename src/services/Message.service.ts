@@ -9,41 +9,28 @@ class FriendService {
 
 	private endPoint = "/message"
 
-	getChannelMessage(channelID: string, offset: number = 0, limit: number = 20) {
-		return HttpClient.get(`${this.endPoint}?channelID=${channelID}&offset=${offset}&limit=${limit}`);
+	getMessages(id: string, isChannel: boolean, offset: number = 0, limit: number = 20) {
+		if (isChannel)
+			return HttpClient.get(`${this.endPoint}?channelID=${id}&offset=${offset}&limit=${limit}`);
+		return HttpClient.get(`${this.endPoint}?dmID=${id}&offset=${offset}&limit=${limit}`);
 	}
 
-	getDmMessages(DmID: string, offset: number = 0, limit: number = 20) {
-		return HttpClient.get(`${this.endPoint}?dmID=${DmID}&offset=${offset}&limit=${limit}`);
-	}
-
-	sendDmMessage(val: string, dmID: string, attachment: Attachment | undefined = undefined) {
 
 
-		let data =
+	sendMessage(val: string, id: string, isChannel: boolean, attachment: Attachment | undefined = undefined) {
+
+
+		let data: any =
 		{
+			dmMessage: !isChannel,
 			content: val,
-			dmMessage: true,
-			directmessageID: dmID,
 			attachment: attachment
 
 		}
-
-
-		return HttpClient.post(`${this.endPoint}`, data);
-	}
-
-	sendChannelMessage(val: string, channelID: string, attachment: Attachment | undefined = undefined) {
-
-
-		let data =
-		{
-			dmMessage: false,
-			content: val,
-			channelID: channelID,
-			attachment: attachment
-
-		}
+		if (isChannel)
+			data["channelID"] = id;
+		else
+			data["directmessageID"] = id;
 
 
 		return HttpClient.post(`${this.endPoint}`, data);

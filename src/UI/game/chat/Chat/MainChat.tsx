@@ -26,8 +26,6 @@ export default function MainChat({ className, messages, chatRef, loading, onPagi
 
 		let scrollHandler = (e: any) => {
 			if (prevValue && prevValue > e.currentTarget.scrollTop && e.currentTarget.scrollTop < 100) {
-				console.log("yes");
-
 				onPaginate && onPaginate();
 			}
 			prevValue = e.currentTarget.scrollTop;

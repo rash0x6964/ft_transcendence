@@ -23,4 +23,17 @@ interface Channel {
 	message: Message[];
 }
 
-export type { Channel, ChannelUser };
+interface CreateChannel {
+	imageUrl: string;
+	name: string;
+	password?: string;
+	visibility: "PRIVATE" | "PUBLIC" | "PROTECTED";
+}
+
+interface JoinChannel {
+	channelID: string;
+  password?: string;
+}
+
+
+export type { Channel, ChannelUser, CreateChannel, JoinChannel };

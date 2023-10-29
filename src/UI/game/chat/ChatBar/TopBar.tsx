@@ -22,6 +22,10 @@ export default function TopBar({ DMList,onChange }: Props) {
     setDialogueState(false);
   };
 
+  const saveChannel = () => {
+    setDialogueState(true);
+  };
+
   return (
     <div className="flex gap-2 mb-4">
       <Input
@@ -42,7 +46,7 @@ export default function TopBar({ DMList,onChange }: Props) {
         onBackDropClick={() => setDialogueState(true)}
         closed={dialogueState}
       >
-        <CreateChannelDialBox />
+        <CreateChannelDialBox handler={saveChannel}/>
       </Dialogue>
     </div>
   );

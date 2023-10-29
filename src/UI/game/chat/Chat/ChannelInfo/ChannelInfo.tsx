@@ -35,9 +35,8 @@ export default function ChannelInfo({ channelID }: Props) {
         setChannelInfo(response.data);
       })
       .catch((err) => {
-        //error
       });
-  }, []);
+  }, [channelID]);
 
   let memberList: ChannelUser[] = channelInfo.filter((item) => {
     return item.role == "MEMBER";

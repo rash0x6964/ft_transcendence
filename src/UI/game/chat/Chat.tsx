@@ -85,7 +85,6 @@ export default function Chat({ channelData }: Props) {
 
 	const handlePaginate = async () => {
 
-		return;
 		if (!channelData)
 			return
 

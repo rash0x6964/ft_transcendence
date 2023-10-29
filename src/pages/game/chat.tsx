@@ -11,11 +11,13 @@ import ChannelSevice from "@/services/Channel.sevice";
 import DMService from "@/services/DMService";
 import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "../_app";
+import { useRouter } from "next/router";
 
 const Page: NextPageWithLayout = () => {
 	const [channelList, setChannelList] = useState<Channel[]>([]);
 	const [DMList, setDMList] = useState<DirectMessage[]>([]);
 	const [selected, setSelected] = useState<DirectMessage | Channel>();
+	const router = useRouter();
 
 	const isChannel = () => {
 		return (selected as Channel)?.visibility != undefined;
@@ -25,7 +27,9 @@ const Page: NextPageWithLayout = () => {
 		DMService.getDMList()
 			.then(({ data }: { data: DirectMessage[] }) => {
 				setDMList(data);
-				if (data.length > 0)
+				if (router.query?.type == "DM")
+					setSelected(data.find(x => x.id == router.query?.id))
+				else if (data.length > 0)
 					setSelected(data[0]);
 
 			})
@@ -36,7 +40,9 @@ const Page: NextPageWithLayout = () => {
 		ChannelSevice.getChannelList()
 			.then(({ data }: { data: Channel[] }) => {
 				setChannelList(data);
-				if (data.length > 0 && selected != undefined)
+				if (router.query?.type == "channel")
+					setSelected(data.find(x => x.id == router.query?.id))
+				else if (data.length > 0 && selected != undefined)
 					setSelected(data[0]);
 			})
 			.catch((err) => {

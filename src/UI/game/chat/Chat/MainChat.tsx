@@ -23,20 +23,21 @@ export default function MainChat({ className, messages, chatRef, loading, onPagi
 		if (!chatRef.current)
 			return;
 		let prevValue: number | null = null;
-		let called = false;
+
 		let scrollHandler = (e: any) => {
-			if (!called && prevValue && prevValue > e.currentTarget.scrollTop && e.currentTarget.scrollTop < 100) {
+			if (prevValue && prevValue > e.currentTarget.scrollTop && e.currentTarget.scrollTop < 100) {
+				console.log("yes");
+
 				onPaginate && onPaginate();
-				called = true;
 			}
 			prevValue = e.currentTarget.scrollTop;
 
 
 		}
-		chatRef.current.addEventListener("scroll", scrollHandler);
+		chatRef.current.addEventListener("scrollend", scrollHandler);
 
 		return () => {
-			chatRef.current?.removeEventListener("scroll", scrollHandler);
+			chatRef.current?.removeEventListener("scrollend", scrollHandler);
 		}
 
 	}, [messages])

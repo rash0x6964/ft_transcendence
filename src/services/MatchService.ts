@@ -10,6 +10,12 @@ class MatchService {
     return HttpClient.get(`${this.endpoint}`).then(result => result.data)
   }
 
+  getLatestMatches(take: number): Promise<Match[]> {
+    return HttpClient.get(`${this.endpoint}/latest/${take}`).then(
+      result => result.data
+    )
+  }
+
   getStats() {
     return HttpClient.get(`${this.endpoint}/stats`).then(result => result.data)
   }

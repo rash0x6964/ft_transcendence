@@ -11,14 +11,12 @@ const Page: NextPage = () => {
   const providerCookie = cookieService.getProvdierCookie()
 
   const signIn = () => {
-    console.log("in")
     cookieService.setJwtCookie(infoCookie)
     cookieService.deleteInfoCookie()
     router.replace("/")
   }
-  const linkAccount = () => {
-    console.log("link")
 
+  const linkAccount = () => {
     cookieService.deleteProviderCookie()
     userService
       .addProvider({ providerInfoToken: providerCookie })
@@ -29,8 +27,6 @@ const Page: NextPage = () => {
   }
 
   const signUp = () => {
-    console.log("up")
-
     cookieService.deleteProviderCookie()
     userService
       .createByProvider({ providerInfoToken: providerCookie })

@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { getInfoCookie, getJwtCookie } from "@/services/CookiesService"
+import cookieService from "@/services/CookiesService"
 import { useRouter } from "next/router"
 
 export default function AuthProvider({ children }: PropsWithChildren) {
@@ -8,7 +8,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const curentPath = usePathname()
   const router = useRouter()
 
-  if (!getJwtCookie() && !publicRoutes.includes(curentPath))
+  if (!cookieService.getJwtCookie() && !publicRoutes.includes(curentPath))
     router.push("/signin")
   return <>{children} </>
 }

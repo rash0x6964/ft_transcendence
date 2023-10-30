@@ -25,7 +25,7 @@ const Page: NextPageWithLayout = () => {
   else
     return (
       <div className="flex flex-col h-full">
-        <HeadTitle>Profile | {router.query.username}</HeadTitle>
+        <HeadTitle>Profile | {username}</HeadTitle>
 
         <div className="relative">
           <BannerProfile />

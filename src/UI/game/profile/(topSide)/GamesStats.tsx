@@ -24,7 +24,11 @@ export default function GamesStats({ profile, userData, stats }: Props) {
         <div className="bg-gray-700 h-16 my-auto w-[1px]"></div>
         <Stat title="Longest winstreak" value={String(stats.winstreak)} />
       </div>
-      <CenterProfile avatarUrl={userData.avatarUrl} rating={profile.rating} />
+      <CenterProfile
+        avatarUrl={userData.avatarUrl}
+        rating={profile.rating}
+        username={userData.userName}
+      />
       <LevelCube level={level} percentage={percentage} />
     </div>
   )

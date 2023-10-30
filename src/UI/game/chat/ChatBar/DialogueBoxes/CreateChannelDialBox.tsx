@@ -44,6 +44,10 @@ export default function CreateChannelDialBox({ handler }: Props) {
       });
   };
 
+  const onFileChange = (e: any) => {
+    console.log('e: ', e.target.file)
+  }
+
   return (
     <div className="gradient-border-2  p-4 rounded-xl ">
       <div className="flex relative">
@@ -52,6 +56,13 @@ export default function CreateChannelDialBox({ handler }: Props) {
         </div>
         <div className="absolute top-[172px] right-[172px] w-7 h-7 bg-gray-200 rounded-full items-center flex  border-gray-500 border-2">
           <Plus width={16} height={16} className="text-black mx-auto" />
+          <input
+            type="file"
+            className="opacity-0 rounded-full cursor-pointer"
+            accept="image/png, image/jpeg"
+            onChange={onFileChange}
+            name="banners"
+          ></input>
         </div>
       </div>
       <Input

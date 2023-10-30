@@ -5,7 +5,7 @@ import Loader from "@/components/BaseComponents/Loader";
 import FriendRequestService from "@/services/FriendRequest.service";
 import FriendRequests from "@/models/FriendRequest.model";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
-import { getJwtCookie } from "@/services/CookiesService";
+import cookieService from "@/services/CookiesService";
 export default function FriendRequestsDialBox() {
 	const socket = useContext(WebSocketContext);
 	const [requests, setRequests] = useState<FriendRequests[]>([]);
@@ -38,7 +38,7 @@ export default function FriendRequestsDialBox() {
 
 	const handleAccept = (data: FriendRequests) => {
 		FriendRequestService.acceptRequest(data).then(() => {
-			socket?.emit("friendAction", { token: getJwtCookie(), data }).emit("friendReqAction", { token: getJwtCookie(), data });
+			socket?.emit("friendAction", { token: cookieService.getJwtCookie(), data }).emit("friendReqAction", { token: getJwtCookie(), data });
 			setRefresh(prevState => !prevState)
 		}).catch((err) => {
 			alert("error")
@@ -48,7 +48,7 @@ export default function FriendRequestsDialBox() {
 
 	const handleDecline = (data: FriendRequests) => {
 		FriendRequestService.deleteRequest(data).then(() => {
-			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data });
+			socket?.emit("friendReqAction", { token: cookieService.getJwtCookie(), data: data });
 			setRefresh(prevState => !prevState)
 		}).catch((err) => {
 			alert("error")

@@ -5,7 +5,7 @@ import MainChat from "./Chat/MainChat";
 import Message from "@/models/Message.model";
 import MessageService from "@/services/Message.service";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
-import { getJwtCookie } from "@/services/CookiesService";
+import cookieService from "@/services/CookiesService";
 import { Channel } from "@/models/Channel.model";
 import UploadService from "@/services/Upload.service";
 import Attachment from "@/models/Attachment.model";
@@ -41,7 +41,7 @@ export default function Chat({ channelData }: Props) {
 			return;
 		let emitEvent = isChannel() ? "channelMessage" : "privateMessage";
 		MessageService.sendMessage(val, channelData.id, isChannel(), attachement).then(data => {
-			socket?.emit(emitEvent, { token: getJwtCookie(), data: data.data });
+			socket?.emit(emitEvent, { token: cookieService.getJwtCookie(), data: data.data });
 		}).catch(err => {
 
 		})

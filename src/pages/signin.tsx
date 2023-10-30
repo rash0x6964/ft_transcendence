@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react"
+import React, { ReactElement, useContext, useState } from "react"
 import MainBtn from "@/components/BaseComponents/MainButton"
 import Input from "@/components/BaseComponents/Input"
 import AuthBtn from "@/components/BaseComponents/AuthButton"
@@ -9,49 +9,41 @@ import Logo from "@/components/svgs/Logo"
 import AuthLayout from "@/UI/AuthLayout"
 import { NextPageWithLayout } from "./_app"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
-import { object, string } from "yup"
 import { signIn } from "@/services/AuthService"
 import { setJwtCookie } from "@/services/CookiesService"
 import { useRouter } from "next/navigation"
-import { AxiosError } from "axios"
-
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import NotifData from "@/types/NotifData"
 const audiowide = Audiowide({
-	weight: "400",
-	subsets: ["latin"],
-	display: "swap",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 })
 
 const Page: NextPageWithLayout = () => {
-	const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
-	const router = useRouter()
-
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const router = useRouter()
+  const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    let userSchema = object({
-      username: string().min(3).max(20).required(),
-      password: string().min(8).required(),
-    })
-    let parsedUser
+    if (!(password && username))
+      return notify({
+        message: "username and password are required",
+        title: "Sign In Error",
+        type: "error",
+      })
     try {
-      parsedUser = userSchema.validateSync(
-        {
-          username,
-          password,
-        },
-        { strict: true }
-      )
-    } catch (err) {
-      console.log(err)
-      return
-    }
-    try {
-      const { access_token } = await signIn(parsedUser)
+      const { access_token } = await signIn({ username, password })
       setJwtCookie(access_token)
       router.push("/")
     } catch (err: any) {
-      console.log(err)
+      notify({
+        message: "You have entered an invalid username or password",
+        title: "Sign In Error",
+        type: "error",
+      })
     }
   }
   return (
@@ -122,7 +114,7 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return <AuthLayout>{page}</AuthLayout>
+  return <AuthLayout>{page}</AuthLayout>
 }
 
 export default Page

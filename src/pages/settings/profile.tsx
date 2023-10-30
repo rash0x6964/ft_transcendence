@@ -7,27 +7,30 @@ import Avatar from "@/components/BaseComponents/Avatar"
 import Change from "@/UI/settings/icons/Change"
 import { NextPageWithLayout } from "../_app"
 import SettingLayout from "@/UI/SettingLayout"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useContext, useEffect, useState } from "react"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
-import { object, string } from "yup"
+import { ValidationError, object, string } from "yup"
 import { getCurrent, update, uploadPhoto } from "@/services/UsersService"
 import env from "@/environment/environment"
 import Image from "next/image"
 import { User } from "@/types/User"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import NotifData from "@/types/NotifData"
+import axios from "axios"
 
 const Page: NextPageWithLayout = () => {
+  const notify: (data: NotifData) => void = useContext(NotifcationContext)
   const [username, setUsername] = useState<string>("")
   const [email, setMail] = useState<string>("")
   const [fullname, setFullname] = useState<string>("")
   const [user, setUser] = useState<User>()
   const [fallback, setFallback] = useState<boolean>(false)
-  const [fallbackAvatar, setFallbackAvatar] = useState<boolean>(false)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     let userSchema = object({
-      userName: string().min(3).max(20),
-      fullName: string().min(3).max(20),
+      userName: string().min(3).max(60),
+      fullName: string().min(3).max(60),
       email: string().email(),
     })
     let parsedUser
@@ -41,25 +44,34 @@ const Page: NextPageWithLayout = () => {
         { strict: true }
       )
     } catch (err) {
-      console.log(err)
+      if (err instanceof ValidationError) {
+        notify({
+          message: err.errors[0],
+          title: "Validation Error",
+          type: "error",
+        })
+      }
       return
     }
     try {
-      console.log(parsedUser)
       const user = await update(parsedUser)
       setUser(user)
       setFullname(user.fullName)
       setUsername(user.userName)
       setMail(user.email)
       setFallback(false)
-      setFallbackAvatar(false)
     } catch (err) {
-      console.log(err)
+      if (axios.isAxiosError(err)) {
+        notify({
+          message: err.response?.data?.message,
+          title: "Validation Error",
+          type: "error",
+        })
+      }
     }
   }
 
   const updatePhoto = (url: string, type: string) => {
-    console.log("url :", url)
     if (type == "banners") return update({ bannerUrl: url })
     else return update({ avatarUrl: url })
   }
@@ -72,10 +84,14 @@ const Page: NextPageWithLayout = () => {
       const res = await uploadPhoto(formdata, e.target.name)
       const user = await updatePhoto(res[0].url, e.target.name)
       setUser(user)
-      setFallback(false)
-      setFallbackAvatar(false)
     } catch (err) {
-      console.log(err)
+      if (axios.isAxiosError(err)) {
+        notify({
+          message: err.response?.data?.message,
+          title: "Validation Error",
+          type: "error",
+        })
+      }
     }
   }
   const getUser = async () => {
@@ -84,21 +100,6 @@ const Page: NextPageWithLayout = () => {
     setFullname(currentUser.fullName)
     setUsername(currentUser.userName)
     setMail(currentUser.email)
-  }
-  const reloadBanner = (e) => {
-    if (fallback || !user) return
-    setTimeout(() => {
-      e.target.src = `${env.endPoint}${user.bannerUrl}`
-    }, 200)
-    setFallback(true)
-  }
-
-  const reloadAvatar = (e) => {
-    if (fallbackAvatar || !user) return
-    setTimeout(() => {
-      e.target.src = `${env.endPoint}${user.avatarUrl}`
-    }, 200)
-    setFallbackAvatar(true)
   }
 
   useEffect(() => {
@@ -117,14 +118,9 @@ const Page: NextPageWithLayout = () => {
         <Image
           width={680}
           height={128}
-          src={
-            user
-              ? `${env.endPoint}/${user.bannerUrl}`
-              : "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
-          }
+          src={user?.bannerUrl ?? env.defaultBanner}
           alt="W3Schools.com"
           className="w-[680px] h-32  object-cover  mx-auto rounded-xl border-2"
-          onError={reloadBanner}
         />
         <div className="relative -top-3 left-[735px] w-[22px] h-[22px]">
           <Change className="cursor-pointer" />
@@ -138,14 +134,9 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div className=" absolute top-10 left-10">
           <Avatar
-            src={
-              user
-                ? `${env.endPoint}/${user.avatarUrl}`
-                : "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg"
-            }
+            src={user?.avatarUrl ?? env.defaultAvatar}
             alt="W3Schools.com"
             className="w-28 h-28 rounded-full relative border-2"
-            OnError={reloadAvatar}
           />
           <div className="relative -top-7 left-20 w-[22px] h-[22px] ">
             <Change className="cursor-pointer" />
@@ -166,21 +157,21 @@ const Page: NextPageWithLayout = () => {
             <Input
               placeholder="Full name"
               icon={<Pen />}
-              value={fullname}
+              value={fullname ?? ""}
               onChange={(e) => setFullname(e.target.value)}
               className="bg-big-stone w-[332px] min-w-[300px] h-11  "
             />
             <Input
               placeholder="Username"
               icon={<Person />}
-              value={username}
+              value={username ?? ""}
               onChange={(e) => setUsername(e.target.value)}
               className="bg-big-stone w-[332px] min-w-[300px]  h-11"
             />
             <Input
               placeholder="Mail"
               icon={<Mail />}
-              value={email ? email : ""}
+              value={email ?? ""}
               onChange={(e) => setMail(e.target.value)}
               className="w-[332px] min-w-[300px]  bg-big-stone  h-11"
             />

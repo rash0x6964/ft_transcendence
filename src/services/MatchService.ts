@@ -10,6 +10,10 @@ class MatchService {
     return HttpClient.get(`${this.endpoint}`).then(result => result.data)
   }
 
+  getStats() {
+    return HttpClient.get(`${this.endpoint}/stats`).then(result => result.data)
+  }
+
   async getMatchProps(matches: Match[]): Promise<MatchDisplayData[]> {
     function datediff(first: number, second: number) {
       return Math.round((second - first) / (1000 * 60 * 60 * 24))

@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react"
 import GamesStats from "./GamesStats"
-import ProfileService from "@/services/ProfileService"
-import Profile from "@/models/Profile.model"
-import User from "@/models/User.model"
-import { getCurrent } from "@/services/UsersService"
 import matchService from "@/services/MatchService"
 import MatchesStats from "@/types/MatchesStats"
+import profileService from "@/services/ProfileService"
+import ProfileData from "@/models/ProfileData.model"
 
-export default function PlayerInfoBar() {
-  const [profile, setProfile] = useState({} as Profile)
-  const [userData, setUserData] = useState({} as User)
+type Props = {
+  username: string
+}
+
+export default function PlayerInfoBar({ username }: Props) {
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [stats, setStats] = useState({} as MatchesStats)
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const _profile = await ProfileService.getCurrentProfile()
-      const _userData = await getCurrent()
-      setProfile(_profile)
-      setUserData(_userData)
+    if (!username) return
+
+    const fetchProfileData = async () => {
+      const _profileData = await profileService.getProfileDataByUsername(
+        username
+      )
+      setProfileData(_profileData)
     }
 
     const fetchStats = async () => {
@@ -25,13 +28,15 @@ export default function PlayerInfoBar() {
       setStats(_stats)
     }
 
-    fetchProfile()
+    fetchProfileData()
     fetchStats()
-  }, [])
+  }, [username])
 
-  return (
-    <div className="relative -top-24 bg-secondary rounded-[40px] -mb-24 m-10">
-      <GamesStats profile={profile} userData={userData} stats={stats} />
-    </div>
-  )
+  if (!profileData) return <div>Loading ...</div>
+  else
+    return (
+      <div className="relative -top-24 bg-secondary rounded-[40px] -mb-24 m-10">
+        <GamesStats profileData={profileData} stats={stats} />
+      </div>
+    )
 }

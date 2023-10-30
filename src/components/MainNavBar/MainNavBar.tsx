@@ -1,4 +1,3 @@
-"use client"
 import React, { useEffect, useState } from "react"
 import PlayerName from "./PlayerName"
 import PlayerCoins from "./PlayerCoins"
@@ -13,6 +12,7 @@ import User from "@/models/User.model"
 import { getCurrent } from "@/services/UsersService"
 import matchService from "@/services/MatchService"
 import Match from "@/models/Match.model"
+import Link from "next/link"
 type Props = {
   coins: number
   className: string
@@ -50,7 +50,9 @@ export default function MainNavBar({ coins, className }: Props) {
 
   return (
     <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
-      <Logo width={24} height={24} className="text-primary my-auto" />
+      <Link href="/game/profile/wow">
+        <Logo width={24} height={24} className="text-primary my-auto" />
+      </Link>
       <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
         <PlayerName src={userData.avatarUrl} name={userData.userName} />
         <PlayerCoins className="my-auto" coins={profile.coins} />

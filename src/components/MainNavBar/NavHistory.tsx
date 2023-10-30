@@ -16,7 +16,6 @@ export default function NavHistory({ matches, className, id }: Props) {
     match.winnerID === id ? (history[index] = "win") : (history[index] = "loss")
   })
 
-  console.log(history)
   return (
     <div className={className}>
       <div className="flex  gap-1 ">

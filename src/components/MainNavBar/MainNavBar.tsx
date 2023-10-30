@@ -11,6 +11,8 @@ import Profile from "@/models/Profile.model"
 import profileService from "@/services/ProfileService"
 import User from "@/models/User.model"
 import { getCurrent } from "@/services/UsersService"
+import matchService from "@/services/MatchService"
+import Match from "@/models/Match.model"
 type Props = {
   coins: number
   className: string
@@ -19,6 +21,7 @@ type Props = {
 export default function MainNavBar({ coins, className }: Props) {
   const [profile, setProfile] = useState({} as Profile)
   const [userData, setUserData] = useState({} as User)
+  const [latestMatches, setLatestMatches] = useState<Match[]>([])
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -31,9 +34,14 @@ export default function MainNavBar({ coins, className }: Props) {
       setUserData(_user)
     }
 
+    const fetchLatestMatches = async () => {
+      const _matches = await matchService.getLatestMatches(5)
+      setLatestMatches(_matches)
+    }
+
     fetchProfile()
     fetchUserData()
-    // fetchLatestMatches()
+    fetchLatestMatches()
   }, [])
 
   let history: boolean[] = [true, true, false, false, true]
@@ -46,7 +54,11 @@ export default function MainNavBar({ coins, className }: Props) {
       <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
         <PlayerName src={userData.avatarUrl} name={userData.userName} />
         <PlayerCoins className="my-auto" coins={profile.coins} />
-        <NavHistory className="my-auto" history={history} />
+        <NavHistory
+          className="my-auto"
+          matches={latestMatches}
+          id={userData.id}
+        />
         <PlayerLevel
           className="my-auto"
           level={profile.level}

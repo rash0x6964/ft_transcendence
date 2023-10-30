@@ -1,31 +1,39 @@
-import Achievement from "./Achievement"
+import AchievementEntry from "./AchievementEntry"
 import SectionTitle from "../SectionTitle"
+import { useEffect, useState } from "react"
+import achievementService from "@/services/AchievementService"
+import AchievementUser from "@/types/AchievementUser"
 
 export default function Achievements() {
-  const achievements = [
-    { name: "one" },
-    { name: "two" },
-    { name: "three" },
-    { name: "four" },
-    { name: "five" },
-    { name: "six" },
-    { name: "seven" },
-    { name: "eight" },
-    { name: "nine" },
-    { name: "ten" },
-    { name: "eleven" },
-    { name: "twelve" },
-    { name: "thirteen" },
-    { name: "fourteen" },
-    { name: "fifteen" },
-  ]
+  const [achievements, setAchievements] = useState<AchievementUser[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const promises = [
+        achievementService.getAllAchievements(),
+        achievementService.getUserAchievements(),
+      ]
+      const [allAchievements, userAchievements] = await Promise.all(promises)
+
+      const achievs: AchievementUser[] = allAchievements.map(achievement => {
+        return {
+          ...achievement,
+          active: userAchievements.find(ach => ach.id === achievement.id)
+            ? true
+            : false,
+        }
+      })
+      setAchievements(achievs)
+    }
+    fetchData()
+  }, [])
 
   return (
     <div className="bg-secondary rounded-2xl h-fit max-w-lg m-10">
       <SectionTitle text="Achievements" />
       <div className="flex flex-wrap justify-center">
         {achievements.map(achievement => (
-          <Achievement key={achievement.name} name={achievement.name} />
+          <AchievementEntry key={achievement.name} achievement={achievement} />
         ))}
       </div>
     </div>

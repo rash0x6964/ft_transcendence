@@ -1,4 +1,4 @@
-import MatchDisplayData from "@/types/Match"
+import MatchDisplayData from "@/types/MatchDisplayData"
 
 type Props = {
   match: MatchDisplayData

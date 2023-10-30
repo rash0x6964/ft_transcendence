@@ -1,4 +1,4 @@
-import MatchDisplayData from "@/types/Match"
+import MatchDisplayData from "@/types/MatchDisplayData"
 import Score from "./Score"
 import Avatar from "@/components/BaseComponents/Avatar"
 type Props = {

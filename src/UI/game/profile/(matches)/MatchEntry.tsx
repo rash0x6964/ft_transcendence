@@ -1,4 +1,4 @@
-import MatchDisplayData from "@/types/Match"
+import MatchDisplayData from "@/types/MatchDisplayData"
 import MatchInfo from "./MatchInfo"
 import ScoreBoard from "./ScoreBoard"
 

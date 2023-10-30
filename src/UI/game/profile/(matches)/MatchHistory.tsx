@@ -1,4 +1,4 @@
-import MatchDisplayData from "@/types/Match"
+import MatchDisplayData from "@/types/MatchDisplayData"
 import Player from "@/types/Player"
 import MatchEntry from "./MatchEntry"
 import SectionTitle from "../SectionTitle"
@@ -38,7 +38,7 @@ export default function MatchHistory() {
     <div className="m-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
-        {matches.map((match) => (
+        {matches.map(match => (
           <MatchEntry key={match.name} match={match} />
         ))}
       </div>

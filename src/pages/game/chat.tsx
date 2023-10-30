@@ -14,83 +14,103 @@ import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPers
 import DirectMessage from "@/models/DM.model";
 import DMService from "@/services/DMService";
 import { Channel } from "@/models/Channel.model";
-import ChannelSevice from "@/services/Channel.sevice";
+import ChannelService from "@/services/Channel.sevice";
 import FriendInfo from "@/UI/game/chat/FriendInfo/FriendInfo";
 
 const Page: NextPageWithLayout = () => {
-	const [channelList, setChannelList] = useState<Channel[]>([]);
-	const [DMList, setDMList] = useState<DirectMessage[]>([]);
-	const [selected, setSelected] = useState<DirectMessage | Channel>();
+  const [channelList, setChannelList] = useState<Channel[]>([]);
+  const [DMList, setDMList] = useState<DirectMessage[]>([]);
+  const [selected, setSelected] = useState<DirectMessage | Channel>();
+  const [dialogueState, setDialogueState] = useState(true);
 
-	const isChannel = () => {
-		return (selected as Channel)?.visibility != undefined;
-	};
+	const [channelTryingToJoin, setChannelTryingToJoin] = useState({})
 
-	useEffect(() => {
-		DMService.getDMList()
-			.then(({ data }: { data: DirectMessage[] }) => {
-				console.log(data);
-				setDMList(data);
-				if (data.length > 0)
-					setSelected(data[0]);
+
+  const isChannel = () => {
+    return (selected as Channel)?.visibility != undefined;
+  };
+
+  useEffect(() => {
+    DMService.getDMList()
+      .then(({ data }: { data: DirectMessage[] }) => {
+        setDMList(data);
+        if (data.length > 0) setSelected(data[0]);
+      })
+      .catch((err) => {
+        //error
+      });
+
+    ChannelService.getChannelList()
+      .then(({ data }: { data: Channel[] }) => {
+        setChannelList(data);
+        if (data.length > 0 && !selected) setSelected(data[0]);
+      })
+      .catch((err) => {
+        //error
+      });
+  }, []);
+
+  const clickOnChannel = (id: string) => {
+    const obj = channelList.find((item) => item.id == id);
+    if (obj) {
+      setDialogueState(true);
+      setSelected(obj);
+    } else {
+			ChannelService.getChannelById(id).then((res) => {
+				setChannelTryingToJoin(res.data);
+				console.log('res: ', res.data);
+			}).catch((err) => {
 
 			})
-			.catch((err) => {
-				//error
-			});
+      setDialogueState(false);
+    }
+  };
+  const clickOnDm = (id: string) => {
+    const obj = DMList.find((item) => item.id == id);
+    setSelected(obj);
+  };
 
-		ChannelSevice.getChannelList()
-			.then(({ data }: { data: Channel[] }) => {
-				setChannelList(data);
-				if (data.length > 0 && !selected)
-					setSelected(data[0]);
-			})
-			.catch((err) => {
-				//error
-			});
-	}, []);
+  return (
+    <div className="w-full  h-full flex gap-2">
+      <HeadTitle>Pong Fury | Chat</HeadTitle>
 
-	const clickOnChannel = (id: string) => {
-		const obj = channelList.find((item) => item.id == id);
-		setSelected(obj);
-	};
-	const clickOnDm = (id: string) => {
-		const obj = DMList.find((item) => item.id == id);
-		setSelected(obj);
-	};
+      <div className="h-full w-96">
+        <ChatBar
+          DMList={DMList}
+          channelList={channelList}
+          selectedId={selected?.id ?? ""}
+          clickOnDm={clickOnDm}
+          clickOnChannel={clickOnChannel}
+        />
+      </div>
+      <div className="flex-1 flex flex-col   h-full">
+        <Chat />
+      </div>
+      <div className=" h-full w-96">
+        {isChannel() && <ChannelInfo channelID={selected?.id ?? ""} />}
+        {!isChannel() && (
+          <FriendInfo friend={(selected as DirectMessage)?.friend} />
+        )}
+      </div>
 
-	return (
-		<div className="w-full  h-full flex gap-2">
-			<HeadTitle>Pong Fury | Chat</HeadTitle>
+      <Dialogue
+        onBackDropClick={() => setDialogueState(true)}
+        closed={dialogueState}
+      >
+        <JoinChannelDialBox channelInfo={channelTryingToJoin}/>
+      </Dialogue>
 
-			<div className="h-full w-96">
-				<ChatBar
-					DMList={DMList}
-					channelList={channelList}
-					selectedId={selected?.id ?? ""}
-					clickOnDm={clickOnDm}
-					clickOnChannel={clickOnChannel}
-				/>
-			</div>
-			<div className="flex-1 flex flex-col   h-full">
-				<Chat />
-			</div>
-			<div className=" h-full w-96">
-				{isChannel() && <ChannelInfo />}
-				{!isChannel() && <FriendInfo />}
-			</div>
-
-			<Dialogue closed={true}>
-				{/* <CreateChannelDialBox /> */}
-				{/* <EditChannelDialBox /> */}
-				{/* <JoinChannelDialBox /> */}
-			</Dialogue>
-		</div>
-	);
+      {/* <Dialogue closed={true}>
+				<CreateChannelDialBox />
+				<EditChannelDialBox />
+				<JoinChannelDialBox />
+			</Dialogue> */}
+    </div>
+  );
 };
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return <Layout>{page}</Layout>;
+  return <Layout>{page}</Layout>;
 };
 
 export default Page;

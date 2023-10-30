@@ -1,4 +1,4 @@
-import Match from "@/types/Match"
+import MatchDisplayData from "@/types/Match"
 import Player from "@/types/Player"
 import MatchEntry from "./MatchEntry"
 import SectionTitle from "../SectionTitle"
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import matchService from "@/services/MatchService"
 
 export default function MatchHistory() {
-  const [match, setMatch] = useState(new Array<Match>())
+  const [match, setMatch] = useState(new Array<MatchDisplayData>())
 
   const url =
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBLE2R35SV62Enw03QHS5AY-LUr6HOhmHvrA&usqp=CAU"
@@ -15,7 +15,7 @@ export default function MatchHistory() {
   const s_1: number = 5
   const s_2: number = 3
 
-  const matches: Match[] = [
+  const matches: MatchDisplayData[] = [
     { name: "one", type: "Normal", win: true, days: 3, p_1, p_2, s_1, s_2 },
     { name: "four", type: "Ranked", win: false, days: 3, p_1, p_2, s_1, s_2 },
     { name: "two", type: "Normal", win: false, days: 3, p_1, p_2, s_1, s_2 },

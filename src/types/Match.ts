@@ -1,6 +1,6 @@
 import Player from "./Player"
 
-export default interface Match {
+export default interface MatchDisplayData {
   p_1: Player
   p_2: Player
   s_1: number

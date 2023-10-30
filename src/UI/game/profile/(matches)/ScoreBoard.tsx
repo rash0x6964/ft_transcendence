@@ -1,8 +1,8 @@
-import Match from "@/types/Match"
+import MatchDisplayData from "@/types/Match"
 import Score from "./Score"
 import Avatar from "@/components/BaseComponents/Avatar"
 type Props = {
-  match: Match
+  match: MatchDisplayData
 }
 
 export default function ScoreBoard({ match }: Props) {

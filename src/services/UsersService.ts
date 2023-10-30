@@ -4,6 +4,7 @@ import env from "@/environment/environment"
 import { getJwtCookie } from "./CookiesService"
 import { ProviderToken } from "@/types/Auth"
 import { UpdatePassword, UpdateUser } from "@/types/User"
+import User from "@/models/User.model"
 
 export const update = (userData: UpdateUser) => {
   return HttpClient.patch("/users", userData).then((res) => res.data)
@@ -15,7 +16,7 @@ export const updatePassword = (passwordData: UpdatePassword) => {
   )
 }
 
-export const getCurrent = () => {
+export const getCurrent = (): Promise<User> => {
   return HttpClient.get("/users/current").then((res) => res.data)
 }
 

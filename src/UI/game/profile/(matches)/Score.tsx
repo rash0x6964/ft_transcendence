@@ -1,7 +1,7 @@
-import Match from "@/types/Match"
+import MatchDisplayData from "@/types/Match"
 
 type Props = {
-  match: Match
+  match: MatchDisplayData
 }
 
 export default function Score({ match }: Props) {

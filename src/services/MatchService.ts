@@ -1,7 +1,7 @@
 import Match from "@/models/Match.model"
 import { HttpClient } from "./HttpClient"
-import UserService from "./User.Service"
-import { getCurrent } from "./UsersService"
+import { getById, getCurrent } from "./UsersService"
+import MatchDisplayData from "@/types/Match"
 
 class MatchService {
   private endpoint = "/match"
@@ -10,9 +10,15 @@ class MatchService {
     return HttpClient.get(`${this.endpoint}`)
   }
 
-  getMatchProps(matches: Match[]) {
+  async getMatchProps(matches: Match[]): Promise<MatchDisplayData[]> {
+    const current = await getCurrent()
+
     return matches.map(async (match) => {
-      const current = await getCurrent()
+      const enemyId =
+        match.winnerID == current.id ? match.loserID : match.winnerID
+      const enemy = await getById(enemyId)
+
+      return {}
     })
   }
 }

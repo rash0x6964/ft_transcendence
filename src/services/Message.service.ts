@@ -1,5 +1,6 @@
 import Message from "@/models/Message.model";
 import { HttpClient } from "./HttpClient";
+import Attachment from "@/models/Attachment.model";
 
 
 
@@ -8,26 +9,33 @@ class FriendService {
 
 	private endPoint = "/message"
 
-	getChannelMessage(channelID: string) {
-		return HttpClient.get(`${this.endPoint}?channelID=${channelID}`);
+	getMessages(id: string, isChannel: boolean, offset: number = 0, limit: number = 20) {
+		if (isChannel)
+			return HttpClient.get(`${this.endPoint}?channelID=${id}&offset=${offset}&limit=${limit}`);
+		return HttpClient.get(`${this.endPoint}?dmID=${id}&offset=${offset}&limit=${limit}`);
 	}
 
-	getDmMessages(DmID: string) {
-		return HttpClient.get(`${this.endPoint}?dmID=${DmID}`);
-	}
-
-	sendDmMessage(val: string, dmID: string) {
 
 
-		let data =
+	sendMessage(val: string, id: string, isChannel: boolean, attachment: Attachment | undefined = undefined) {
+
+
+		let data: any =
 		{
+			dmMessage: !isChannel,
 			content: val,
-			dmMessage: true,
-			directmessageID: dmID
+			attachment: attachment
 
 		}
+		if (isChannel)
+			data["channelID"] = id;
+		else
+			data["directmessageID"] = id;
+
+
 		return HttpClient.post(`${this.endPoint}`, data);
 	}
+
 
 }
 

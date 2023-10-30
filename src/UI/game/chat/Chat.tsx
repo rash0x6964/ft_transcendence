@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Header from "./Chat/Header";
 import ChatInputs from "./Chat/ChatInputs";
 import MainChat from "./Chat/MainChat";
@@ -6,70 +6,145 @@ import Message from "@/models/Message.model";
 import MessageService from "@/services/Message.service";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
 import { getJwtCookie } from "@/services/CookiesService";
-export default function Chat() {
-	const socket = useContext(WebSocketContext);
-	const [messages, setMessages] = useState<Message[]>([]);
+import { Channel } from "@/models/Channel.model";
+import UploadService from "@/services/Upload.service";
+import Attachment from "@/models/Attachment.model";
+import DirectMessage from "@/models/DM.model";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
-	let channelData = {
-		"id": "clo79v0gp0001u5mg1ak3jwwi",
-		"friendID": "7b14f8de-4385-425b-9036-42d20bcf8ef2",
-		"avatarUrl": "https://avatars.githubusercontent.com/u/60697106?v=4",
-		"userName": "KINCH3RO",
-		"isSender": true,
-		"onlineStatus": false,
-		"lastMsg": [
-			{
-				"senderID": "9ad7136a-586c-4130-998a-722e6b250d77",
-				"content": "df",
-				"attachment": null
-			}
-		]
+
+type Props =
+	{
+		channelData: DirectMessage | Channel | undefined;
 	}
 
+export default function Chat({ channelData }: Props) {
+	const socket = useContext(WebSocketContext);
 	const chatRef = useRef<HTMLDivElement>(null);
+	const isChannel = () => (channelData as Channel)?.visibility != undefined;
+	const channelCheck = (messages: Message[]) => messages.length > 0 && (messages[0].channelID ?? messages[0].directmessageID) == channelData?.id;
+	const channelCheckM = (message: Message) => (message.channelID ?? message.directmessageID) == channelData?.id;
 
-	useEffect(() => {
-		if (chatRef.current)
-			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
-
-	}, [messages])
-
-	useEffect(() => {
-		MessageService.getDmMessages(channelData.id).then((data) => {
-			setMessages(data.data);
-		})
-
-		let handler = (data: Message) => {
-			setMessages((prevState) => [...prevState, data])
-
+	const [messages, setMessages] = useState<Message[]>([]);
+	const [sent, setSent] = useState(false);
+	const [loaders, setLoaders] = useState(
+		{
+			loadingMsgs: false,
+			uploading: false,
+			paginating: false
 		}
-		socket?.on("privateMessage", handler)
-
-		return () => {
-			socket?.off("privateMessage", handler)
-		}
-	}, [])
+	)
 
 
-	const handleSend = (val: string) => {
-		MessageService.sendDmMessage(val, channelData.id).then(data => {
-			socket?.emit("privateMessage", { token: getJwtCookie(), data: data.data });
-
+	const handleSend = (val: string, attachement: Attachment | undefined = undefined) => {
+		if (!channelData)
+			return;
+		let emitEvent = isChannel() ? "channelMessage" : "privateMessage";
+		MessageService.sendMessage(val, channelData.id, isChannel(), attachement).then(data => {
+			socket?.emit(emitEvent, { token: getJwtCookie(), data: data.data });
 		}).catch(err => {
 
 		})
+
+
 	}
+
+	const handleFileChange = (formData: FormData) => {
+		let upDir: "messages" | "channels" = isChannel() ? "channels" : "messages"
+		setLoaders(prevState => { return { ...prevState, uploading: true } })
+		UploadService.uploadFiles(upDir, formData).then(({ data }: { data: Attachment[] }) => {
+			setLoaders(prevState => { return { ...prevState, uploading: false } })
+			handleSend("", data[0]);
+
+		}).catch(err => {
+			setLoaders(prevState => { return { ...prevState, uploading: false } })
+		})
+	}
+
+	const handlePaginate = () => {
+
+		if (!channelData)
+			return
+		setLoaders(prevState => { return { ...prevState, paginating: true } })
+		//delay because the animation is too flashy
+		MessageService.getMessages(channelData.id, isChannel(), messages.length).then(({ data }: { data: Message[] }) => {
+			setLoaders(prevState => { return { ...prevState, paginating: false } })
+			if (!channelCheck(data))
+				return
+			setMessages(prevState => [...data.reverse(), ...prevState]);
+		}).catch(err => {
+			setLoaders(prevState => { return { ...prevState, paginating: false } })
+
+		})
+	}
+
+	useEffect(() => {
+		if (!channelData || loaders.paginating)
+			return;
+		if (chatRef.current)
+			chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
+	}, [sent])
+
+	useEffect(() => {
+		if (!channelData)
+			return;
+		let handler = (data: Message) => {
+
+
+			if (!channelCheckM(data))
+				return;
+			setMessages((prevState) => [...prevState, data])
+			setSent(prevState => !prevState)
+		}
+		socket?.on("privateMessage", handler)
+		socket?.on("channelMessage", handler);
+
+		return () => {
+			socket?.off("privateMessage", handler)
+			socket?.off("channelMessage", handler);
+
+		}
+	}, [channelData])
+
+	useEffect(() => {
+
+		if (!channelData)
+			return;
+
+		setLoaders(prevState => { return { ...prevState, loadingMsgs: true } })
+		MessageService.getMessages(channelData.id, isChannel()).then(({ data }: { data: Message[] }) => {
+			setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+			setMessages(data.reverse());
+			setSent(prevState => !prevState)
+
+		}).catch(err => {
+			setLoaders(prevState => { return { ...prevState, loadingMsgs: false } })
+			setMessages([]);
+
+		})
+
+	}, [channelData])
+
+
 
 	return (
 		<div className="w-full flex flex-col gap-2 h-full">
-			<Header
-				playerName="KINCH3RO"
-				self={true}
-				msg="Yeaaaah wooooo"
-				src="https://steamavatar.io/img/14777429717elSu.jpg"
-			/>
-			<MainChat chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
-			<ChatInputs onSend={handleSend} />
+
+			{isChannel() && <Header
+				playerName={(channelData as Channel)?.name}
+				self={messages.length > 0 ? messages[messages.length - 1].mine : false}
+				msg={messages.length > 0 ? messages[messages.length - 1].content : ""}
+				src={(channelData as Channel).imageUrl}
+			/>}
+
+			{!isChannel() && <Header
+				playerName={(channelData as DirectMessage)?.friend?.userName}
+				self={messages.length > 0 ? messages[messages.length - 1].mine : false}
+				msg={messages.length > 0 ? messages[messages.length - 1].content : ""}
+				src={(channelData as DirectMessage)?.friend?.avatarUrl}
+			/>}
+			<MainChat onPaginate={handlePaginate} paginating={loaders.paginating} loading={loaders.loadingMsgs} chatRef={chatRef} messages={messages} className="flex-1 w-full drop-shadow-lg" />
+			<ChatInputs uploading={loaders.uploading} onFile={handleFileChange} onSend={handleSend} />
 		</div>
 	);
 }

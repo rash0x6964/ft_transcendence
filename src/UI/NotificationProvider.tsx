@@ -40,7 +40,7 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
 			setStyleData("-bottom-64")
 			setQueueNotification(prevState => prevState - 1)
 		}, notifTime);
-		() => {
+		return () => {
 			clearTimeout(timeout);
 		}
 

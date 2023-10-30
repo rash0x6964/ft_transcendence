@@ -17,6 +17,9 @@ import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
 import { getJwtCookie } from "@/services/CookiesService"
 import { handleBlock, handleFriendRemove, handleMute, handleUnMute, handleUnblock, isBlocked, isMuted, useRightBarSocket } from "./Helpers/RightBarHandlers"
+import DMService from "@/services/DMService"
+import { useRouter } from "next/router"
+import DirectMessage from "@/models/DM.model"
 type Props = {
 	className?: string
 }
@@ -24,8 +27,7 @@ type Props = {
 
 export default function RightBar({ className }: Props) {
 	const socket = useContext(WebSocketContext)
-	const notify: (data: NotifData) => void = useContext(NotifcationContext);
-
+	const router = useRouter();
 	const [dialogueClosed, setDialogueClosed] = useState(true);
 	const [dialogueClosedFriends, setDialogueClosedFriends] = useState(true);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -36,6 +38,24 @@ export default function RightBar({ className }: Props) {
 
 
 
+	const handleSendMessage = () => {
+		if (!selectedData?.friend)
+			return;
+		DMService.create(selectedData?.friend.id).then(({ data }: { data: DirectMessage }) => {
+			router.push({
+				pathname: "/game/chat",
+				query: {
+					type: "DM",
+					id: data.id
+				}
+			}, "/game/chat")
+		}).catch(err => {
+
+		})
+
+
+
+	}
 
 
 	const handleContextMenu = (e: MouseEvent<HTMLDivElement>, data: FriendStatus) => {
@@ -47,7 +67,7 @@ export default function RightBar({ className }: Props) {
 	return (
 		<>
 			<ContextMenu MenuRef={menuRef} clicked={clicked} pos={position} >
-				<MenuBtn onClick={() => alert("yes")} title="Send Message" />
+				<MenuBtn onClick={handleSendMessage} title="Send Message" />
 				<MenuBtn onClick={() => alert("yes")} title="Profile" />
 
 				{<MenuBtn onClick={() => { handleFriendRemove(selectedData, socket) }} title="Unfriend" />}

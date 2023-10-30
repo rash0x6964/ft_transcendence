@@ -1,5 +1,5 @@
 import { Channel } from "./Channel.model";
-import DirectMessage from "./DirectMessage.model";
+import DirectMessage from "./DM.model";
 import User from "./User.model";
 import Attachment from "./Attachment.model";
 

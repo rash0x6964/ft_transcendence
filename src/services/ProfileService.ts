@@ -4,7 +4,7 @@ class ProfileService {
   private endPoint = "/profile"
 
   getCurrentProfile() {
-    return HttpClient.get(`${this.endPoint}`)
+    return HttpClient.get(`${this.endPoint}`).then(res => res.data)
   }
 }
 

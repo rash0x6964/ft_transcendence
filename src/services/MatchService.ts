@@ -16,8 +16,6 @@ class MatchService {
     }
     const current = await getCurrent()
 
-    console.log(matches)
-
     const promises: Promise<MatchDisplayData>[] = matches.map(
       async (match): Promise<MatchDisplayData> => {
         const enemyId =

@@ -2,12 +2,14 @@ import Profile from "@/models/Profile.model"
 import CenterProfile from "./CenterProfile"
 import LevelCube from "./LevelCube"
 import Stat from "./Stat"
+import User from "@/models/User.model"
 
 type Props = {
   profile: Profile
+  userData: User
 }
 
-export default function GamesStats({ profile }: Props) {
+export default function GamesStats({ profile, userData }: Props) {
   const level = profile.level
   const percentage = 96
 
@@ -20,7 +22,7 @@ export default function GamesStats({ profile }: Props) {
         <div className="bg-gray-700 h-16 my-auto w-[1px]"></div>
         <Stat title="Longest winstreak" value="13" />
       </div>
-      <CenterProfile />
+      <CenterProfile avatarUrl={userData.avatarUrl} rating={profile.rating} />
       <LevelCube level={level} percentage={percentage} />
     </div>
   )

@@ -24,7 +24,7 @@ export default function FriendsList({ selectedId, handleClick, DMList }: Prop) {
             alt="Avatar"
             username={data.friend?.userName ?? "Unknown"}
             isOnline={data.friend?.onlineStatus ?? false}
-            lastMessage={data.message?.content ?? ""}
+            lastMessage={data.message?.content ?? "say hi!"}
             time={`${date.getHours()}:${date.getMinutes()}`}
           />
         );

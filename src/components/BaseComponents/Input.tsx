@@ -18,11 +18,16 @@ export default function Input({
 	icon,
 	onChange,
 	value = "",
-	autoFocus
+	autoFocus,
 }: Props) {
 	return (
-		<div className={`rounded-xl text-sm font-normal flex  justify-between  w-80 px-5 ${className}`}>
-			<input autoFocus={autoFocus} onChange={onChange} value={value}
+		<div
+			className={`rounded-xl text-sm font-normal flex  justify-between  w-80 px-5 ${className}`}
+		>
+			<input
+				autoFocus={autoFocus}
+				onChange={onChange}
+				value={value}
 				className="  appearance-none my-auto h-fit outline-none text-slate-300 bg-transparent placeholder-slate-700"
 				placeholder={placeholder}
 				type={type}

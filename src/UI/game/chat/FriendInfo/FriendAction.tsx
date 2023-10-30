@@ -1,9 +1,10 @@
 import Block from "@/components/svgs/Block"
 import Unfriend from "@/components/svgs/Unfriend"
 import Mute from "@/components/svgs/Mute"
+import AddUser from "@/components/svgs/DM-AddUser"
 
 type Prop = {
-  action: "Unfriend" | "Block" | "Mute"
+  action: "Unfriend" | "Block" | "Mute" | "Add friend"
 }
 
 export default function FriendAction({ action }: Prop) {
@@ -13,6 +14,7 @@ export default function FriendAction({ action }: Prop) {
         {action == "Unfriend" && <Unfriend />}
         {action == "Block" && <Block />}
         {action == "Mute" && <Mute />}
+        {action == "Add friend" && <AddUser width={24}/>}
       </div>
       <p className="text-xs text-gray-500 self-center">{action}</p>
     </div>

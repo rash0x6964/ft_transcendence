@@ -17,14 +17,14 @@ export default function ChannelsList({ selectedId, handleClick, channelList}: Pr
     <div className="flex flex-col gap-2 overflow-y-scroll">
       {
         channelList?.map((data) => {
-				  const date = new Date(data.message[0]?.createdAt || Date.now())
+				  const date = new Date((data.message && data.message[0]?.createdAt) || Date.now())
           return <ChannelBar
             key={data.id}
             id={data.id}
             channelName={data.name}
             handleClick={handleClick}
             isSelected={selectedId == data.id}
-            lastMessage={data.message[0]?.content??""}
+            lastMessage={(data.message && data.message[0]?.content)??"say hi to your friends!"}
             src={data.imageUrl}
             time={`${date.getHours()}:${date.getMinutes()}`}
             unread={20}

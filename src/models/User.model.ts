@@ -1,3 +1,8 @@
+interface Profile {
+	id: string,
+	rating: number,
+}
+
 export default interface User {
 	id: string;
 	userName: string;
@@ -11,4 +16,6 @@ export default interface User {
 	createdAt: Date;
 	updatedAt: Date;
 	profileID: string;
+
+	profile: Profile;
 }

@@ -5,6 +5,7 @@ export type User = {
   fullName: string
   avatarUrl: string
   bannerUrl: string
+  password: boolean
 }
 
 export type UpdateUser = {

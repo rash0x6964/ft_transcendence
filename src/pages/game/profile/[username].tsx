@@ -1,7 +1,7 @@
 import Achievements from "@/UI/game/profile/(achievements)/Achievements"
 import PlayerInfoBar from "@/UI/game/profile/(topSide)/PlayerInfoBar"
 import MatchHistory from "@/UI/game/profile/(matches)/MatchHistory"
-import { NextPageWithLayout } from "../_app"
+import { NextPageWithLayout } from "../../_app"
 import { ReactElement } from "react"
 import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"

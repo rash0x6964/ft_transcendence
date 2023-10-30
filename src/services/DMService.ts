@@ -24,6 +24,11 @@ class DMService {
 		return HttpClient.patch(`${this.endPoint}/unMuteUser`, { senderID, receiverID })
 	}
 
+	create(receiverID: string) {
+		return HttpClient.post(`${this.endPoint}/${receiverID}`);
+
+	}
+
 }
 
 export default new DMService()

@@ -7,8 +7,8 @@ type Props =
 		className?: string,
 		msg: string,
 		self: boolean,
-		src: string,
-		playerName: string
+		src?: string,
+		playerName?: string
 		onProfileClick?: () => void,
 	}
 export default function Header({ className, msg, playerName, self, src, onProfileClick }: Props) {
@@ -18,7 +18,7 @@ export default function Header({ className, msg, playerName, self, src, onProfil
 				<Avatar className='w-12 h-12 mr-4 ' src={src} />
 				<div className='flex flex-col'>
 					<div className='font-semibold text-base'>{playerName}</div>
-					<div className='font-normal text-sm text-gray-600'> <span>{self && "You : "}</span> {msg}</div>
+					<div className='font-normal text-sm text-gray-600 w-72 truncate ...'> <span>{self && "You : "}</span> {msg}</div>
 				</div>
 			</div>
 			<button onClick={onProfileClick} className='transition-opacity hover:opacity-60'>

@@ -9,8 +9,10 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@types/file-saver": "^2.0.6",
 		"animate.css": "^4.1.1",
 		"axios": "^1.5.1",
+		"file-saver": "^2.0.5",
 		"next": "13.5.5",
 		"react": "^18",
 		"react-dom": "^18",

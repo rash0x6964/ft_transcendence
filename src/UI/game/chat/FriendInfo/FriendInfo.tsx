@@ -1,10 +1,15 @@
+import User from "@/models/User.model";
 import FriendCard from "./FriendCard"
 import FriendDuels from "./FriendDuels"
 
-export default function FriendInfo() {
+type Props = {
+  friend: User | undefined,
+};
+
+export default function FriendInfo({ friend }: Props) {
   return (
     <div className="flex flex-col h-full">
-      <FriendCard />
+      <FriendCard friend={friend}/>
       <FriendDuels className="flex flex-col overflow-y-scroll" />
     </div>
   )

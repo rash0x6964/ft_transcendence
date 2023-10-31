@@ -2,7 +2,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { WebSocketContext } from "./WebSocketContextWrapper";
 import User from "@/models/User.model";
 import { NotifcationContext } from "./NotificationProvider";
-import { getJwtCookie } from "@/services/CookiesService";
+import CookiesService from "@/services/CookiesService";
 import Lobby from "@/models/Lobby.model";
 import { useRouter } from "next/router";
 
@@ -15,14 +15,14 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
 	useEffect(() => {
 		if (!socket)
 			return;
-		socket.emit("getLobbyData", { token: getJwtCookie() })
+		socket.emit("getLobbyData", { token: CookiesService.getJwtCookie() })
 
 		const onlobbyInvite = ((data: any) => {
 
 			notify(
 				{
 					buttonEvent: () => {
-						socket.emit("lobbyAccept", { token: getJwtCookie(), data: data })
+						socket.emit("lobbyAccept", { token: CookiesService.getJwtCookie(), data: data })
 
 					},
 					buttonTitle: "Accept",

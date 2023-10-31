@@ -14,21 +14,27 @@ export default function Achievements({ profileData }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const promises = [
-        achievementService.getAllAchievements(),
-        achievementService.getUserAchievementsById(profileData.id),
-      ]
-      const [allAchievements, userAchievements] = await Promise.all(promises)
+      try {
+        const promises = [
+          achievementService.getAllAchievements(),
+          achievementService.getUserAchievementsById(profileData.id),
+        ]
+        const [allAchievements, userAchievements] = await Promise.all(promises)
 
-      const achievs: AchievementUser[] = allAchievements.map((achievement) => {
-        return {
-          ...achievement,
-          active: userAchievements.find((ach) => ach.id === achievement.id)
-            ? true
-            : false,
-        }
-      })
-      setAchievements(achievs)
+        const achievs: AchievementUser[] = allAchievements.map(
+          (achievement) => {
+            return {
+              ...achievement,
+              active: userAchievements.find((ach) => ach.id === achievement.id)
+                ? true
+                : false,
+            }
+          }
+        )
+        setAchievements(achievs)
+      } catch (error) {
+        console.log("Couldn't fetch achievements")
+      }
     }
     fetchData()
   }, [profileData])

@@ -15,8 +15,12 @@ export default function PlayerInfoBar({ profileData }: Props) {
     if (!profileData) return
 
     const fetchStats = async () => {
-      const _stats = await matchService.getStatsById(profileData.id)
-      setStats(_stats)
+      try {
+        const _stats = await matchService.getStatsById(profileData.id)
+        setStats(_stats)
+      } catch (error) {
+        console.log("Couldn't fetch player stats")
+      }
     }
 
     fetchStats()

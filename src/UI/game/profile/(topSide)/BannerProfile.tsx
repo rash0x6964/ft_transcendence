@@ -1,6 +1,3 @@
-import { getCurrent } from "@/services/UsersService"
-import { useEffect, useState } from "react"
-
 type Props = {
   bannerUrl: string
 }

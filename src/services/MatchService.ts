@@ -1,6 +1,6 @@
 import Match from "@/models/Match.model"
 import { HttpClient } from "./HttpClient"
-import { getById, getCurrent } from "./UsersService"
+import { getById } from "./UsersService"
 import MatchDisplayData from "@/types/MatchDisplayData"
 import ProfileData from "@/models/ProfileData.model"
 
@@ -54,7 +54,7 @@ class MatchService {
         console.log(current)
         return Promise.resolve({
           p_1: {
-            username: current.userName,
+            username: current.username,
             url: current.avatarUrl,
           },
           p_2: {

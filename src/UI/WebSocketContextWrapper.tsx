@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from "react";
 import io, { Socket } from "socket.io-client"
 import env from "@/environment/environment";
-import { getJwtCookie } from "@/services/CookiesService";
+import cookieService from "@/services/CookiesService";
 import { HttpClient } from "@/services/HttpClient";
 import { NotifcationContext } from "./NotificationProvider";
 import User from "@/models/User.model";
@@ -13,7 +13,7 @@ export default function WebSocketContextProvider({ children }: PropsWithChildren
 		transports: ["websocket"],
 		query:
 		{
-			userId: getJwtCookie()
+			userId: cookieService.getJwtCookie()
 		}
 	}), [])
 	useEffect(() => {
@@ -21,7 +21,9 @@ export default function WebSocketContextProvider({ children }: PropsWithChildren
 
 			const onConnect = () => {
 				HttpClient.get("/channelUser/myChannels").then(({ data }: { data: string[] }) => {
-					socket.emit("connected", { token: getJwtCookie(), data: data });
+					socket.emit("connected", { token: cookieService.getJwtCookie(), data: data });
+
+
 				}).catch(err => {
 				})
 

@@ -1,33 +1,25 @@
-import {
-  deleteInfoCookie,
-  deleteProviderCookie,
-  getInfoCookie,
-  getJwtCookie,
-  getProvdierCookie,
-  setJwtCookie,
-} from "@/services/CookiesService"
-import { addProvider, createByProvider } from "@/services/UsersService"
+import cookieService from "@/services/CookiesService"
+import userService from "@/services/UsersService"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 
 const Page: NextPage = () => {
   const router = useRouter()
-  const infoCookie = getInfoCookie()
-  const userCookie = getJwtCookie()
-  const providerCookie = getProvdierCookie()
+  const infoCookie = cookieService.getInfoCookie()
+  const userCookie = cookieService.getJwtCookie()
+  const providerCookie = cookieService.getProvdierCookie()
 
   const signIn = () => {
-	console.log("in")
-    setJwtCookie(infoCookie)
-    deleteInfoCookie()
+    cookieService.setJwtCookie(infoCookie)
+    cookieService.deleteInfoCookie()
     router.replace("/")
   }
-  const linkAccount = () => {
-	console.log("link")
 
-    deleteProviderCookie()
-    addProvider({ providerInfoToken: providerCookie })
+  const linkAccount = () => {
+    cookieService.deleteProviderCookie()
+    userService
+      .addProvider({ providerInfoToken: providerCookie })
       .then((res) => {})
       .catch((err) => {
         console.log(err)
@@ -35,12 +27,11 @@ const Page: NextPage = () => {
   }
 
   const signUp = () => {
-	console.log("up")
-
-    deleteProviderCookie()
-    createByProvider({ providerInfoToken: providerCookie })
+    cookieService.deleteProviderCookie()
+    userService
+      .createByProvider({ providerInfoToken: providerCookie })
       .then((res) => {
-        setJwtCookie(res.access_token)
+        cookieService.setJwtCookie(res.access_token)
       })
       .catch((err) => console.log(err))
     router.replace("/")
@@ -55,7 +46,7 @@ const Page: NextPage = () => {
       } else router.replace("/signup")
     } else {
       if (providerCookie) linkAccount()
-      else deleteInfoCookie()
+      else cookieService.deleteInfoCookie()
       router.replace("/settings/security")
     }
   }, [])

@@ -2,14 +2,14 @@ import AuthButton from "@/components/BaseComponents/AuthButton"
 import Link from "./Link"
 import Linked from "./Linked"
 import { useEffect, useState } from "react"
-import { getAccounts } from "@/services/UsersService"
+import userService from "@/services/UsersService"
 import { LinkedAccount } from "@/types/User"
 
 export default function LinkedAccounts() {
   const [linkedAcc, setLinkedAcc] = useState<LinkedAccount[]>([])
 
   const setAccounts = async () => {
-    const accounts = await getAccounts()
+    const accounts = await userService.getAccounts()
     setLinkedAcc(accounts)
   }
   useEffect(() => {

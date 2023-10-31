@@ -27,9 +27,7 @@ export default function Achievements({ profileData }: Props) {
           (achievement) => {
             return {
               ...achievement,
-              active: userAchievements.find((ach) => ach.id === achievement.id)
-                ? true
-                : false,
+              active: userAchievements.some((ach) => ach.id === achievement.id),
             }
           }
         )

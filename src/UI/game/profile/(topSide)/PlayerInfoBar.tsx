@@ -26,7 +26,7 @@ export default function PlayerInfoBar({ profileData }: Props) {
     fetchStats()
   }, [profileData])
 
-  if (!profileData) return <div>Loading ...</div>
+  if (!profileData || !stats) return <span className="loader"></span>
   else
     return (
       <div className="relative -top-24 bg-secondary rounded-[40px] -mb-24 m-10">

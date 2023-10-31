@@ -2,19 +2,22 @@ import Achievements from "@/UI/game/profile/(achievements)/Achievements"
 import PlayerInfoBar from "@/UI/game/profile/(topSide)/PlayerInfoBar"
 import MatchHistory from "@/UI/game/profile/(matches)/MatchHistory"
 import { NextPageWithLayout } from "../../_app"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useContext, useEffect, useState } from "react"
 import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import BannerProfile from "@/UI/game/profile/(topSide)/BannerProfile"
 import { useRouter } from "next/router"
 import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
+import NotifData from "@/types/NotifData"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 
 const Page: NextPageWithLayout = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
 
   const router = useRouter()
   const _username = router.query.username as string
+  // const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
   useEffect(() => {
     if (!router.query.username) return
@@ -34,7 +37,7 @@ const Page: NextPageWithLayout = () => {
     fetchData()
   }, [router, _username])
 
-  if (!profileData) return <div>loading...</div>
+  if (!profileData) return <span className="loader"></span>
   else
     return (
       <div className="flex flex-col h-full">

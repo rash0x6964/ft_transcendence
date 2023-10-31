@@ -32,7 +32,7 @@ export default function MatchHistory({ profileData }: Props) {
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
         {matches.map((match) => (
-          <MatchEntry key={match.name} match={match} />
+          <MatchEntry key={match.id} match={match} />
         ))}
       </div>
     </div>

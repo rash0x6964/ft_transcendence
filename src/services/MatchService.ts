@@ -69,7 +69,7 @@ class MatchService {
           win: current.id === match.winnerID ? true : false,
           type: match.ranked ? "Ranked" : "Normal",
           days,
-          name: "Game",
+          id: match.id,
         })
       }
     )

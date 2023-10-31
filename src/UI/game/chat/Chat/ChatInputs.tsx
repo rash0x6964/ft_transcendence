@@ -44,6 +44,7 @@ export default function ChatInputs({
 			return;
 		}
 		formData.append("file", e.target.files[0], e.target.files[0].name);
+		console.log(formData);
 
 		onFile && onFile(formData);
 

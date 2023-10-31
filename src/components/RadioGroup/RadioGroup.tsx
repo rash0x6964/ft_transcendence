@@ -4,6 +4,7 @@ import RadioButton from '@/components/RadioGroup/RadioButton'
 
 type Props =
 	{
+		disabled?: boolean,
 		radios: string[]
 		defaultVal: string
 		className?: string
@@ -11,7 +12,7 @@ type Props =
 		onChange?: (value: string) => void
 
 	}
-export default function RadioGroup({ radios, defaultVal, className, onChange, glow = false }: Props) {
+export default function RadioGroup({ radios, defaultVal, className, onChange, glow = false, disabled = false }: Props) {
 	let radiosSet: string[] = Array.from(new Set(radios));
 	const handleChange = (value: string) => {
 		onChange && onChange(value);
@@ -19,9 +20,9 @@ export default function RadioGroup({ radios, defaultVal, className, onChange, gl
 	}
 	const [selectedVal, setSelectedVal] = useState(defaultVal);
 	return (
-		<div className={className}>
+		<div className={`${className}  ${disabled ? "opacity-70" : ""}`} >
 			{radios.map((val, i) => {
-				return <RadioButton key={"radios-" + i} onClick={handleChange} label={val} value={val} glow={glow} selected={selectedVal === val} />;
+				return <RadioButton disabled={disabled} key={"radios-" + i} onClick={handleChange} label={val} value={val} glow={glow} selected={selectedVal === val} />;
 			})}
 
 		</div>

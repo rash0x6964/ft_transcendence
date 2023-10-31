@@ -6,13 +6,14 @@ import MatchesStats from "@/types/MatchesStats"
 
 type Props = {
   profileData: ProfileData
-  stats: MatchesStats
+  stats: MatchesStats | null
 }
 
 export default function GamesStats({ profileData, stats }: Props) {
   const level = profileData.profile.level
   const percentage = 96
 
+  if (!profileData || !stats) return <div>Loading...</div>
   return (
     <div className="flex items-center justify-around">
       <div className="flex h-fit gap-16">

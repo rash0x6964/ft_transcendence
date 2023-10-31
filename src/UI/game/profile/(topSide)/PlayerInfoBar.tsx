@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import GamesStats from "./GamesStats"
 import matchService from "@/services/MatchService"
 import MatchesStats from "@/types/MatchesStats"
-import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
 
 type Props = {
@@ -10,27 +9,18 @@ type Props = {
 }
 
 export default function PlayerInfoBar({ profileData }: Props) {
-  const [profileData, setProfileData] = useState<ProfileData | null>(null)
-  const [stats, setStats] = useState({} as MatchesStats)
+  const [stats, setStats] = useState<MatchesStats | null>(null)
 
   useEffect(() => {
-    if (!username) return
-
-    const fetchProfileData = async () => {
-      const _profileData = await profileService.getProfileDataByUsername(
-        username
-      )
-      setProfileData(_profileData)
-    }
+    if (!profileData) return
 
     const fetchStats = async () => {
-      const _stats = await matchService.getStats()
+      const _stats = await matchService.getStatsById(profileData.id)
       setStats(_stats)
     }
 
-    fetchProfileData()
     fetchStats()
-  }, [username])
+  }, [profileData])
 
   if (!profileData) return <div>Loading ...</div>
   else

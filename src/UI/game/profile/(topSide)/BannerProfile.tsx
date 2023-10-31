@@ -1,18 +1,11 @@
 import { getCurrent } from "@/services/UsersService"
 import { useEffect, useState } from "react"
 
-export default function BannerProfile() {
-  const [bannerUrl, setBannerUrl] = useState("")
+type Props = {
+  bannerUrl: string
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getCurrent()
-      setBannerUrl(userData.bannerUrl)
-    }
-
-    fetchData()
-  }, [])
-
+export default function BannerProfile({ bannerUrl }: Props) {
   return (
     <div className="m-10">
       <img

@@ -37,12 +37,12 @@ const Page: NextPageWithLayout = () => {
         <HeadTitle>Profile | {profileData.username}</HeadTitle>
 
         <div className="relative">
-          <BannerProfile />
+          <BannerProfile bannerUrl={profileData.bannerUrl} />
           <PlayerInfoBar profileData={profileData} />
         </div>
         <div className="flex container mx-auto overflow-y-scroll">
-          <Achievements />
-          <MatchHistory />
+          <Achievements profileData={profileData} />
+          <MatchHistory profileData={profileData} />
         </div>
       </div>
     )

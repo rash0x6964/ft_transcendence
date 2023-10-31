@@ -2,29 +2,47 @@ import Match from "@/models/Match.model"
 import { HttpClient } from "./HttpClient"
 import { getById, getCurrent } from "./UsersService"
 import MatchDisplayData from "@/types/MatchDisplayData"
+import ProfileData from "@/models/ProfileData.model"
 
 class MatchService {
   private endpoint = "/match"
 
   getAllMatches(): Promise<Match[]> {
-    return HttpClient.get(`${this.endpoint}`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}`).then((result) => result.data)
+  }
+
+  getAllMatchesById(id: string): Promise<Match[]> {
+    return HttpClient.get(`${this.endpoint}/${id}`).then(
+      (result) => result.data
+    )
   }
 
   getLatestMatches(take: number): Promise<Match[]> {
     return HttpClient.get(`${this.endpoint}/latest/${take}`).then(
-      result => result.data
+      (result) => result.data
     )
   }
 
   getStats() {
-    return HttpClient.get(`${this.endpoint}/stats`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}/stats`).then(
+      (result) => result.data
+    )
   }
 
-  async getMatchProps(matches: Match[]): Promise<MatchDisplayData[]> {
+  getStatsById(id: string) {
+    return HttpClient.get(`${this.endpoint}/stats/${id}`).then(
+      (result) => result.data
+    )
+  }
+
+  async getMatchProps(
+    profileData: ProfileData,
+    matches: Match[]
+  ): Promise<MatchDisplayData[]> {
     function datediff(first: number, second: number) {
       return Math.round((second - first) / (1000 * 60 * 60 * 24))
     }
-    const current = await getCurrent()
+    const current = profileData
 
     const promises: Promise<MatchDisplayData>[] = matches.map(
       async (match): Promise<MatchDisplayData> => {
@@ -33,6 +51,7 @@ class MatchService {
         const enemy = await getById(enemyId)
         const days = datediff(new Date(match.date).getTime(), Date.now())
 
+        console.log(current)
         return Promise.resolve({
           p_1: {
             username: current.userName,

@@ -5,11 +5,17 @@ class AchievementService {
   private endpoint = "/achievement"
 
   getAllAchievements(): Promise<Achievement[]> {
-    return HttpClient.get(`${this.endpoint}/all`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}/all`).then((result) => result.data)
   }
 
   getUserAchievements(): Promise<Achievement[]> {
-    return HttpClient.get(`${this.endpoint}/user`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}/user`).then((result) => result.data)
+  }
+
+  getUserAchievementsById(id: string): Promise<Achievement[]> {
+    return HttpClient.get(`${this.endpoint}/user/${id}`).then(
+      (result) => result.data
+    )
   }
 }
 

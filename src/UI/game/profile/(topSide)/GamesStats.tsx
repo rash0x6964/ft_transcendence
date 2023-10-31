@@ -14,7 +14,7 @@ export default function GamesStats({ profileData, stats }: Props) {
   const level = profileData.profile.level
   const percentage = profileService.calculatePercentage(profileData)
 
-  if (!profileData || !stats) return <div>Loading...</div>
+  if (!profileData || !stats) return <span className="loader"></span>
   return (
     <div className="flex items-center justify-around">
       <div className="flex h-fit gap-16">

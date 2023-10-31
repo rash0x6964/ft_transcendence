@@ -9,15 +9,12 @@ import BannerProfile from "@/UI/game/profile/(topSide)/BannerProfile"
 import { useRouter } from "next/router"
 import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
-import NotifData from "@/types/NotifData"
-import { NotifcationContext } from "@/UI/NotificationProvider"
 
 const Page: NextPageWithLayout = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
 
   const router = useRouter()
   const _username = router.query.username as string
-  // const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
   useEffect(() => {
     if (!router.query.username) return

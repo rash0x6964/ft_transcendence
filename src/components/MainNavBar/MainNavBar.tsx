@@ -6,32 +6,29 @@ import PlayerRP from "./PlayerRP"
 import Logo from "../svgs/Logo"
 import SettingsButton from "./SettingsButton"
 import PlayerLevel from "./PlayerLevel"
-import Profile from "@/models/Profile.model"
 import profileService from "@/services/ProfileService"
-import User from "@/models/User.model"
-import userService from "@/services/UsersService"
 import matchService from "@/services/MatchService"
 import Match from "@/models/Match.model"
 import Link from "next/link"
+import ProfileData from "@/models/ProfileData.model"
 type Props = {
   coins: number
   className: string
 }
 
 export default function MainNavBar({ coins, className }: Props) {
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [userData, setUserData] = useState<User | null>(null)
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [latestMatches, setLatestMatches] = useState<Match[]>([])
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const _profile = await profileService.getCurrentProfile()
-      setProfile(_profile)
-    }
+    const fetchProfileData = async () => {
+      try {
+        const _profileData = await profileService.getCurrentProfileData()
 
-    const fetchUserData = async () => {
-      const _user = await userService.getCurrent()
-      setUserData(_user)
+        setProfileData(_profileData)
+      } catch (error) {
+        console.log("Couldn't fetch profile data")
+      }
     }
 
     const fetchLatestMatches = async () => {
@@ -39,35 +36,33 @@ export default function MainNavBar({ coins, className }: Props) {
       setLatestMatches(_matches)
     }
 
-    fetchProfile()
-    fetchUserData()
+    fetchProfileData()
     fetchLatestMatches()
   }, [])
 
   const percentage = 50
 
-  if (!profile || !userData || !latestMatches)
-    return <span className="loader"></span>
+  if (!profileData) return <span className="loader"></span>
   else
     return (
       <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
-        <Link href="/game/profile/wow">
+        <Link href={`/game/profile/${profileData.username}`}>
           <Logo width={24} height={24} className="text-primary my-auto" />
         </Link>
         <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-          <PlayerName src={userData.avatarUrl} name={userData.userName} />
-          <PlayerCoins className="my-auto" coins={profile.coins} />
+          <PlayerName src={profileData.avatarUrl} name={profileData.username} />
+          <PlayerCoins className="my-auto" coins={profileData.profile.coins} />
           <NavHistory
             className="my-auto"
             matches={latestMatches}
-            id={userData.id}
+            id={profileData.id}
           />
           <PlayerLevel
             className="my-auto"
-            level={profile.level}
+            level={profileData.profile.level}
             percentage={percentage}
           />
-          <PlayerRP className="my-auto" RP={profile.rating} />
+          <PlayerRP className="my-auto" RP={profileData.profile.rating} />
         </div>
         <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
       </div>

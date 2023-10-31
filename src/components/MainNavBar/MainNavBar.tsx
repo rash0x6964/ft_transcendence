@@ -19,8 +19,8 @@ type Props = {
 }
 
 export default function MainNavBar({ coins, className }: Props) {
-  const [profile, setProfile] = useState({} as Profile)
-  const [userData, setUserData] = useState({} as User)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [userData, setUserData] = useState<User | null>(null)
   const [latestMatches, setLatestMatches] = useState<Match[]>([])
 
   useEffect(() => {
@@ -44,31 +44,32 @@ export default function MainNavBar({ coins, className }: Props) {
     fetchLatestMatches()
   }, [])
 
-  let history: boolean[] = [true, true, false, false, true]
-  let RP: number = 10050
   const percentage = 50
 
-  return (
-    <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
-      <Link href="/game/profile/wow">
-        <Logo width={24} height={24} className="text-primary my-auto" />
-      </Link>
-      <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-        <PlayerName src={userData.avatarUrl} name={userData.userName} />
-        <PlayerCoins className="my-auto" coins={profile.coins} />
-        <NavHistory
-          className="my-auto"
-          matches={latestMatches}
-          id={userData.id}
-        />
-        <PlayerLevel
-          className="my-auto"
-          level={profile.level}
-          percentage={percentage}
-        />
-        <PlayerRP className="my-auto" RP={profile.rating} />
+  if (!profile || !userData || !latestMatches)
+    return <span className="loader"></span>
+  else
+    return (
+      <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
+        <Link href="/game/profile/wow">
+          <Logo width={24} height={24} className="text-primary my-auto" />
+        </Link>
+        <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
+          <PlayerName src={userData.avatarUrl} name={userData.userName} />
+          <PlayerCoins className="my-auto" coins={profile.coins} />
+          <NavHistory
+            className="my-auto"
+            matches={latestMatches}
+            id={userData.id}
+          />
+          <PlayerLevel
+            className="my-auto"
+            level={profile.level}
+            percentage={percentage}
+          />
+          <PlayerRP className="my-auto" RP={profile.rating} />
+        </div>
+        <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
       </div>
-      <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
-    </div>
-  )
+    )
 }

@@ -7,29 +7,38 @@ import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import BannerProfile from "@/UI/game/profile/(topSide)/BannerProfile"
 import { useRouter } from "next/router"
+import profileService from "@/services/ProfileService"
+import ProfileData from "@/models/ProfileData.model"
 
 const Page: NextPageWithLayout = () => {
-  const [username, setUsername] = useState<string | null>(null)
+  const [profileData, setProfileData] = useState<ProfileData | null>(null)
 
   const router = useRouter()
+  const _username = router.query.username as string
 
   useEffect(() => {
     if (!router.query.username) return
 
-    const username = router.query.username as string
+    const fetchData = async () => {
+      const _profileData = await profileService.getProfileDataByUsername(
+        _username
+      )
 
-    setUsername(username)
-  }, [router])
+      setProfileData(_profileData)
+    }
 
-  if (!username) return <div>loading...</div>
+    fetchData()
+  }, [router, _username])
+
+  if (!profileData) return <div>loading...</div>
   else
     return (
       <div className="flex flex-col h-full">
-        <HeadTitle>Profile | {username}</HeadTitle>
+        <HeadTitle>Profile | {profileData.username}</HeadTitle>
 
         <div className="relative">
           <BannerProfile />
-          <PlayerInfoBar username={username} />
+          <PlayerInfoBar profileData={profileData} />
         </div>
         <div className="flex container mx-auto overflow-y-scroll">
           <Achievements />

@@ -6,10 +6,10 @@ import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
 
 type Props = {
-  username: string
+  profileData: ProfileData
 }
 
-export default function PlayerInfoBar({ username }: Props) {
+export default function PlayerInfoBar({ profileData }: Props) {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [stats, setStats] = useState({} as MatchesStats)
 

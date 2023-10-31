@@ -3,6 +3,7 @@ import CenterProfile from "./CenterProfile"
 import LevelCube from "./LevelCube"
 import Stat from "./Stat"
 import MatchesStats from "@/types/MatchesStats"
+import profileService from "@/services/ProfileService"
 
 type Props = {
   profileData: ProfileData
@@ -11,11 +12,7 @@ type Props = {
 
 export default function GamesStats({ profileData, stats }: Props) {
   const level = profileData.profile.level
-  const percentage =
-    ((profileData.profile.xp - profileData.xpRequirements.previous) /
-      (profileData.xpRequirements.current -
-        profileData.xpRequirements.previous)) *
-    100
+  const percentage = profileService.calculatePercentage(profileData)
 
   if (!profileData || !stats) return <div>Loading...</div>
   return (

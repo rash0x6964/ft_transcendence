@@ -1,3 +1,4 @@
+import ProfileData from "@/models/ProfileData.model"
 import { HttpClient } from "./HttpClient"
 
 class ProfileService {
@@ -18,6 +19,15 @@ class ProfileService {
   getProfileDataByUsername(name: string) {
     return HttpClient.get(`${this.endPoint}/data/name/${name}`).then(
       (res) => res.data
+    )
+  }
+
+  calculatePercentage(profileData: ProfileData) {
+    return (
+      ((profileData.profile.xp - profileData.xpRequirements.previous) /
+        (profileData.xpRequirements.current -
+          profileData.xpRequirements.previous)) *
+      100
     )
   }
 }

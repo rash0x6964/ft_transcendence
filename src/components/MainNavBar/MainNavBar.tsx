@@ -40,8 +40,6 @@ export default function MainNavBar({ coins, className }: Props) {
     fetchLatestMatches()
   }, [])
 
-  const percentage = 50
-
   if (!profileData) return <span className="loader"></span>
   else
     return (
@@ -49,21 +47,29 @@ export default function MainNavBar({ coins, className }: Props) {
         <Link href={`/game/profile/${profileData.username}`}>
           <Logo width={24} height={24} className="text-primary my-auto" />
         </Link>
-        <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-          <PlayerName src={profileData.avatarUrl} name={profileData.username} />
-          <PlayerCoins className="my-auto" coins={profileData.profile.coins} />
-          <NavHistory
-            className="my-auto"
-            matches={latestMatches}
-            id={profileData.id}
-          />
-          <PlayerLevel
-            className="my-auto"
-            level={profileData.profile.level}
-            percentage={percentage}
-          />
-          <PlayerRP className="my-auto" RP={profileData.profile.rating} />
-        </div>
+        <Link href={`/game/profile/${profileData.username}`}>
+          <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
+            <PlayerName
+              src={profileData.avatarUrl}
+              name={profileData.username}
+            />
+            <PlayerCoins
+              className="my-auto"
+              coins={profileData.profile.coins}
+            />
+            <NavHistory
+              className="my-auto"
+              matches={latestMatches}
+              id={profileData.id}
+            />
+            <PlayerLevel
+              className="my-auto"
+              level={profileData.profile.level}
+              percentage={profileService.calculatePercentage(profileData)}
+            />
+            <PlayerRP className="my-auto" RP={profileData.profile.rating} />
+          </div>
+        </Link>
         <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
       </div>
     )

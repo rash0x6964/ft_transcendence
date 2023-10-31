@@ -51,7 +51,6 @@ class MatchService {
         const enemy = await getById(enemyId)
         const days = datediff(new Date(match.date).getTime(), Date.now())
 
-        console.log(current)
         return Promise.resolve({
           p_1: {
             username: current.username,

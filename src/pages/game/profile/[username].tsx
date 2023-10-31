@@ -20,11 +20,15 @@ const Page: NextPageWithLayout = () => {
     if (!router.query.username) return
 
     const fetchData = async () => {
-      const _profileData = await profileService.getProfileDataByUsername(
-        _username
-      )
+      try {
+        const _profileData = await profileService.getProfileDataByUsername(
+          _username
+        )
 
-      setProfileData(_profileData)
+        setProfileData(_profileData)
+      } catch (error) {
+        console.log("Couldn't fetch profile data")
+      }
     }
 
     fetchData()

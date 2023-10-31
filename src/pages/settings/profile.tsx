@@ -10,7 +10,7 @@ import SettingLayout from "@/UI/SettingLayout"
 import { ReactElement, useContext, useEffect, useState } from "react"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import { ValidationError, object, string } from "yup"
-import { getCurrent, update, uploadPhoto } from "@/services/UsersService"
+import userService from "@/services/UsersService"
 import env from "@/environment/environment"
 import Image from "next/image"
 import { User } from "@/types/User"
@@ -54,7 +54,7 @@ const Page: NextPageWithLayout = () => {
       return
     }
     try {
-      const user = await update(parsedUser)
+      const user = await userService.update(parsedUser)
       setUser(user)
       setFullname(user.fullName)
       setUsername(user.userName)
@@ -72,8 +72,8 @@ const Page: NextPageWithLayout = () => {
   }
 
   const updatePhoto = (url: string, type: string) => {
-    if (type == "banners") return update({ bannerUrl: url })
-    else return update({ avatarUrl: url })
+    if (type == "banners") return userService.update({ bannerUrl: url })
+    else return userService.update({ avatarUrl: url })
   }
 
   const onFileChange = async (e: any) => {
@@ -81,7 +81,7 @@ const Page: NextPageWithLayout = () => {
     const formdata = new FormData()
     formdata.append("photo", e.target.files[0], e.target.files[0].name)
     try {
-      const res = await uploadPhoto(formdata, e.target.name)
+      const res = await userService.uploadPhoto(formdata, e.target.name)
       const user = await updatePhoto(res[0].url, e.target.name)
       setUser(user)
     } catch (err) {
@@ -95,7 +95,7 @@ const Page: NextPageWithLayout = () => {
     }
   }
   const getUser = async () => {
-    const currentUser: User = await getCurrent()
+    const currentUser: User = await userService.getCurrent()
     setUser(currentUser)
     setFullname(currentUser.fullName)
     setUsername(currentUser.userName)

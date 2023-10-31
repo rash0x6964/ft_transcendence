@@ -2,83 +2,92 @@ import Input from "@/components/BaseComponents/Input"
 import Search from "@/components/svgs/Search"
 import ChannelMember from "./ChannelMember"
 import { useContext, useEffect, useState } from "react"
-import User from "@/models/User.model";
-import Loader from "@/components/BaseComponents/Loader";
-import UserService from "@/services/User.Service";
-import { time } from "console";
-import FriendRequestService from "@/services/FriendRequest.service";
-import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
-import { getJwtCookie } from "@/services/CookiesService";
-import { AxiosError } from "axios";
-import { NotifcationContext } from "@/UI/NotificationProvider";
+import User from "@/models/User.model"
+import Loader from "@/components/BaseComponents/Loader"
+import UserService from "@/services/User.Service"
+import FriendRequestService from "@/services/FriendRequest.service"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import cookieService from "@/services/CookiesService"
+import { AxiosError } from "axios"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 export default function SearchPersonDialBox() {
+  const socket = useContext(WebSocketContext)
+  const [val, setVal] = useState("")
+  const [users, setUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const notify = useContext(NotifcationContext)
+  useEffect(() => {
+    if (val == "") {
+      setIsLoading(false)
+      return
+    }
+    setIsLoading(true)
+    const timeout = setTimeout(() => {
+      UserService.findByName(val)
+        .then((data) => {
+          setUsers(data.data)
+          setIsLoading(false)
+        })
+        .catch((err) => {})
+    }, 1000)
 
-	const socket = useContext(WebSocketContext)
-	const [val, setVal] = useState("");
-	const [users, setUsers] = useState<User[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const notify = useContext(NotifcationContext);
-	useEffect(() => {
-		if (val == "") {
-			setIsLoading(false);
-			return;
-		}
-		setIsLoading(true);
-		const timeout = setTimeout(() => {
-			UserService.findByName(val).then((data) => {
-				setUsers(data.data);
-				setIsLoading(false);
-			}).catch(err => {
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [val])
 
-			})
-		}, 1000)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVal(e.target.value)
+  }
 
-		return () => {
-			clearTimeout(timeout)
-		}
+  const handleSendRequest = (receiverID: string) => {
+    FriendRequestService.sendRequest(receiverID)
+      .then((data) => {
+        socket?.emit("friendReqAction", {
+          token: cookieService.getJwtCookie(),
+          data: data.data,
+        })
+        notify({
+          message: "Friend Request sent",
+          title: "Friend Request",
+        })
+      })
+      .catch((err: AxiosError<AxiosError, any>) => {
+        if (!err.response) return
+        if (err.response.status == 409)
+          notify({
+            message: err.response?.data.message,
+            title: "Notice",
+            type: "notice",
+          })
+      })
+  }
 
-	}, [val])
+  return (
+    <div className="gradient-border-2 min-w-[29rem]  w-fit gradient-border-2 p-4 rounded-xl flex flex-col gap-1 ">
+      <Input
+        autoFocus={true}
+        value={val}
+        onChange={handleChange}
+        className="mb-4 w-full h-11 bg-big-stone mx-auto"
+        placeholder="Search"
+        icon={<Search />}
+      />
 
+      {isLoading && <Loader className="mx-auto scale-50" />}
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setVal(e.target.value)
-	}
-
-	const handleSendRequest = (receiverID: string) => {
-		FriendRequestService.sendRequest(receiverID).then((data) => {
-			socket?.emit("friendReqAction", { token: getJwtCookie(), data: data.data });
-			notify({
-				message: "Friend Request sent",
-				title: "Friend Request",
-			})
-		}).catch((err: AxiosError<AxiosError, any>) => {
-			if (!err.response)
-				return;
-			if (err.response.status == 409)
-				notify({
-					message: err.response?.data.message,
-					title: "Notice",
-					type: "notice"
-				})
-		})
-	}
-
-	return (
-		<div className="gradient-border-2 min-w-[29rem]  w-fit gradient-border-2 p-4 rounded-xl flex flex-col gap-1 ">
-			<Input autoFocus={true} value={val} onChange={handleChange}
-				className="mb-4 w-full h-11 bg-big-stone mx-auto"
-				placeholder="Search"
-				icon={<Search />}
-			/>
-
-			{isLoading && <Loader className="mx-auto scale-50" />}
-
-			{(!isLoading && users.length > 0) && users.map((data: User) => <ChannelMember onMessage={() => alert("yes")} key={data.id} onSendRequest={() => handleSendRequest(data.id)}
-				className="animate__animated animate__fadeIn" src={data.avatarUrl} userName={data.userName} />)}
-
-
-
-		</div>
-	)
+      {!isLoading &&
+        users.length > 0 &&
+        users.map((data: User) => (
+          <ChannelMember
+            onMessage={() => alert("yes")}
+            key={data.id}
+            onSendRequest={() => handleSendRequest(data.id)}
+            className="animate__animated animate__fadeIn"
+            src={data.avatarUrl}
+            userName={data.userName}
+          />
+        ))}
+    </div>
+  )
 }
-

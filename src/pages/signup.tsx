@@ -12,8 +12,8 @@ import AuthLayout from "@/UI/AuthLayout"
 import { NextPageWithLayout } from "./_app"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import { ValidationError, object, string } from "yup"
-import { signUp } from "@/services/AuthService"
-import { setJwtCookie } from "@/services/CookiesService"
+import authService from "@/services/AuthService"
+import cookieService from "@/services/CookiesService"
 import { useRouter } from "next/navigation"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
@@ -63,8 +63,8 @@ const Page: NextPageWithLayout = () => {
       return
     }
     try {
-      const { access_token } = await signUp(parsedUser)
-      setJwtCookie(access_token)
+      const { access_token } = await authService.signUp(parsedUser)
+      cookieService.setJwtCookie(access_token)
       router.push("/")
     } catch (err) {
       if (axios.isAxiosError(err)) {

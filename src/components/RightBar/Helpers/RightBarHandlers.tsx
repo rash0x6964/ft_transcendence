@@ -1,6 +1,6 @@
 
 import FriendService from "@/services/Friend.service";
-import { getJwtCookie } from "@/services/CookiesService";
+import cookieService from "@/services/CookiesService";
 import FriendStatus from "@/models/FriendStatus.model";
 import { Socket } from "socket.io-client";
 import { useContext, useEffect, useState } from "react";
@@ -52,7 +52,7 @@ export const handleFriendRemove = (selectedData: FriendStatus | null, socket: So
 	if (!selectedData)
 		return
 	FriendService.removeFriend(selectedData).then(() => {
-		socket?.emit("friendAction", { token: getJwtCookie(), data: selectedData });
+		socket?.emit("friendAction", { token: cookieService.getJwtCookie(), data: selectedData });
 	}
 	).catch(err => {
 

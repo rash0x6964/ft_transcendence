@@ -9,7 +9,7 @@ import PlayerLevel from "./PlayerLevel"
 import Profile from "@/models/Profile.model"
 import profileService from "@/services/ProfileService"
 import User from "@/models/User.model"
-import { getCurrent } from "@/services/UsersService"
+import userService from "@/services/UsersService"
 import matchService from "@/services/MatchService"
 import Match from "@/models/Match.model"
 import Link from "next/link"
@@ -30,7 +30,7 @@ export default function MainNavBar({ coins, className }: Props) {
     }
 
     const fetchUserData = async () => {
-      const _user = await getCurrent()
+      const _user = await userService.getCurrent()
       setUserData(_user)
     }
 

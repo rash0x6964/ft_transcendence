@@ -13,6 +13,8 @@ export default function Achievements({ profileData }: Props) {
   const [achievements, setAchievements] = useState<AchievementUser[]>([])
 
   useEffect(() => {
+    if (!profileData) return
+
     const fetchData = async () => {
       try {
         const promises = [

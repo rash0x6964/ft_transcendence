@@ -1,6 +1,6 @@
 import Match from "@/models/Match.model"
 import { HttpClient } from "./HttpClient"
-import { getById } from "./UsersService"
+import userService from "./UsersService"
 import MatchDisplayData from "@/types/MatchDisplayData"
 import ProfileData from "@/models/ProfileData.model"
 
@@ -48,7 +48,7 @@ class MatchService {
       async (match): Promise<MatchDisplayData> => {
         const enemyId =
           match.winnerID === current.id ? match.loserID : match.winnerID
-        const enemy = await getById(enemyId)
+        const enemy = await userService.getById(enemyId)
         const days = datediff(new Date(match.date).getTime(), Date.now())
 
         return Promise.resolve({

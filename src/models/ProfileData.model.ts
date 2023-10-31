@@ -6,4 +6,10 @@ export default interface ProfileData {
   bannerUrl: string
   username: string
   profile: Profile
+  xpRequirements: XpRequirements
+}
+
+type XpRequirements = {
+  current: number
+  previous: number
 }

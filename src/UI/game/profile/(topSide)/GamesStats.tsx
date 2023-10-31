@@ -11,7 +11,11 @@ type Props = {
 
 export default function GamesStats({ profileData, stats }: Props) {
   const level = profileData.profile.level
-  const percentage = 96
+  const percentage =
+    ((profileData.profile.xp - profileData.xpRequirements.previous) /
+      (profileData.xpRequirements.current -
+        profileData.xpRequirements.previous)) *
+    100
 
   if (!profileData || !stats) return <div>Loading...</div>
   return (

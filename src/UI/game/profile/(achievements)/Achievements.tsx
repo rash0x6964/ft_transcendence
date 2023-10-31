@@ -10,9 +10,7 @@ type Props = {
 }
 
 export default function Achievements({ profileData }: Props) {
-  const [achievements, setAchievements] = useState<AchievementUser[] | null>(
-    null
-  )
+  const [achievements, setAchievements] = useState<AchievementUser[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,9 +33,8 @@ export default function Achievements({ profileData }: Props) {
     fetchData()
   }, [profileData])
 
-  if (!achievements) return <div>Loading...</div>
   return (
-    <div className="bg-secondary rounded-2xl h-fit max-w-lg m-10">
+    <div className="bg-secondary rounded-2xl h-fit w-1/2 max-w-lg m-10">
       <SectionTitle text="Achievements" />
       <div className="flex flex-wrap justify-center">
         {achievements.map((achievement) => (

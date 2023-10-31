@@ -10,7 +10,7 @@ type Props = {
 }
 
 export default function MatchHistory({ profileData }: Props) {
-  const [matches, setMatches] = useState<MatchDisplayData[] | null>(null)
+  const [matches, setMatches] = useState<MatchDisplayData[]>([])
 
   useEffect(() => {
     if (!profileData) return
@@ -23,7 +23,6 @@ export default function MatchHistory({ profileData }: Props) {
     fetchData()
   }, [profileData])
 
-  if (!matches) return <div>Loading...</div>
   return (
     <div className="m-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />

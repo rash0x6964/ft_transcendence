@@ -11,6 +11,7 @@ const Page: NextPage = () => {
   const providerCookie = cookieService.getProvdierCookie()
 
   const signIn = () => {
+	// if 2FA cookie => redirect to enter the code and validate by the backend
     cookieService.setJwtCookie(infoCookie)
     cookieService.deleteInfoCookie()
     router.replace("/")

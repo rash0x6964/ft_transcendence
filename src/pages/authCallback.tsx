@@ -11,9 +11,13 @@ const Page: NextPage = () => {
   const providerCookie = cookieService.getProvdierCookie()
 
   const signIn = () => {
-    cookieService.setJwtCookie(infoCookie)
-    cookieService.deleteInfoCookie()
-    router.replace("/")
+    if (cookieService.get2FACookie()) {
+      router.replace("/signin")
+    } else {
+      cookieService.setJwtCookie(infoCookie)
+      cookieService.deleteInfoCookie()
+      router.replace("/")
+    }
   }
 
   const linkAccount = () => {

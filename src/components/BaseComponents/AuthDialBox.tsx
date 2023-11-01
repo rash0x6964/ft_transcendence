@@ -19,7 +19,9 @@ export default function AuthDialBox({ onClick }: Props) {
 		onClick && onClick(str);
 	}
 
-	const handleChange = (e: any) => {
+	const handleKeyDown = (e: any) => {
+		if (e.code == "Backspace")
+			return;
 		let inputs: any = document.getElementsByClassName("authInput");
 		if (!inputs)
 			return;
@@ -43,16 +45,16 @@ export default function AuthDialBox({ onClick }: Props) {
 			<div className="flex mx-auto w-fit mb-8">
 
 				<div className="flex gap-2">
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput  bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput  bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
 				</div>
 				<div className="h-[2px] w-4 my-auto mx-4 bg-slate-700"></div>
 
 				<div className="flex gap-2">
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onKeyUp={handleKeyDown} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
 				</div>
 			</div>
 

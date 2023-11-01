@@ -15,9 +15,14 @@ const deleteProviderCookie = () => {
   document.cookie = `PROVIDER=`
 }
 
+const delete2FACookie = () => {
+  document.cookie = `TWO_AUTH_FACT=`
+}
+
 const getJwtCookie = () => getCookieValue(jwtCookieName)
 const getInfoCookie = () => getCookieValue("INFO")
 const getProvdierCookie = () => getCookieValue("PROVIDER")
+const get2FACookie = () => getCookieValue("TWO_AUTH_FACT") === "activated"
 
 export default {
   setJwtCookie,
@@ -26,4 +31,6 @@ export default {
   getJwtCookie,
   getInfoCookie,
   getProvdierCookie,
+  get2FACookie,
+  delete2FACookie,
 }

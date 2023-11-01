@@ -18,6 +18,22 @@ export default function AuthDialBox({ onClick }: Props) {
 			str += e.target[i].value;
 		onClick && onClick(str);
 	}
+
+	const handleChange = (e: any) => {
+		let inputs: any = document.getElementsByClassName("authInput");
+		if (!inputs)
+			return;
+		for (let i = 0; i < inputs.length; i++) {
+
+			if (inputs[i] == e.target) {
+				inputs[i + 1] && inputs[i + 1].focus()
+				break;
+			}
+
+		}
+
+
+	}
 	return (
 		<form onSubmit={handleSubmit} className="gradient-border-2  p-6 rounded-xl ">
 			<AuthIcon className="mx-auto mt-14 mb-4 w-fit" width={70} height={70} />
@@ -27,16 +43,16 @@ export default function AuthDialBox({ onClick }: Props) {
 			<div className="flex mx-auto w-fit mb-8">
 
 				<div className="flex gap-2">
-					<input maxLength={1} required={true} className="authInput  bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput  bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
 				</div>
 				<div className="h-[2px] w-4 my-auto mx-4 bg-slate-700"></div>
 
 				<div className="flex gap-2">
-					<input maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
-					<input maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.5rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
+					<input tabIndex={0} onChange={handleChange} maxLength={1} required={true} className="authInput bg-big-stone mx-auto pl-[1.4rem] w-14 h-14 rounded-md appearance-none outline-none" type="text" />
 				</div>
 			</div>
 

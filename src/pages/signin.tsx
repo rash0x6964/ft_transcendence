@@ -53,7 +53,7 @@ const Page: NextPageWithLayout = () => {
 		<div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
 			<HeadTitle>Pong Fury | Sign in</HeadTitle>
 			<Dialogue closed={closeDialogue}>
-				<AuthDialBox />
+				<AuthDialBox onClick={alert} />
 			</Dialogue>
 			<div className="self-center">
 				<p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>

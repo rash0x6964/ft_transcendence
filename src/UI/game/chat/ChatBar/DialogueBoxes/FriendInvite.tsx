@@ -6,7 +6,7 @@ import { useContext, useState } from "react"
 import FriendStatus from "@/models/FriendStatus.model"
 import Avatar from "@/components/BaseComponents/Avatar"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
-import { getJwtCookie } from "@/services/CookiesService"
+import CookiesService from "@/services/CookiesService"
 
 type Props = {
 	friendData?: FriendStatus,
@@ -17,7 +17,7 @@ export default function FriendInvite({ friendData }: Props) {
 
 
 	const handleInvite = () => {
-		socket?.emit("lobbyInvite", { token: getJwtCookie(), data: friendData?.friend });
+		socket?.emit("lobbyInvite", { token: CookiesService.getJwtCookie(), data: friendData?.friend });
 		setInviteSent(true);
 	}
 	return (

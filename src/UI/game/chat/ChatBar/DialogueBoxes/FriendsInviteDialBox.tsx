@@ -5,7 +5,7 @@ import Loader from "@/components/BaseComponents/Loader";
 import FriendRequestService from "@/services/FriendRequest.service";
 import FriendRequests from "@/models/FriendRequest.model";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
-import { getJwtCookie } from "@/services/CookiesService";
+
 import FriendInvite from "./FriendInvite";
 import FriendService from "@/services/Friend.service";
 import FriendStatus from "@/models/FriendStatus.model";

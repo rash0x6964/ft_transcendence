@@ -16,8 +16,7 @@ import { LobbyContext } from "@/UI/LobbyProvider";
 import UserData from "@/models/UserData.model";
 import { HttpClient } from "@/services/HttpClient";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
-import { getJwtCookie } from "@/services/CookiesService";
-
+import CookiesService from "@/services/CookiesService";
 const Page: NextPageWithLayout = () => {
 	const socket = useContext(WebSocketContext);
 	const lobby = useContext(LobbyContext);
@@ -26,7 +25,7 @@ const Page: NextPageWithLayout = () => {
 	const [profile, setProfile] = useState<UserData | null>(null)
 
 	const handleLeaveLobby = () => {
-		socket?.emit("leaveLobby", { token: getJwtCookie(), data: lobby });
+		socket?.emit("leaveLobby", { token: CookiesService.getJwtCookie(), data: lobby });
 	}
 
 	const handleRadioChange = (data: string) => {
@@ -38,7 +37,7 @@ const Page: NextPageWithLayout = () => {
 
 		console.log(tmpLobby?.ranked);
 
-		socket?.emit("lobbyChange", { token: getJwtCookie(), data: tmpLobby });
+		socket?.emit("lobbyChange", { token: CookiesService.getJwtCookie(), data: tmpLobby });
 	}
 	useEffect(() => {
 		HttpClient.get("/profile/data").then((data) => {

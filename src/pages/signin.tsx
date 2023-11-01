@@ -17,6 +17,7 @@ import NotifData from "@/types/NotifData"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import AuthDialBox from "@/components/BaseComponents/AuthDialBox"
 import TFAService from "@/services/TFAService"
+import axios from "axios"
 const audiowide = Audiowide({
   weight: "400",
   subsets: ["latin"],
@@ -67,7 +68,17 @@ const Page: NextPageWithLayout = () => {
       console.log(code)
       const { access_token } = await TFAService.verify2Fa({ token, code })
       setToken(access_token)
-    } catch (err) {}
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        notify({
+          message:
+            err.response?.data?.message ??
+            "username and email should be unique",
+          title: "Validation Error",
+          type: "error",
+        })
+      }
+    }
   }
 
   useEffect(() => {

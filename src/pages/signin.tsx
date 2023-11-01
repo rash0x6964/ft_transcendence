@@ -16,38 +16,41 @@ import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import AuthDialBox from "@/components/BaseComponents/AuthDialBox"
+import TFAService from "@/services/TFAService"
 const audiowide = Audiowide({
-	weight: "400",
-	subsets: ["latin"],
-	display: "swap",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
 })
 
 const Page: NextPageWithLayout = () => {
-	const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
-	const [closeDialogue, setCloseDialogue] = useState(false)
-	const router = useRouter()
-	const notify: (data: NotifData) => void = useContext(NotifcationContext)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [closeDialogue, setCloseDialogue] = useState(false)
+  const [Token, setTempToken] = useState("")
+  const router = useRouter()
+  const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
-	const handleSubmit = async (e: any) => {
-		e.preventDefault()
-		if (!(password && username))
-			return notify({
-				message: "username and password are required",
-				title: "Sign In Error",
-				type: "error",
-			})
-		try {
-			const { access_token } = await authService.signIn({ username, password })
-			cookieService.setJwtCookie(access_token)
-			router.push("/")
-		} catch (err: any) {
-			notify({
-				message: "You have entered an invalid username or password",
-				title: "Sign In Error",
-				type: "error",
-			})
-		}
+  const setToken = (access_token: string) => {
+    cookieService.setJwtCookie(access_token)
+    router.push("/")
+  }
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    if (!(password && username))
+      return notify({
+        message: "username and password are required",
+        title: "Sign In Error",
+        type: "error",
+      })
+    // try {
+    //   const { access_token, tempToken } = await authService.signIn({
+    //     username,
+    //     password,
+    //   })
+    //   if (!tempToken) setToken(access_token)
+	//   else {
+	// 	set
 	}
 	return (
 		<div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
@@ -120,7 +123,7 @@ const Page: NextPageWithLayout = () => {
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return <AuthLayout>{page}</AuthLayout>
+  return <AuthLayout>{page}</AuthLayout>
 }
 
 export default Page

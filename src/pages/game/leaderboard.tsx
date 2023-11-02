@@ -13,8 +13,12 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const _leaderboard = await profileService.getLeaderboard()
-      setLeaderboard(_leaderboard)
+      try {
+        const _leaderboard = await profileService.getLeaderboard()
+        setLeaderboard(_leaderboard)
+      } catch (error) {
+        console.log("Couldn't fetch leaderboard")
+      }
     }
 
     fetchData()

@@ -13,3 +13,8 @@ export type SignUpData = {
   email: string
   password: string
 }
+
+export type OtpVerifyData = {
+  token: string
+  code: string
+}

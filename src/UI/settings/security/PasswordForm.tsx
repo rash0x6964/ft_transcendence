@@ -6,28 +6,22 @@ import userService from "@/services/UsersService"
 import NotifData from "@/types/NotifData"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import axios from "axios"
-import env from "@/environment/environment"
-import { User } from "@/types/User"
 
-export default function PasswordForm() {
+type Props = {
+  hasPassword: boolean
+  setHasPassword: (state: boolean) => void
+}
+
+export default function PasswordForm({ hasPassword, setHasPassword }: Props) {
   const [password, setPassword] = useState<string>("")
   const [newPassword, setNewPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const [user, setUser] = useState<User>({
-    avatarUrl: env.defaultAvatar,
-    bannerUrl: env.defaultBanner,
-    fullName: "fullname",
-    email: "email",
-    id: "0",
-    userName: "username",
-    password: false,
-  })
 
   const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    if ((user.password && !password) || !newPassword) return
+    if ((hasPassword && !password) || !newPassword) return
     if (newPassword !== confirmPassword)
       return notify({
         message: "new password is not matching",
@@ -36,7 +30,10 @@ export default function PasswordForm() {
       })
     try {
       await userService.updatePassword({ password, newPassword })
-      setUser({ ...user, password: true })
+      setHasPassword(true)
+      setNewPassword("")
+      setPassword("")
+      setConfirmPassword("")
     } catch (err) {
       if (axios.isAxiosError(err)) {
         notify({
@@ -47,24 +44,12 @@ export default function PasswordForm() {
       }
     }
   }
-  const getUser = async () => {
-    const userData: User = await userService.getCurrent()
-    setUser(userData)
-  }
-
-  useEffect(() => {
-    try {
-      getUser()
-    } catch (err) {
-      console.log(err)
-    }
-  }, [])
 
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 ">
       <p className="text-base p-5">Change Password</p>
       <div className="px-10 py-3">
-        {user.password && (
+        {hasPassword && (
           <Input
             placeholder="Current Password"
             icon={<Lock />}

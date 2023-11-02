@@ -17,7 +17,7 @@ export default function LinkedAccounts() {
   }, [])
 
   return (
-    <div className="bg-secondary rounded-xl mt-3 pb-2 gradient-border-2  ">
+    <div className="bg-secondary rounded-xl my-3 pb-2 gradient-border-2  ">
       <p className="text-base p-5">Linked Accounts</p>
       <div className="flex justify-between mx-8 mb-4 ">
         <AuthButton

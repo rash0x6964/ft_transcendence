@@ -58,22 +58,35 @@ const Page: NextPageWithLayout = () => {
 	const clickOnChannel = (id: string) => {
 		const obj = channelList.find((item) => item.id == id);
 		if (obj) {
+			// console.log('channel: ', obj)
 			setDialogueState(true);
 			setSelected(obj);
 		} else {
 			ChannelService.getChannelById(id).then((res) => {
 				setChannelTryingToJoin(res.data);
-				console.log('res: ', res.data);
+				setDialogueState(false);
 			}).catch((err) => {
+				//error
+				setDialogueState(false);
 
 			})
-			setDialogueState(false);
 		}
 	};
 	const clickOnDm = (id: string) => {
 		const obj = DMList.find((item) => item.id == id);
 		setSelected(obj);
 	};
+
+	const roomCreated = (data: Channel) => {
+		setChannelList(channelList.concat(data))
+		setSelected(data);
+	}
+
+	const roomJoined = (data: Channel) => {
+		setChannelList(channelList.concat(data))
+		setSelected(data);
+		setDialogueState(true);
+	}
 
 	return (
 		<div className="w-full  h-full flex gap-2">
@@ -86,13 +99,14 @@ const Page: NextPageWithLayout = () => {
 					selectedId={selected?.id ?? ""}
 					clickOnDm={clickOnDm}
 					clickOnChannel={clickOnChannel}
+					createChannelEvent={roomCreated}
 				/>
 			</div>
 			<div className="flex-1 flex flex-col   h-full">
 				<Chat channelData={selected} />
 			</div>
 			<div className=" h-full w-96">
-				{isChannel() && <ChannelInfo channelID={selected?.id ?? ""} />}
+				{isChannel() && <ChannelInfo selectedChannel={selected as Channel} />}
 				{!isChannel() && (
 					<FriendInfo friend={(selected as DirectMessage)?.friend} />
 				)}
@@ -102,7 +116,7 @@ const Page: NextPageWithLayout = () => {
 				onBackDropClick={() => setDialogueState(true)}
 				closed={dialogueState}
 			>
-				<JoinChannelDialBox channelInfo={channelTryingToJoin} />
+				<JoinChannelDialBox channelInfo={channelTryingToJoin} event={roomJoined} />
 			</Dialogue>
 
 			{/* <Dialogue closed={true}>

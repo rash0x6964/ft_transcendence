@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RadioButton from '@/components/RadioGroup/RadioButton'
 
 type Props =
@@ -18,10 +18,11 @@ export default function RadioGroup({ radios, defaultVal, className, onChange, gl
 		setSelectedVal(value);
 	}
 	const [selectedVal, setSelectedVal] = useState(defaultVal);
+
 	return (
 		<div className={className}>
 			{radios.map((val, i) => {
-				return <RadioButton key={"radios-" + i} onClick={handleChange} label={val} value={val} glow={glow} selected={selectedVal === val} />;
+				return <RadioButton key={"radios-" + i} onClick={handleChange} label={val} value={val.toUpperCase()} glow={glow} selected={selectedVal === val.toUpperCase()} />;
 			})}
 
 		</div>

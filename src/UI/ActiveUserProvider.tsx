@@ -25,7 +25,7 @@ export default function ActiveUserProvider({ children }: PropsWithChildren) {
     }
 
     fetchProfileData()
-  })
+  }, [])
   return (
     <ProfileContext.Provider value={{ profileData, setProfileData }}>
       {children}

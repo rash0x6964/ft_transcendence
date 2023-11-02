@@ -41,7 +41,7 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="flex flex-col ">
-        <TableHead className="h-14 w-fill flex   pl-8 pr-16   text-sm text-slate-600 " />
+        <TableHead className="h-14 w-fill flex pl-8 pr-16 text-sm text-slate-600" />
         <div className="flex flex-col gap-3">
           {leaderboard.map((element, index) => {
             return (
@@ -51,7 +51,7 @@ const Page: NextPageWithLayout = () => {
                 playerName={element.username}
                 rank={index + 4}
                 rp={element.profile.rating}
-                winrate={element.winrate}
+                winrate={element.winrate || "N/A"}
                 nbGame={element.games}
               />
             )

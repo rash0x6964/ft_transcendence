@@ -95,11 +95,15 @@ const Page: NextPageWithLayout = () => {
     }
   }
   const getUser = async () => {
-    const currentUser: User = await userService.getCurrent()
-    setUser(currentUser)
-    setFullname(currentUser.fullName)
-    setUsername(currentUser.userName)
-    setMail(currentUser.email)
+    try {
+      const currentUser: User = await userService.getCurrent()
+      setUser(currentUser)
+      setFullname(currentUser.fullName)
+      setUsername(currentUser.userName)
+      setMail(currentUser.email)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   useEffect(() => {

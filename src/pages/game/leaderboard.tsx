@@ -26,14 +26,14 @@ const Page: NextPageWithLayout = () => {
 
       <div className="flex gap-5 justify-around mb-8">
         <div></div>
-        {leaderboard.map((element, index) => {
+        {leaderboard.map((e, index) => {
           if (index < 3)
             return (
               <Podium
-                playerAvatar={element.avatarUrl}
-                playerName={element.username}
+                playerAvatar={e.avatarUrl}
+                playerName={e.username}
                 position={index + 1}
-                rp={element.profile.rating}
+                rp={e.profile.rating}
               />
             )
         })}
@@ -41,20 +41,23 @@ const Page: NextPageWithLayout = () => {
       </div>
 
       <div className="flex flex-col ">
-        <TableHead className="h-14 w-fill flex pl-8 pr-16 text-sm text-slate-600" />
+        {leaderboard.length > 3 && (
+          <TableHead className="h-14 w-fill flex pl-8 pr-16 text-sm text-slate-600" />
+        )}
         <div className="flex flex-col gap-3">
-          {leaderboard.map((element, index) => {
-            return (
-              <TableRow
-                key={element.id}
-                playerAvatar={element.avatarUrl}
-                playerName={element.username}
-                rank={index + 4}
-                rp={element.profile.rating}
-                winrate={element.winrate || "N/A"}
-                nbGame={element.games}
-              />
-            )
+          {leaderboard.map((e, index) => {
+            if (index > 2)
+              return (
+                <TableRow
+                  key={e.id}
+                  playerAvatar={e.avatarUrl}
+                  playerName={e.username}
+                  rank={index + 4}
+                  rp={e.profile.rating}
+                  winrate={e.winrate || "N/A"}
+                  nbGame={e.games}
+                />
+              )
           })}
         </div>
       </div>

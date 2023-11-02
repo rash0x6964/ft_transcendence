@@ -1,21 +1,25 @@
 import { useState } from "react"
 import UnLink from "./UnLink"
-import Link from "./Link"
+import Linked from "./Linked"
 
 type Props = {
-  lProvider: "github" | "fortytwo" | "google"
-  uProvider: "GITHUB" | "INTRA" | "GOOGLE"
+  provider: "GITHUB" | "INTRA" | "GOOGLE"
+  removeProvider: (provider: "GITHUB" | "INTRA" | "GOOGLE") => void
 }
 
-export default function ProviderState({ lProvider, uProvider }: Props) {
+export default function ProviderState({ provider, removeProvider }: Props) {
   const [showUnlink, setShowUnlink] = useState<boolean>(false)
 
   return (
     <>
       {showUnlink ? (
-        <UnLink provider={uProvider} />
+        <div onMouseLeave={() => setShowUnlink(!showUnlink)}>
+          <UnLink provider={provider} removeProvider={removeProvider} />
+        </div>
       ) : (
-        <Link provider={lProvider} />
+        <div onMouseEnter={() => setShowUnlink(!showUnlink)}>
+          <Linked />
+        </div>
       )}
     </>
   )

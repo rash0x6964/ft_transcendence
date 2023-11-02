@@ -3,6 +3,7 @@ import Github from "../svgs/Github"
 import Intra from "../svgs/Intra"
 import Google from "../svgs/Google"
 import GoogleAuth from "../svgs/GoogleAuth"
+import env from "@/environment/environment"
 type Props = {
   onClick?: () => void
   glow?: Boolean
@@ -18,7 +19,7 @@ export default function AuthButton({
   provider,
   link = false,
 }: Props) {
-  const loginUrl = `http://localhost:3001/${provider}Authentication/login`
+  const loginUrl = `${env.endPoint}${provider}Authentication/login`
   if (link)
     return (
       <a href={loginUrl}>

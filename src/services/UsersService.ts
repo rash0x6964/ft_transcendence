@@ -53,6 +53,10 @@ const getById = (id: string) => {
   return HttpClient.get(`${env.endPoint}/users/${id}`).then((res) => res.data)
 }
 
+const unlink = (provider: "GITHUB" | "INTRA" | "GOOGLE") => {
+  return HttpClient.delete(`${env.endPoint}/provider/unlink/${provider}`)
+}
+
 export default {
   getById,
   addProvider,
@@ -62,4 +66,5 @@ export default {
   getCurrent,
   updatePassword,
   update,
+  unlink,
 }

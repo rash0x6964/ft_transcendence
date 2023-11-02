@@ -6,9 +6,10 @@ import Lock from "@/components/svgs/Lock";
 import TVIcn from "@/components/svgs/TVIcn";
 import { Channel, JoinChannel } from "@/models/Channel.model";
 import ChannelSevice from "@/services/Channel.sevice";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ChannelInfo from "../../Chat/ChannelInfo/ChannelInfo";
 import { it } from "node:test";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
 type Props = {
   channelInfo: any;
@@ -16,9 +17,13 @@ type Props = {
 };
 
 export default function JoinChannelDialBox({ channelInfo, event }: Props) {
+  const notify = useContext(NotifcationContext)
   const [password, setPassword] = useState("");
   const [lock, setLock] = useState(true);
   const [channel, setChannel] = useState<Channel>();
+
+  const [errorLog, setErrorLog] = useState([]);
+  const [processing, setProcessing] = useState(false);
 
   const joinChannelHandler = () => {
     const body: JoinChannel = {
@@ -27,19 +32,20 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
 
     if (channelInfo.visibility == "PROTECTED") body["password"] = password;
 
+    setProcessing(true);
+    setErrorLog([]);
     ChannelSevice.joinChannel(body)
-      .then((res) => {
-        // console.log("usechannel", res.data);
-      })
-      .catch((err) => {});
-
+    .then((res) => {
       ChannelSevice.getChannelById(channelInfo.id)
       .then((res) => {
-        // console.log("channel", res.data);
-        event(res.data)
+        event(res.data);
       })
       .catch((err) => {});
-
+    })
+    .catch((err) => {
+      setProcessing(false);
+      setErrorLog(err.response.data.message);
+    });
   };
 
   const lockEvent = (e: any) => {
@@ -84,14 +90,31 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
           className="mt-6 w-80 h-11 bg-big-stone mx-auto"
           value={password}
           type={lock ? "password" : "text"}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setErrorLog([]);
+            setPassword(e.target.value);
+          }}
         />
+      )}
+      {errorLog.length ? (
+        <p className="font-light text-red-400 text-center mt-7 text-sm animate__animated animate__headShake">
+          {errorLog}
+        </p>
+      ) : (
+        <></>
       )}
       <div className="flex justify-center mt-6">
         <MainButton className="mb-2" onClick={joinChannelHandler}>
-          <p className="text-base font-semibold py-3 px-9 rounded-xl">
-            Join Channel
-          </p>
+          {!processing ? (
+            <p className="text-base font-semibold pt-4 pb-4 pr-8 pl-8 rounded-xl flex justify-center">
+              Join Channel
+            </p>
+          ) : (
+            <p className="text-base font-semibold pt-4 pb-4 pr-8 pl-8 rounded-xl flex justify-center">
+              <span className="self-center channelCreateLoader"></span>
+              <span className="self-center mx-3">Processing...</span>
+            </p>
+          )}
         </MainButton>
       </div>
     </div>

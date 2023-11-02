@@ -19,9 +19,9 @@ type Props = {
 };
 
 export default function ChannelInfo({ selectedChannel }: Props) {
-  const isOwner = true;
   const menuRef = useRef<HTMLDivElement>(null);
   const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef);
+  const [channelInfo, setChannelInfo] = useState<ChannelUser[]>([]);
 
   const handleContextMenu = (
     e: MouseEvent<HTMLDivElement>,
@@ -31,24 +31,33 @@ export default function ChannelInfo({ selectedChannel }: Props) {
     setPosition(getMenuPos(e, menuRef));
   };
 
-  let memberList: ChannelUser[] = selectedChannel.channels.filter((item) => {
+  useEffect(() => {
+    ChannelUserService.getChannelMemberUser(selectedChannel.id)
+      .then((response: any) => {
+        console.log("is Owner: ",response.data);
+        setChannelInfo(response.data);
+      })
+      .catch((err) => {
+      });
+  }, [selectedChannel]);
+
+  let memberList: ChannelUser[] = channelInfo.filter((item) => {
     return item.role == "MEMBER";
   });
-  let adminList: ChannelUser[] = selectedChannel.channels.filter((item) => {
+  let adminList: ChannelUser[] = channelInfo.filter((item) => {
     return item.role == "ADMINISTRATOR";
   });
-  let owner: ChannelUser | undefined = selectedChannel.channels.find((item) => {
+  let owner: ChannelUser | undefined = channelInfo.find((item) => {
     return item.role == "OWNER";
   });
 
-
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
-      {/* {!isOwner ? (
+      {  owner && !owner.isOwner ? (
         <LeaveRoom className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all" />
       ) : (
         <EditRoom className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all" />
-      )} */}
+      )}
       <div className="flex flex-col gap-5 py-10">
         <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
         <span className="self-center">{selectedChannel.name}</span>

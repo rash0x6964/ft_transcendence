@@ -58,7 +58,6 @@ const Page: NextPageWithLayout = () => {
 	const clickOnChannel = (id: string) => {
 		const obj = channelList.find((item) => item.id == id);
 		if (obj) {
-			// console.log('channel: ', obj)
 			setDialogueState(true);
 			setSelected(obj);
 		} else {
@@ -68,7 +67,6 @@ const Page: NextPageWithLayout = () => {
 			}).catch((err) => {
 				//error
 				setDialogueState(false);
-
 			})
 		}
 	};

@@ -46,14 +46,11 @@ export default function CreateChannelDialBox({
 
     if (body.visibility == "PROTECTED") body["password"] = password;
 
-    setProcessing(true);
     setErrorLog([]);
-    console.log(processing);
+    setProcessing(true);
     ChannelSevice.createChannel(body)
       .then((res) => {
-        console.log("response", res.data);
         createChannelEvent(res.data);
-        // setProcessing(false);
         handler();
       })
       .catch((err) => {

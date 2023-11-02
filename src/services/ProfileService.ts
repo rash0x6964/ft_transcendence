@@ -22,6 +22,12 @@ class ProfileService {
     )
   }
 
+  getLeaderboard() {
+    return HttpClient.get(`${this.endPoint}/leaderboard`).then(
+      (res) => res.data
+    )
+  }
+
   calculatePercentage(profileData: ProfileData) {
     return (
       ((profileData.profile.xp - profileData.xpRequirements.previous) /

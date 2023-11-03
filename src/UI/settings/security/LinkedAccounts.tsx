@@ -4,6 +4,7 @@ import Linked from "./Linked"
 import { useEffect, useState } from "react"
 import userService from "@/services/UsersService"
 import { LinkedAccount } from "@/types/User"
+import ProviderState from "./ProviderState"
 
 export default function LinkedAccounts() {
   const [linkedAcc, setLinkedAcc] = useState<LinkedAccount[]>([])
@@ -16,6 +17,9 @@ export default function LinkedAccounts() {
     setAccounts()
   }, [])
 
+  const removeProvider = (provider: "GITHUB" | "INTRA" | "GOOGLE") => {
+    setLinkedAcc(linkedAcc.filter((acc) => acc.provider !== provider))
+  }
   return (
     <div className="bg-secondary rounded-xl my-3 pb-2 gradient-border-2  ">
       <p className="text-base p-5">Linked Accounts</p>
@@ -25,7 +29,7 @@ export default function LinkedAccounts() {
           className="h-10 w-24 flex justify-center items-center"
         />
         {linkedAcc && linkedAcc.find((acc) => acc.provider == "INTRA") ? (
-          <Linked />
+          <ProviderState provider="INTRA" removeProvider={removeProvider} />
         ) : (
           <Link provider="fortytwo" />
         )}
@@ -36,7 +40,7 @@ export default function LinkedAccounts() {
           className="h-10 w-24 flex justify-center items-center"
         />
         {linkedAcc && linkedAcc.find((acc) => acc.provider == "GITHUB") ? (
-          <Linked />
+          <ProviderState provider="GITHUB" removeProvider={removeProvider} />
         ) : (
           <Link provider="github" />
         )}
@@ -47,7 +51,7 @@ export default function LinkedAccounts() {
           className="h-10 w-24 flex justify-center items-center"
         />
         {linkedAcc && linkedAcc.find((acc) => acc.provider == "GOOGLE") ? (
-          <Linked />
+          <ProviderState provider="GOOGLE" removeProvider={removeProvider} />
         ) : (
           <Link provider="google" />
         )}

@@ -11,7 +11,6 @@ interface ChannelUser {
 
 	user?: User
 	channel?: Channel
-	isOwner?: boolean
 }
 
 interface Channel {
@@ -22,6 +21,8 @@ interface Channel {
 	visibility: "PRIVATE" | "PUBLIC" | "PROTECTED";
 	channels: ChannelUser[];
 	message: Message[];
+
+	owner?: "OWNER" | "ADMINISTRATOR" | "MEMBER";
 }
 
 interface CreateChannel {
@@ -35,4 +36,9 @@ interface JoinChannel {
 	channelID: string;
   password?: string;
 }
-export type { Channel, ChannelUser, CreateChannel, JoinChannel };
+
+interface leaveChannel {
+	channelID?: string;
+}
+
+export type { Channel, ChannelUser, CreateChannel, JoinChannel, leaveChannel };

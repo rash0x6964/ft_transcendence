@@ -1,7 +1,7 @@
 import React from "react";
 import SvgProps from "@/types/SvgProps";
 
-export default function EditRoom({ width, height, className }: SvgProps) {
+export default function EditRoom({ width, height, className, onClick }: SvgProps) {
   return (
     <svg
       viewBox="0 0 64 64"
@@ -11,6 +11,7 @@ export default function EditRoom({ width, height, className }: SvgProps) {
       xmlns="http://www.w3.org/2000/svg"
       stroke="#CBD5E1"
 			className={className}
+      onClick={onClick}
     >
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g

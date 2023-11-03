@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Avatar from "@/components/BaseComponents/Avatar";
 import MemberCard from "./MemberCard";
 import ContextMenu, {
@@ -10,18 +10,24 @@ import { MenuBtn } from "@/components/BaseComponents/ContextMenu";
 import { getMenuPos } from "@/components/BaseComponents/ContextMenu";
 import { Channel, ChannelUser } from "@/models/Channel.model";
 import ChannelUserService from "@/services/ChannelUser.service";
-import { time } from "console";
 import LeaveRoom from "@/components/svgs/leaveRoom";
 import EditRoom from "@/components/svgs/editChannel";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
 type Props = {
   selectedChannel: Channel;
+  event: (id: string) => void;
 };
 
-export default function ChannelInfo({ selectedChannel }: Props) {
+export default function ChannelInfo({ selectedChannel, event }: Props) {
+  const notify = useContext(NotifcationContext);
+
   const menuRef = useRef<HTMLDivElement>(null);
   const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef);
-  const [channelInfo, setChannelInfo] = useState<ChannelUser[]>([]);
+
+  const [memberList, setMemberList] = useState<ChannelUser[]>([]);
+  const [adminList, setAdminList] = useState<ChannelUser[]>([]);
+  const [owner, setOwner] = useState<ChannelUser | undefined>(undefined);
 
   const handleContextMenu = (
     e: MouseEvent<HTMLDivElement>,
@@ -33,28 +39,58 @@ export default function ChannelInfo({ selectedChannel }: Props) {
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
-      .then((response: any) => {
-        console.log("is Owner: ",response.data);
-        setChannelInfo(response.data);
+      .then(({ data }: { data: any }) => {
+        setMemberList(
+          data.filter((item: any) => {
+            return item.role == "MEMBER";
+          })
+        );
+
+        setAdminList(
+          data.filter((item: any) => {
+            return item.role == "ADMINISTRATOR";
+          })
+        );
+
+        setOwner(
+          data.find((item: any) => {
+            return item.role == "OWNER";
+          })
+        );
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
   }, [selectedChannel]);
 
-  let memberList: ChannelUser[] = channelInfo.filter((item) => {
-    return item.role == "MEMBER";
-  });
-  let adminList: ChannelUser[] = channelInfo.filter((item) => {
-    return item.role == "ADMINISTRATOR";
-  });
-  let owner: ChannelUser | undefined = channelInfo.find((item) => {
-    return item.role == "OWNER";
-  });
+  // let memberList: ChannelUser[] = channelInfo.filter((item) => {
+  //   return item.role == "MEMBER";
+  // });
+  // let adminList: ChannelUser[] = channelInfo.filter((item) => {
+  //   return item.role == "ADMINISTRATOR";
+  // });
+  // let owner: ChannelUser | undefined = channelInfo.find((item) => {
+  //   return item.role == "OWNER";
+  // });
+
+  const LeaveRoomEvent = (e: any) => {
+    ChannelUserService.leaveChannel(selectedChannel.id)
+      .then((res) => {
+        notify({
+          message: "You leaved the channel successfully",
+          title: "Leave Channel",
+          type: "success",
+        });
+        event(selectedChannel.id);
+      })
+      .catch((err) => {});
+  };
 
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
-      {  owner && !owner.isOwner ? (
-        <LeaveRoom className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all" />
+      {selectedChannel && selectedChannel.owner != 'OWNER' ? (
+        <LeaveRoom
+          className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
+          onClick={LeaveRoomEvent}
+        />
       ) : (
         <EditRoom className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all" />
       )}

@@ -9,7 +9,6 @@ import ChannelSevice from "@/services/Channel.sevice";
 import { useContext, useState } from "react";
 import ChannelInfo from "../../Chat/ChannelInfo/ChannelInfo";
 import { it } from "node:test";
-import { NotifcationContext } from "@/UI/NotificationProvider";
 
 type Props = {
   channelInfo: any;
@@ -17,7 +16,6 @@ type Props = {
 };
 
 export default function JoinChannelDialBox({ channelInfo, event }: Props) {
-  const notify = useContext(NotifcationContext)
   const [password, setPassword] = useState("");
   const [lock, setLock] = useState(true);
   const [channel, setChannel] = useState<Channel>();

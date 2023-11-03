@@ -19,7 +19,7 @@ export default function AuthButton({
   provider,
   link = false,
 }: Props) {
-  const loginUrl = `${env.endPoint}${provider}Authentication/login`
+  const loginUrl = `${env.endPoint}/${provider}Authentication/login`
   if (link)
     return (
       <a href={loginUrl}>

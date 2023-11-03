@@ -7,7 +7,7 @@ type Props = {
 }
 
 export default function Link({ provider }: Props) {
-  const loginUrl = `${env.endPoint}${provider}Authentication/login`
+  const loginUrl = `${env.endPoint}/${provider}Authentication/login`
   return (
     <a href={loginUrl}>
       <MainButton className="w-28 h-10 py-3">

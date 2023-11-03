@@ -68,7 +68,6 @@ const Page: NextPageWithLayout = () => {
       router.push("/")
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.log(err)
         notify({
           message:
             err.response?.data?.message ??

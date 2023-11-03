@@ -5,7 +5,7 @@ type Props = {
   provider: "github" | "fortytwo" | "google"
 }
 
-export default function Link({ provider }) {
+export default function Link({ provider }: Props) {
   const loginUrl = `http://localhost:3001/${provider}Authentication/login`
   return (
     <a href={loginUrl}>

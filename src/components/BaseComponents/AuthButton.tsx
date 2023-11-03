@@ -2,11 +2,12 @@ import React from "react"
 import Github from "../svgs/Github"
 import Intra from "../svgs/Intra"
 import Google from "../svgs/Google"
+import GoogleAuth from "../svgs/GoogleAuth"
 type Props = {
   onClick?: () => void
   glow?: Boolean
   className?: string
-  provider: "github" | "fortytwo" | "google"
+  provider: "github" | "fortytwo" | "google" | "googleAuth"
   link?: boolean
 }
 
@@ -40,6 +41,7 @@ export default function AuthButton({
         {provider === "google" && <Google />}
         {provider === "fortytwo" && <Intra />}
         {provider === "github" && <Github />}
+        {provider === "googleAuth" && <GoogleAuth />}
       </div>
     )
 }

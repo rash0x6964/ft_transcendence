@@ -1,3 +1,4 @@
+import { leaveChannel } from "@/models/Channel.model";
 import { HttpClient } from "./HttpClient";
 
 class ChannelUserService {
@@ -6,6 +7,10 @@ class ChannelUserService {
 
 	getChannelMemberUser(roomId: string) {
 		return HttpClient.get(`${this.endPoint}/${roomId}`);
+	}
+
+	leaveChannel(roomId: string) {
+		return HttpClient.delete(`${this.endPoint}/${roomId}`,);
 	}
 }
 

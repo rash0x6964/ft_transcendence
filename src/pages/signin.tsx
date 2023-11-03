@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from "react"
+import React, { ReactElement, useContext, useEffect, useState } from "react"
 import MainBtn from "@/components/BaseComponents/MainButton"
 import Input from "@/components/BaseComponents/Input"
 import AuthBtn from "@/components/BaseComponents/AuthButton"
@@ -14,6 +14,10 @@ import cookieService from "@/services/CookiesService"
 import { useRouter } from "next/navigation"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
+import Dialogue from "@/components/Dialogue/Dialogue"
+import AuthDialBox from "@/components/BaseComponents/AuthDialBox"
+import TFAService from "@/services/TFAService"
+import axios from "axios"
 const audiowide = Audiowide({
   weight: "400",
   subsets: ["latin"],
@@ -23,9 +27,15 @@ const audiowide = Audiowide({
 const Page: NextPageWithLayout = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [closeDialogue, setCloseDialogue] = useState(true)
+  const [token, setTempToken] = useState("")
   const router = useRouter()
   const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
+  const setToken = (access_token: string) => {
+    cookieService.setJwtCookie(access_token)
+    router.push("/")
+  }
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     if (!(password && username))
@@ -35,9 +45,15 @@ const Page: NextPageWithLayout = () => {
         type: "error",
       })
     try {
-      const { access_token } = await authService.signIn({ username, password })
-      cookieService.setJwtCookie(access_token)
-      router.push("/")
+      const { access_token, tempToken } = await authService.signIn({
+        username,
+        password,
+      })
+      if (!tempToken) setToken(access_token)
+      else {
+        setCloseDialogue(false)
+        setTempToken(access_token)
+      }
     } catch (err: any) {
       notify({
         message: "You have entered an invalid username or password",
@@ -46,9 +62,39 @@ const Page: NextPageWithLayout = () => {
       })
     }
   }
+
+  const handle2FA = async (code: string) => {
+    try {
+      console.log(code)
+      const { access_token } = await TFAService.verify2Fa({ token, code })
+      setToken(access_token)
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        notify({
+          message:
+            err.response?.data?.message ??
+            "username and email should be unique",
+          title: "Validation Error",
+          type: "error",
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!cookieService.get2FACookie()) return
+    const infoCookie = cookieService.getInfoCookie()
+    cookieService.deleteInfoCookie()
+    cookieService.delete2FACookie()
+    setCloseDialogue(false)
+    setTempToken(infoCookie)
+  }, [])
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
       <HeadTitle>Pong Fury | Sign in</HeadTitle>
+      <Dialogue closed={closeDialogue}>
+        <AuthDialBox onClick={handle2FA} />
+      </Dialogue>
       <div className="self-center">
         <p className={"text-5xl pb-2 " + audiowide.className}>PONG FURY</p>
         <Logo className="mx-auto w-7 h-7" />

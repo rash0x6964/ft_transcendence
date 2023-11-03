@@ -1,70 +1,73 @@
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
-import { WebSocketContext } from "./WebSocketContextWrapper";
-import User from "@/models/User.model";
-import { NotifcationContext } from "./NotificationProvider";
-import CookiesService from "@/services/CookiesService";
-import Lobby from "@/models/Lobby.model";
-import { useRouter } from "next/router";
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
+import { WebSocketContext } from "./WebSocketContextWrapper"
+import User from "@/models/User.model"
+import { NotifcationContext } from "./NotificationProvider"
+import CookiesService from "@/services/CookiesService"
+import Lobby from "@/models/Lobby.model"
+import { useRouter } from "next/router"
+import ProfileData from "@/models/ProfileData.model"
 
 export const LobbyContext = createContext<Lobby | null>(null)
 export default function LobbyProvider({ children }: PropsWithChildren) {
-	const notify = useContext(NotifcationContext)
-	const router = useRouter();
-	const [lobby, setLobby] = useState<Lobby | null>(null);
-	const socket = useContext(WebSocketContext)
-	useEffect(() => {
-		if (!socket)
-			return;
-		socket.emit("getLobbyData", { token: CookiesService.getJwtCookie() })
+  const notify = useContext(NotifcationContext)
+  const router = useRouter()
+  const [lobby, setLobby] = useState<Lobby | null>(null)
+  const socket = useContext(WebSocketContext)
+  useEffect(() => {
+    if (!socket) return
+    socket.emit("getLobbyData", { token: CookiesService.getJwtCookie() })
 
-		const onlobbyInvite = ((data: any) => {
+    const onlobbyInvite = (data: any) => {
+      notify({
+        buttonEvent: () => {
+          socket.emit("lobbyAccept", {
+            token: CookiesService.getJwtCookie(),
+            data: data,
+          })
+        },
+        buttonTitle: "Accept",
+        title: "lobby invite",
+        message: `${data.username} invited you to lobby`,
+        imgSrc: data.avatarUrl,
+      })
+    }
 
-			notify(
-				{
-					buttonEvent: () => {
-						socket.emit("lobbyAccept", { token: CookiesService.getJwtCookie(), data: data })
+    const onLeaveLobby = (data: ProfileData) => {
+      setLobby(null)
+      if (!data) return
 
-					},
-					buttonTitle: "Accept",
-					title: "lobby invite",
-					message: `${data.username} invited you to lobby`,
-					imgSrc: data.avatarUrl,
+      notify({
+        title: "Lobby notice",
+        message: `${data.username} has left the lobby`,
+        imgSrc: data.avatarUrl,
+      })
+    }
+    const onLobbyCreated = (data: Lobby) => {
+      router.push("/game/lobby")
 
-				}
-			)
-		})
+      setLobby(data)
+    }
+    const onLobbyChange = (lobby: Lobby) => {
+      console.log(lobby)
 
-		const onLeaveLobby = () => {
-			setLobby(null);
-		}
-		const onLobbyCreated = ((data: Lobby) => {
-			router.push("/game/lobby")
-
-			setLobby(data);
-		})
-		const onLobbyChange = (lobby: Lobby) => {
-			alert("yes")
-			console.log(lobby);
-
-			setLobby(lobby);
-		}
-		socket.on("lobbyData", onLobbyCreated);
-		socket.on("lobbyInvite", onlobbyInvite);
-		socket.on("leaveLobby", onLeaveLobby);
-		socket.on("lobbyChange", onLobbyChange)
-		return () => {
-			socket.off("lobbyCreated", onLobbyCreated);
-			socket.off("lobbyData", onlobbyInvite);
-			socket.off("leaveLobby", onLeaveLobby);
-			socket.off("lobbyChange", onLobbyChange)
-
-
-		}
-
-	}, [])
-	return (
-		<LobbyContext.Provider value={lobby}>
-			{children}
-		</LobbyContext.Provider>
-	)
+      setLobby(lobby)
+    }
+    socket.on("lobbyData", onLobbyCreated)
+    socket.on("lobbyInvite", onlobbyInvite)
+    socket.on("leaveLobby", onLeaveLobby)
+    socket.on("lobbyChange", onLobbyChange)
+    return () => {
+      socket.off("lobbyCreated", onLobbyCreated)
+      socket.off("lobbyData", onlobbyInvite)
+      socket.off("leaveLobby", onLeaveLobby)
+      socket.off("lobbyChange", onLobbyChange)
+    }
+  }, [])
+  return <LobbyContext.Provider value={lobby}>{children}</LobbyContext.Provider>
 }

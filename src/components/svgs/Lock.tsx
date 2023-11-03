@@ -1,4 +1,10 @@
-export default function Lock() {
+
+type Props = {
+  onClick?: (e: any) => void,
+  className?: string,
+}
+
+export default function Lock({onClick, className}: Props) {
   return (
     <svg
       width="20"
@@ -6,6 +12,8 @@ export default function Lock() {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={onClick}
+      className={className}
     >
       <path
         d="M15.8333 9.1665H4.16667C3.24619 9.1665 2.5 9.9127 2.5 10.8332V16.6665C2.5 17.587 3.24619 18.3332 4.16667 18.3332H15.8333C16.7538 18.3332 17.5 17.587 17.5 16.6665V10.8332C17.5 9.9127 16.7538 9.1665 15.8333 9.1665Z"

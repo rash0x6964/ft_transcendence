@@ -11,6 +11,7 @@ type Prop = {
 }
 
 
+
 export default function ChannelsList({ selectedId, handleClick, channelList}: Prop) {
 
   return (

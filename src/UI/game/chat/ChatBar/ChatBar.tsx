@@ -15,6 +15,7 @@ type Props = {
   channelList?: Channel[];
   clickOnDm: (id: string) => void;
   clickOnChannel: (id: string) => void;
+  createChannelEvent: (data: Channel) => void;
 };
 
 export default function ChatBar({
@@ -23,6 +24,7 @@ export default function ChatBar({
   selectedId,
   clickOnDm,
   clickOnChannel,
+  createChannelEvent,
 }: Props) {
   const [DMListSearched, setDMListSearched] = useState<any>([]);
   const [ChannelListSearched, setChannelSearched] = useState<any>([]);
@@ -65,7 +67,7 @@ export default function ChatBar({
 
   return (
     <div className="flex flex-col h-full">
-      <TopBar DMList={DMList} onChange={handleChange} />
+      <TopBar DMList={DMList} onChange={handleChange} createChannelEvent={createChannelEvent}/>
       <FriendsList
         selectedId={selectedId}
         handleClick={clickOnDm}

@@ -12,13 +12,33 @@ import CookiesService from "@/services/CookiesService"
 import Lobby from "@/models/Lobby.model"
 import { useRouter } from "next/router"
 import ProfileData from "@/models/ProfileData.model"
+import interval from "@/services/QueueService"
 
-export const LobbyContext = createContext<Lobby | null>(null)
+export const LobbyContext = createContext<any | null>(null)
 export default function LobbyProvider({ children }: PropsWithChildren) {
   const notify = useContext(NotifcationContext)
   const router = useRouter()
   const [lobby, setLobby] = useState<Lobby | null>(null)
+  const [timer, setTimer] = useState(0)
+  const [inQueue, setInQueue] = useState(false)
+
   const socket = useContext(WebSocketContext)
+
+  useEffect(() => {
+    if (!inQueue) {
+      setTimer(0)
+      return
+    }
+
+    const interval = setInterval(() => {
+      setTimer((prevState) => prevState + 1)
+    }, 1000)
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [inQueue])
+
   useEffect(() => {
     if (!socket) return
     socket.emit("getLobbyData", { token: CookiesService.getJwtCookie() })
@@ -41,7 +61,10 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     const onLeaveLobby = (data: ProfileData) => {
       setLobby(null)
       if (!data) return
-
+      socket.emit("presence", {
+        token: CookiesService.getJwtCookie(),
+        data: "Online",
+      })
       notify({
         title: "Lobby notice",
         message: `${data.username} has left the lobby`,
@@ -50,7 +73,12 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     }
     const onLobbyCreated = (data: Lobby) => {
       router.push("/game/lobby")
-
+      socket.emit("presence", {
+        token: CookiesService.getJwtCookie(),
+        data: "In-Lobby",
+      })
+      setInQueue(false)
+      setTimer(0)
       setLobby(data)
     }
     const onLobbyChange = (lobby: Lobby) => {
@@ -58,16 +86,37 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
 
       setLobby(lobby)
     }
+
+    const onMatchFound = () => {
+      notify({
+        title: "match notice",
+        message: `Match Found`,
+        imgSrc: "https://cdn-icons-png.flaticon.com/512/3104/3104645.png",
+      })
+    }
+
     socket.on("lobbyData", onLobbyCreated)
     socket.on("lobbyInvite", onlobbyInvite)
     socket.on("leaveLobby", onLeaveLobby)
     socket.on("lobbyChange", onLobbyChange)
+    socket.on("matchFound", onMatchFound)
     return () => {
       socket.off("lobbyCreated", onLobbyCreated)
       socket.off("lobbyData", onlobbyInvite)
       socket.off("leaveLobby", onLeaveLobby)
       socket.off("lobbyChange", onLobbyChange)
+      socket.off("matchFound", onMatchFound)
     }
   }, [])
-  return <LobbyContext.Provider value={lobby}>{children}</LobbyContext.Provider>
+  return (
+    <LobbyContext.Provider
+      value={{
+        lobby,
+        timerState: [timer, setTimer],
+        queueState: [inQueue, setInQueue],
+      }}
+    >
+      {children}
+    </LobbyContext.Provider>
+  )
 }

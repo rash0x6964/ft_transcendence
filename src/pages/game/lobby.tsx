@@ -20,8 +20,10 @@ import CookiesService from "@/services/CookiesService"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
-  const lobby = useContext(LobbyContext)
   const { profileData: profile, setProfileData } = useContext(ProfileContext)
+  const { lobby, queueState, timerState } = useContext(LobbyContext)
+  const [inQueue, setInQueue] = queueState
+  const [timer, setTimer] = timerState
 
   let radios: string[] = ["Ranked", "Unranked"]
   const [dialogueClose, setDialogueClose] = useState(true)
@@ -34,9 +36,9 @@ const Page: NextPageWithLayout = () => {
   }
 
   const handleRadioChange = (data: string) => {
+    setRanked(data)
     if (!lobby) return
     let tmpLobby = lobby
-    setRanked(data)
 
     tmpLobby.ranked = data == "Ranked"
     socket?.emit("lobbyChange", {
@@ -45,7 +47,36 @@ const Page: NextPageWithLayout = () => {
     })
   }
 
-  let inQ: boolean = false
+  const handleFindMatch = () => {
+    socket?.emit("presence", {
+      token: CookiesService.getJwtCookie(),
+      data: "In-Queue",
+    })
+
+    socket?.emit("enterQueue", {
+      token: CookiesService.getJwtCookie(),
+      data: {
+        rating: profile.profile.rating,
+        gameMode: "normal",
+        ranked: ranked == "Ranked",
+      },
+    })
+    setInQueue(true)
+  }
+
+  const handleCancelQueue = () => {
+    socket?.emit("presence", {
+      token: CookiesService.getJwtCookie(),
+      data: "Online",
+    })
+
+    socket?.emit("leaveQueue", {
+      token: CookiesService.getJwtCookie(),
+    })
+
+    setInQueue(false)
+  }
+
   if (lobby)
     return (
       <>
@@ -79,35 +110,21 @@ const Page: NextPageWithLayout = () => {
               RP={lobby.players[1].profile.rating}
             />
           </div>
-          <div className="flex flex-col flex-1 justify-around">
-            <RadioGroup
-              disabled={!lobby?.isOwner}
-              className="flex gap-4 mx-auto "
-              onChange={handleRadioChange}
-              radios={radios}
-              defaultVal={ranked}
-              glow={true}
-            />
-            <GameModBar
-              className={`w-fit mx-auto  bg-secondary ${
-                !lobby?.isOwner ? "opacity-60" : ""
-              }`}
-            />
-            {lobby?.queueLobby && (
-              <div className="mx-auto">
-                {!inQ && (
-                  <MainButton
-                    glow={true}
-                    className="px-20 py-6 items-center text-lg font-semibold mx-auto self-end"
-                  >
-                    Find Game
-                  </MainButton>
-                )}
-                {inQ && <QueueTimer />}
-              </div>
-            )}
 
-            {!lobby.queueLobby && (
+          {!lobby.queueLobby && (
+            <div className="flex flex-col flex-1 justify-around">
+              <RadioGroup
+                disabled={!lobby?.isOwner}
+                className="flex gap-4 mx-auto "
+                onChange={handleRadioChange}
+                radios={radios}
+                defaultVal={ranked}
+                glow={true}
+              />
+              <GameModBar
+                disabled={!lobby?.isOwner}
+                className={`w-fit mx-auto  bg-secondary  `}
+              />
               <div className="mx-auto">
                 <MainButton
                   glow={true}
@@ -116,8 +133,8 @@ const Page: NextPageWithLayout = () => {
                   Create Game
                 </MainButton>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </>
     )
@@ -150,11 +167,14 @@ const Page: NextPageWithLayout = () => {
               <SwordsLogo className="my-auto" />
             </div>
 
-            <OpponentCard onClick={() => setDialogueClose(false)} />
+            <OpponentCard
+              inQ={inQueue}
+              onClick={() => setDialogueClose(false)}
+            />
           </div>
           <div className="flex flex-col flex-1 justify-around">
             <RadioGroup
-              disabled={false}
+              disabled={inQueue}
               className="flex gap-4 mx-auto "
               onChange={handleRadioChange}
               radios={radios}
@@ -162,18 +182,24 @@ const Page: NextPageWithLayout = () => {
               glow={true}
             />
 
-            <GameModBar className={`w-fit mx-auto  bg-secondary `} />
+            <GameModBar
+              disabled={inQueue}
+              className={`w-fit mx-auto  bg-secondary `}
+            />
 
             <div className="mx-auto">
-              {!inQ && (
+              {!inQueue && (
                 <MainButton
+                  onClick={handleFindMatch}
                   glow={true}
                   className="px-20 py-6 items-center text-lg font-semibold mx-auto self-end"
                 >
                   Find Game
                 </MainButton>
               )}
-              {inQ && <QueueTimer />}
+              {inQueue && (
+                <QueueTimer time={timer} onClick={handleCancelQueue} />
+              )}
             </div>
           </div>
         </div>

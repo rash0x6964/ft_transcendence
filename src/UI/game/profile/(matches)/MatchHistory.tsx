@@ -19,7 +19,10 @@ export default function MatchHistory({ profileData }: Props) {
 
     const fetchData = async () => {
       try {
-        const matchModels = await matchService.getAllMatchesById(profileData.id)
+        const matchModels = await matchService.getAllMatchesByIdByOffset(
+          profileData.id,
+          0
+        )
         setMatches(await matchService.getMatchProps(profileData, matchModels))
       } catch (error) {
         console.log("Couldn't fetch matches")

@@ -7,9 +7,11 @@ import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import profileService from "@/services/ProfileService"
 import ProfileLeaderboardData from "@/models/ProfileLeaderboardData.model"
+import MainButton from "@/components/BaseComponents/MainButton"
 
 const Page: NextPageWithLayout = () => {
   const [leaderboard, setLeaderboard] = useState<ProfileLeaderboardData[]>([])
+  const [offset, setOffset] = useState(10)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +25,18 @@ const Page: NextPageWithLayout = () => {
 
     fetchData()
   }, [])
+
+  const onLoadMore = async () => {
+    try {
+      const _leaderboardAppend = await profileService.getLeaderboardOffset(
+        offset
+      )
+      setLeaderboard(leaderboard.concat(_leaderboardAppend))
+      setOffset(offset + 20)
+    } catch (error) {
+      console.log("Couldn't load more profiles")
+    }
+  }
 
   return (
     <div className="mx-auto flex flex-col gap-5 container pt-24">
@@ -56,7 +70,7 @@ const Page: NextPageWithLayout = () => {
                   key={e.id}
                   playerAvatar={e.avatarUrl}
                   playerName={e.username}
-                  rank={index + 4}
+                  rank={index + 1}
                   rp={e.profile.rating}
                   winrate={e.winrate || "N/A"}
                   nbGame={e.games}
@@ -65,6 +79,7 @@ const Page: NextPageWithLayout = () => {
           })}
         </div>
       </div>
+      <MainButton onClick={onLoadMore}>Load More</MainButton>
     </div>
   )
 }

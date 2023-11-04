@@ -14,8 +14,10 @@ type Props = {
   DMList?: DirectMessage[];
   channelList?: Channel[];
   clickOnDm: (id: string) => void;
-  clickOnChannel: (id: string) => void;
+  clickOnChannel: (data: Channel) => void;
   createChannelEvent: (data: Channel) => void;
+  handleOnChange: (val: string) => void;
+  isLoading: {dm: boolean, room:boolean};
 };
 
 export default function ChatBar({
@@ -25,60 +27,62 @@ export default function ChatBar({
   clickOnDm,
   clickOnChannel,
   createChannelEvent,
+  handleOnChange,
+  isLoading,
 }: Props) {
-  const [DMListSearched, setDMListSearched] = useState<any>([]);
-  const [ChannelListSearched, setChannelSearched] = useState<any>([]);
-  const [val, setVal] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [DMListSearched, setDMListSearched] = useState<any>([]);
+  // const [ChannelListSearched, setChannelSearched] = useState<any>([]);
+  // const [val, setVal] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (val == "") {
-      setIsLoading(false);
-      setChannelSearched(channelList)
-      return;
-    }
-    setIsLoading(true);
-    const timeout = setTimeout(() => {
-      ChannelSevice.getChannelByName(val)
-        .then((res) => {
-          setChannelSearched(res.data);
-          setIsLoading(false);
-        })
-        .catch((err) => {});
-    }, 200);
+  // useEffect(() => {
+  //   if (val == "") {
+  //     setIsLoading(false);
+  //     // setChannelSearched(channelList)
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   // const timeout = setTimeout(() => {
+  //   //   ChannelSevice.getChannelByName(val)
+  //   //     .then((res) => {
+  //   //       setChannelSearched(res.data);
+  //   //       setIsLoading(false);
+  //   //     })
+  //   //     .catch((err) => {});
+  //   // }, 200);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [val]);
+  //   // return () => {
+  //   //   clearTimeout(timeout);
+  //   // };
+  // }, [val]);
 
-  useEffect(() => {
-    setDMListSearched(DMList);
-    setChannelSearched(channelList);
-  }, [DMList, channelList]);
+  // useEffect(() => {
+  //   setDMListSearched(DMList);
+  //   setChannelSearched(channelList);
+  // }, [DMList, channelList]);
 
-  const handleChange = (val: string) => {
-    setDMListSearched(
-      DMList?.filter((item) => item.friend?.userName.startsWith(val))
-    );
+  // const handleChange = (val: string) => {
+  //   setDMListSearched(
+  //     DMList?.filter((item) => item.friend?.userName.startsWith(val))
+  //   );
 
-    setVal(val)
-  };
+  //   setVal(val)
+  // };
 
   return (
     <div className="flex flex-col h-full">
-      <TopBar DMList={DMList} onChange={handleChange} createChannelEvent={createChannelEvent}/>
+      <TopBar DMList={DMList} onChange={handleOnChange} createChannelEvent={createChannelEvent}/>
       <FriendsList
         selectedId={selectedId}
         handleClick={clickOnDm}
-        DMList={DMListSearched}
+        DMList={DMList}
       />
       <ChannelSeparator />
-			{isLoading && <Loader className="mx-auto scale-50" />}
-      {!isLoading && <ChannelsList
+			{isLoading.room && <Loader className="mx-auto scale-50" />}
+      {!isLoading.room && <ChannelsList
         selectedId={selectedId}
         handleClick={clickOnChannel}
-        channelList={ChannelListSearched}
+        channelList={channelList}
       />}
     </div>
   );

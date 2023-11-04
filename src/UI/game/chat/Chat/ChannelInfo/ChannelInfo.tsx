@@ -61,16 +61,6 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       .catch((err) => {});
   }, [selectedChannel]);
 
-  // let memberList: ChannelUser[] = channelInfo.filter((item) => {
-  //   return item.role == "MEMBER";
-  // });
-  // let adminList: ChannelUser[] = channelInfo.filter((item) => {
-  //   return item.role == "ADMINISTRATOR";
-  // });
-  // let owner: ChannelUser | undefined = channelInfo.find((item) => {
-  //   return item.role == "OWNER";
-  // });
-
   const LeaveRoomEvent = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
@@ -86,7 +76,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
 
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
-      {selectedChannel && selectedChannel.owner != 'OWNER' ? (
+      {selectedChannel && selectedChannel.owner != "OWNER" ? (
         <LeaveRoom
           className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
           onClick={LeaveRoomEvent}

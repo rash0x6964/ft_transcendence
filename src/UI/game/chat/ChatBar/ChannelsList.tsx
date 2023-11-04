@@ -7,7 +7,7 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 type Prop = {
   selectedId: string,
   channelList?: Channel[],
-  handleClick: (id: string) => void
+  handleClick: (data: Channel) => void
 }
 
 
@@ -23,6 +23,7 @@ export default function ChannelsList({ selectedId, handleClick, channelList}: Pr
             key={data.id}
             id={data.id}
             channelName={data.name}
+            data={data}
             handleClick={handleClick}
             isSelected={selectedId == data.id}
             lastMessage={(data.message && data.message[0]?.content)??"say hi to your friends!"}

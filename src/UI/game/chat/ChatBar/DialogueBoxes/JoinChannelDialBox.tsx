@@ -6,12 +6,12 @@ import Lock from "@/components/svgs/Lock";
 import TVIcn from "@/components/svgs/TVIcn";
 import { Channel, JoinChannel } from "@/models/Channel.model";
 import ChannelSevice from "@/services/Channel.sevice";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ChannelInfo from "../../Chat/ChannelInfo/ChannelInfo";
 import { it } from "node:test";
 
 type Props = {
-  channelInfo: any;
+  channelInfo: Channel;
   event: (data: any) => void;
 };
 
@@ -22,6 +22,16 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
 
   const [errorLog, setErrorLog] = useState([]);
   const [processing, setProcessing] = useState(false);
+  const [memberStatus, setMemberStatus] = useState<any>({})
+
+
+  useEffect(() => {
+      ChannelSevice.getChannelById(channelInfo.id)
+      .then((res) => {
+        setMemberStatus(res.data);
+      })
+      .catch((err) => {});
+  }, [])
 
   const joinChannelHandler = () => {
     const body: JoinChannel = {
@@ -34,11 +44,11 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
     setErrorLog([]);
     ChannelSevice.joinChannel(body)
     .then((res) => {
-      ChannelSevice.getChannelById(channelInfo.id)
-      .then((res) => {
-        event(res.data);
-      })
-      .catch((err) => {});
+      // ChannelSevice.getChannelById(channelInfo.id)
+      // .then((res) => {
+        event(channelInfo);
+      // })
+      // .catch((err) => {});
     })
     .catch((err) => {
       setProcessing(false);
@@ -64,11 +74,11 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
         </h4>
         <p className="self-center">
           <span className="font-light text-sm mr-3">
-            {channelInfo.channels?.length} Members
+            {memberStatus.channels?.length} Members
           </span>
           <span className="font-light text-sm text-primary-500">
             {
-              channelInfo.channels?.filter(
+              memberStatus.channels?.filter(
                 (item: any) => item.user.onlineStatus == true
               ).length
             }{" "}

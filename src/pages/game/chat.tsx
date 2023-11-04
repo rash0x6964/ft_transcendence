@@ -13,6 +13,7 @@ import { NextPageWithLayout } from "../_app";
 import { useRouter } from "next/router";
 import DMService from "@/services/DMService";
 import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox";
+import ChannelSevice from "@/services/Channel.sevice";
 
 const Page: NextPageWithLayout = () => {
   const [channelList, setChannelList] = useState<Channel[]>([]);
@@ -20,23 +21,37 @@ const Page: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<DirectMessage | Channel>();
   const [dialogueState, setDialogueState] = useState(true);
   const [refresh, setRefresh] = useState(true);
+  const [isSearch, setIsSearch] = useState(false);
   const router = useRouter();
 
-  const [channelTryingToJoin, setChannelTryingToJoin] = useState({});
+  const [channelTryingToJoin, setChannelTryingToJoin] = useState<
+    Channel | undefined
+  >(undefined);
+
+  const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
+    dm: false,
+    room: false,
+  });
+  const [searching, setSearching] = useState(false);
+  const [searchFor, setSearchFor] = useState("");
 
   const isChannel = () => {
     return (selected as Channel)?.visibility != undefined;
   };
 
   useEffect(() => {
+    setIsLoading({ dm: true, room: true });
+
     DMService.getDMList()
       .then(({ data }: { data: DirectMessage[] }) => {
         setDMList(data);
         if (router.query?.type == "DM")
           setSelected(data.find((x) => x.id == router.query?.id));
         else if (data.length > 0) setSelected(data[0]);
+        setIsLoading({ ...isLoading, dm: false });
       })
       .catch((err) => {
+        setIsLoading({ ...isLoading, dm: false });
         //error
       });
 
@@ -46,32 +61,53 @@ const Page: NextPageWithLayout = () => {
         if (router.query?.type == "channel")
           setSelected(data.find((x) => x.id == router.query?.id));
         else if (data.length > 0 && selected != undefined) setSelected(data[0]);
+        setIsLoading({ ...isLoading, room: false });
       })
       .catch((err) => {
+        setIsLoading({ ...isLoading, room: false });
         //error
       });
-  }, []);
+  }, [isSearch]);
 
   useEffect(() => {
     if (channelList.length) setSelected(channelList[0]);
     else if (DMList.length) setSelected(DMList[0]);
   }, [refresh]);
 
-  const clickOnChannel = (id: string) => {
-    const obj = channelList.find((item) => item.id == id);
-    if (obj) {
-      // setDialogueState(true);
+  useEffect(() => {
+    let timeout: any;
+    setIsLoading({ dm: false, room: true });
+    if (searchFor.length > 0) {
+      setDMList(
+        DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
+      );
+      timeout = setTimeout(() => {
+        ChannelSevice.getChannelByName(searchFor)
+          .then((res) => {
+            setChannelList(res.data);
+            setIsLoading({ dm: false, room: false });
+          })
+          .catch((err) => {
+            setIsLoading({ dm: false, room: false });
+          });
+      }, 200);
+    } else {
+      setIsLoading({ dm: false, room: false });
+      setIsSearch((isSearch) => !isSearch);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searching]);
+
+  const clickOnChannel = (data: Channel) => {
+    const obj = channelList.find((item) => item.id == data.id);
+    if (obj?.isMemeber == true) {
       setSelected(obj);
     } else {
-      ChannelService.getChannelById(id)
-        .then((res) => {
-          setChannelTryingToJoin(res.data);
-          setDialogueState(false);
-        })
-        .catch((err) => {
-          //error
-          setDialogueState(false);
-        });
+      setChannelTryingToJoin(obj);
+      setDialogueState(false);
     }
   };
 
@@ -93,8 +129,13 @@ const Page: NextPageWithLayout = () => {
 
   const roomLeaved = (channel_id: string) => {
     setChannelList(channelList.filter((item) => item.id != channel_id));
-
     setRefresh((prevState) => !prevState);
+  };
+
+  // search
+  const handleChange = (val: string) => {
+    setSearchFor(val);
+    setSearching((searching) => !searching);
   };
 
   return (
@@ -108,7 +149,9 @@ const Page: NextPageWithLayout = () => {
           selectedId={selected?.id ?? ""}
           clickOnDm={clickOnDm}
           clickOnChannel={clickOnChannel}
+          handleOnChange={handleChange}
           createChannelEvent={roomCreated}
+          isLoading={isLoading}
         />
       </div>
       <div className="flex-1 flex flex-col   h-full">
@@ -131,16 +174,10 @@ const Page: NextPageWithLayout = () => {
         closed={dialogueState}
       >
         <JoinChannelDialBox
-          channelInfo={channelTryingToJoin}
+          channelInfo={channelTryingToJoin as Channel}
           event={roomJoined}
         />
       </Dialogue>
-
-      {/* <Dialogue closed={true}>
-				<CreateChannelDialBox />
-				<EditChannelDialBox />
-				<JoinChannelDialBox />
-			</Dialogue> */}
     </div>
   );
 };

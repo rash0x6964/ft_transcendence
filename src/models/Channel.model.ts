@@ -23,6 +23,7 @@ interface Channel {
 	message: Message[];
 
 	owner?: "OWNER" | "ADMINISTRATOR" | "MEMBER";
+	isMemeber?: boolean;
 }
 
 interface CreateChannel {

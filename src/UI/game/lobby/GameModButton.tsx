@@ -7,6 +7,7 @@ type Props = {
   gameMod: string
   img: string
   onClick: () => void
+  disabled: boolean
 }
 export default function GameModButton({
   className,
@@ -14,11 +15,14 @@ export default function GameModButton({
   gameMod,
   img,
   onClick,
+  disabled = false,
 }: Props) {
   return (
     <button
       onClick={onClick}
-      className={`w-44 h-16 rounded-xl relative duration-500 hover:border-primary border-2 ${className} ${
+      className={`w-44 h-16 rounded-xl relative duration-500 ${
+        !disabled ? " hover:border-primary " : "cursor-default"
+      }  border-2 ${className} ${
         selected ? "border-primary" : "border-transparent"
       }  `}
     >

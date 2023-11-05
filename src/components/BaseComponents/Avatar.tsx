@@ -17,7 +17,6 @@ export default function Avatar({
   onClick,
   override = false,
 }: Props) {
-
   return (
     <Image
       onClick={onClick}

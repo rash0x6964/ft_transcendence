@@ -150,7 +150,10 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
         <MenuBtn title="Mute" />
         <MenuBtn title="Ban" />
       </ContextMenu>
-      <Dialogue onBackDropClick={() => setDialogueState(true)} closed={dialogueState}>
+      <Dialogue
+        onBackDropClick={() => setDialogueState(true)}
+        closed={dialogueState}
+      >
         <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
           <p className="font-bold text-white ">Leaving Channel</p>
           <p className="font-light mb-9">

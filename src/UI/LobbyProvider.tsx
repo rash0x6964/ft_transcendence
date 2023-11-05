@@ -107,8 +107,8 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     socket.on("matchFound", onMatchFound)
     socket.on("matchStarting", onMatchStarting)
     return () => {
-      socket.off("lobbyCreated", onLobbyCreated)
-      socket.off("lobbyData", onlobbyInvite)
+      socket.off("lobbyData", onLobbyCreated)
+      socket.off("lobbyInvite", onlobbyInvite)
       socket.off("leaveLobby", onLeaveLobby)
       socket.off("lobbyChange", onLobbyChange)
       socket.off("matchFound", onMatchFound)

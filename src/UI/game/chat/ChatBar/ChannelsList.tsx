@@ -15,7 +15,7 @@ type Prop = {
 export default function ChannelsList({ selectedId, handleClick, channelList}: Prop) {
 
   return (
-    <div className="flex flex-col gap-2 overflow-y-scroll">
+    <div className="flex flex-col gap-2 overflow-y-scroll animate__animated animate__fadeIn">
       {
         channelList?.map((data) => {
 				  const date = new Date((data.message && data.message[0]?.createdAt) || Date.now())

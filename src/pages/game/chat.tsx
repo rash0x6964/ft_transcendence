@@ -21,7 +21,6 @@ const Page: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
-  // const [isSearch, setIsSearch] = useState(false)
   const router = useRouter()
 
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
@@ -32,7 +31,6 @@ const Page: NextPageWithLayout = () => {
     dm: false,
     room: false,
   })
-  // const [searching, setSearching] = useState(false);
   const [searchFor, setSearchFor] = useState("")
 
   const isChannel = () => {
@@ -46,49 +44,49 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     let timeout: any
-    // setIsLoading({ dm: false, room: true })
+    setIsLoading({ dm: true, room: true })
     if (searchFor == "") {
       timeout = setTimeout(() => {
         DMService.getDMList()
           .then(({ data }: { data: DirectMessage[] }) => {
             setDMList(data)
+            setIsLoading((obj) => { return { ...obj, dm: false }})
             if (router.query?.type == "DM")
               setSelected(data.find((x) => x.id == router.query?.id))
             else if (data.length > 0) setSelected(data[0])
-            // setIsLoading({ ...isLoading, dm: false })
           })
           .catch((err) => {
-            // setIsLoading({ ...isLoading, dm: false })
+            setIsLoading((obj) => { return { ...obj, dm: false }})
             //error
           })
 
         ChannelService.getChannelList()
           .then(({ data }: { data: Channel[] }) => {
             setChannelList(data)
+            setIsLoading((obj) => { return { ...obj, room: false }})
             if (router.query?.type == "channel")
               setSelected(data.find((x) => x.id == router.query?.id))
             else if (data.length > 0 && selected != undefined)
               setSelected(data[0])
-            // setIsLoading({ ...isLoading, room: false })
           })
           .catch((err) => {
-            // setIsLoading({ ...isLoading, room: false })
+            setIsLoading((obj) => { return { ...obj, room: false }})
             //error
           })
       }, 300)
-      // setIsLoading({ dm: true, room: true })
     } else {
-      setDMList(
-        DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
-      )
       timeout = setTimeout(() => {
+        setDMList(
+          DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
+          )
+        setIsLoading((obj) => { return { ...obj, dm: false}})
         ChannelSevice.getChannelByName(searchFor)
           .then((res) => {
             setChannelList(res.data)
-            // setIsLoading({ dm: false, room: false })
+            setIsLoading((obj) => { return { ...obj, room: false }})
           })
           .catch((err) => {
-            // setIsLoading({ dm: false, room: false })
+            setIsLoading((obj) => { return { ...obj, room: false }})
           })
       }, 1000)
     }
@@ -119,7 +117,6 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomJoined = (data: Channel) => {
-    setChannelList(channelList.concat(data))
     setSelected(data)
     setDialogueState(true)
   }
@@ -129,10 +126,8 @@ const Page: NextPageWithLayout = () => {
     setRefresh((prevState) => !prevState)
   }
 
-  // search
   const handleChange = (val: string) => {
-    setSearchFor(val)
-    // setSearching((searching) => !searching);
+    setSearchFor(val.trim())
   }
 
   return (

@@ -8,7 +8,7 @@ type Prop = {
 };
 export default function FriendsList({ selectedId, handleClick, DMList }: Prop) {
   return (
-    <div className="flex flex-col h-[40%] gap-2 overflow-y-scroll">
+    <div className="flex flex-col h-[40%] gap-2 overflow-y-scroll animate__animated animate__fadeIn ">
       {DMList?.map((data: DirectMessage) => {
         const date = new Date(data.message?.createdAt ?? Date.now());
         return (

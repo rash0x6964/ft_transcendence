@@ -78,12 +78,10 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
         data: "In-Lobby",
       })
       setInQueue(false)
-      setTimer(0)
       setLobby(data)
     }
     const onLobbyChange = (lobby: Lobby) => {
-      console.log(lobby)
-
+      setInQueue(false)
       setLobby(lobby)
     }
 
@@ -93,6 +91,13 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
         message: `Match Found`,
         imgSrc: "https://cdn-icons-png.flaticon.com/512/3104/3104645.png",
       })
+      setTimer(10)
+    }
+
+    const onMatchStarting = (counter: number) => {
+      console.log("yes")
+
+      setTimer(counter)
     }
 
     socket.on("lobbyData", onLobbyCreated)
@@ -100,12 +105,14 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     socket.on("leaveLobby", onLeaveLobby)
     socket.on("lobbyChange", onLobbyChange)
     socket.on("matchFound", onMatchFound)
+    socket.on("matchStarting", onMatchStarting)
     return () => {
       socket.off("lobbyCreated", onLobbyCreated)
       socket.off("lobbyData", onlobbyInvite)
       socket.off("leaveLobby", onLeaveLobby)
       socket.off("lobbyChange", onLobbyChange)
       socket.off("matchFound", onMatchFound)
+      socket.off("matchStarting", onMatchStarting)
     }
   }, [])
   return (

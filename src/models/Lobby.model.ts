@@ -9,7 +9,7 @@ export default interface Lobby {
 	owner: string,
 	queueLobby: boolean
 	gameData: any
-	lobbySate: "ingame" | "idle" | "inQueue"
+	lobbySate: "ingame" | "idle" | "starting"
 	isOwner?: boolean
 
 }

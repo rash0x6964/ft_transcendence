@@ -12,7 +12,7 @@ type Props = {
 
 export default function MatchHistory({ profileData }: Props) {
   const [matches, setMatches] = useState<MatchDisplayData[]>([])
-  const [offset, setOffset] = useState(5)
+  const [shouldLoadMore, setShouldLoadMore] = useState(true)
 
   useEffect(() => {
     if (!profileData) return
@@ -33,16 +33,18 @@ export default function MatchHistory({ profileData }: Props) {
   }, [profileData])
 
   const onLoadMore = async () => {
+    if (shouldLoadMore === false) return
+
     try {
       const _matchAppend = await matchService.getAllMatchesByIdByOffset(
         profileData.id,
-        offset
+        matches.length
       )
       const _matchAppendModels = await matchService.getMatchProps(
         profileData,
         _matchAppend
       )
-      setOffset(offset + 5)
+      _matchAppend.length === 0 && setShouldLoadMore(false)
       setMatches(matches.concat(_matchAppendModels))
     } catch (error) {
       console.log("Couldn't fetch more matches")

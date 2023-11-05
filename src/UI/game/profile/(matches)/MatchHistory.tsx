@@ -44,14 +44,16 @@ export default function MatchHistory({ profileData }: Props) {
       )
       setOffset(offset + 5)
       setMatches(matches.concat(_matchAppendModels))
-    } catch (error) {}
+    } catch (error) {
+      console.log("Couldn't fetch more matches")
+    }
   }
 
   return (
     <div className="m-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
-        {matches.map(match => (
+        {matches.map((match) => (
           <MatchEntry key={match.id} match={match} />
         ))}
       </div>

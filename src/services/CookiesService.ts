@@ -18,7 +18,9 @@ const deleteProviderCookie = () => {
 const delete2FACookie = () => {
   document.cookie = `TWO_AUTH_FACT=`
 }
-
+const deleteUserCookie = () => {
+  document.cookie = `USER=`
+}
 const getJwtCookie = () => getCookieValue(jwtCookieName)
 const getInfoCookie = () => getCookieValue("INFO")
 const getProvdierCookie = () => getCookieValue("PROVIDER")
@@ -33,4 +35,5 @@ export default {
   getProvdierCookie,
   get2FACookie,
   delete2FACookie,
+  deleteUserCookie,
 }

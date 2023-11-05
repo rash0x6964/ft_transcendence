@@ -5,7 +5,7 @@ import Game from "./settings/icons/Game"
 import Profile from "./settings/icons/Profile"
 import Security from "./settings/icons/Security"
 import AuthProvider from "./AuthProvider"
-
+import LogoutButton from "./settings/LogoutButton"
 const lexend = Lexend({ subsets: ["latin"] })
 
 export default function SettingLayout({
@@ -29,6 +29,7 @@ export default function SettingLayout({
               icon={<Security />}
             />
             <NavButton title="Game Prefrences" path="game" icon={<Game />} />
+            <LogoutButton />
           </div>
           <div className="w-[823px]">{children}</div>
         </div>

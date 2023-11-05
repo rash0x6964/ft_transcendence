@@ -5,14 +5,15 @@ import { SetStateAction, useState } from "react";
 import Dialogue from "@/components/Dialogue/Dialogue";
 import CreateChannelDialBox from "./DialogueBoxes/CreateChannelDialBox";
 import DirectMessage from "@/models/DM.model";
+import { Channel } from "@/models/Channel.model";
 
 type Props = {
 	DMList?: DirectMessage[],
 	onChange?: (val: string) => void
-
+	createChannelEvent: (data: Channel) => void
 }
 
-export default function TopBar({ DMList, onChange }: Props) {
+export default function TopBar({ DMList, onChange, createChannelEvent }: Props) {
 
 	const [search, setSearch] = useState("")
 
@@ -46,7 +47,7 @@ export default function TopBar({ DMList, onChange }: Props) {
 				onBackDropClick={() => setDialogueState(true)}
 				closed={dialogueState}
 			>
-				<CreateChannelDialBox handler={saveChannel} />
+				<CreateChannelDialBox handler={saveChannel} createChannelEvent={createChannelEvent} />
 			</Dialogue>
 		</div>
 	);

@@ -15,7 +15,7 @@ export default function NavButton({ title = "Profile", path, icon }: Props) {
     <Link
       href={href}
       className={
-        "flex py-3 rounded-xl pl-3" +
+        "flex py-3 rounded-xl pl-3 hover:bg-selected" +
         (selected ? " bg-selected" : " bg-secondary")
       }
     >

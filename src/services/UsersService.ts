@@ -4,7 +4,6 @@ import env from "@/environment/environment"
 import cookieService from "./CookiesService"
 import { ProviderToken } from "@/types/Auth"
 import { UpdatePassword, UpdateUser } from "@/types/User"
-import User from "@/models/User.model"
 
 const update = (userData: UpdateUser) => {
   return HttpClient.patch("/users", userData).then((res) => res.data)
@@ -17,7 +16,9 @@ const updatePassword = (passwordData: UpdatePassword) => {
 }
 
 const getCurrent = () => {
-  return HttpClient.get("/users/current").then((res) => res.data)
+  return HttpClient.get("/users/current").then((res) => {
+    return res.data
+  })
 }
 
 const uploadPhoto = (formData: any, type: "banners" | "avatars") => {
@@ -52,6 +53,10 @@ const getById = (id: string) => {
   return HttpClient.get(`${env.endPoint}/users/${id}`).then((res) => res.data)
 }
 
+const unlink = (provider: "GITHUB" | "INTRA" | "GOOGLE") => {
+  return HttpClient.delete(`${env.endPoint}/provider/unlink/${provider}`)
+}
+
 export default {
   getById,
   addProvider,
@@ -61,4 +66,5 @@ export default {
   getCurrent,
   updatePassword,
   update,
+  unlink,
 }

@@ -26,7 +26,7 @@ HttpClient.interceptors.response.use(
   function (error) {
     if (error.response && error.response.status == "401")
       document.location = "/signup"
-    else return Promise.reject(error)
+    return Promise.reject(error)
   }
 )
 

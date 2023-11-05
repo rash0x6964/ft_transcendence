@@ -1,92 +1,91 @@
-import Podium from "@/UI/game/leaderboard/Podium";
-import TableHead from "@/UI/game/leaderboard/TableHead";
-import TableRow from "@/UI/game/leaderboard/TableRow";
-import { NextPageWithLayout } from "../_app";
-import { ReactElement } from "react";
-import Layout from "@/UI/Layout";
-import HeadTitle from "@/components/BaseComponents/HeadTitle";
+import Podium from "@/UI/game/leaderboard/Podium"
+import TableHead from "@/UI/game/leaderboard/TableHead"
+import TableRow from "@/UI/game/leaderboard/TableRow"
+import { NextPageWithLayout } from "../_app"
+import { ReactElement, useEffect, useState } from "react"
+import Layout from "@/UI/Layout"
+import HeadTitle from "@/components/BaseComponents/HeadTitle"
+import profileService from "@/services/ProfileService"
+import ProfileLeaderboardData from "@/models/ProfileLeaderboardData.model"
+import MainButton from "@/components/BaseComponents/MainButton"
 
 const Page: NextPageWithLayout = () => {
+  const [leaderboard, setLeaderboard] = useState<ProfileLeaderboardData[]>([])
+  const [offset, setOffset] = useState(10)
 
-	return (
-		<div className="mx-auto flex flex-col gap-5 container pt-24">
-			<HeadTitle>Pong Fury | Leadeboard</HeadTitle>
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const _leaderboard = await profileService.getLeaderboard()
+        setLeaderboard(_leaderboard)
+      } catch (error) {
+        console.log("Couldn't fetch leaderboard")
+      }
+    }
 
-			<div className="flex gap-5 justify-around mb-8">
-				<div></div>
-				<Podium
-					playerAvatar="https://steamavatar.io/img/1477742918oUeJT.jpg"
-					playerName="rash"
-					position={1}
-					rp={8500}
-				/>
+    fetchData()
+  }, [])
 
-				<Podium
-					playerAvatar="https://steamavatar.io/img/1477742918oUeJT.jpg"
-					playerName="ghali"
-					position={2}
-					rp={8500}
-				/>
+  const onLoadMore = async () => {
+    try {
+      const _leaderboardAppend = await profileService.getLeaderboardOffset(
+        offset
+      )
+      setLeaderboard(leaderboard.concat(_leaderboardAppend))
+      setOffset(offset + 20)
+    } catch (error) {
+      console.log("Couldn't load more profiles")
+    }
+  }
 
-				<Podium
-					playerAvatar="https://steamavatar.io/img/1477742918oUeJT.jpg"
-					playerName="samini"
-					position={3}
-					rp={8500}
-				/>
-				<div className="order-5"></div>
-			</div>
+  return (
+    <div className="mx-auto flex flex-col gap-5 container pt-24">
+      <HeadTitle>Pong Fury | Leadeboard</HeadTitle>
 
-			<div className="flex flex-col ">
-				<TableHead className="h-14 w-fill flex   pl-8 pr-16   text-sm text-slate-600 " />
-				<div className="flex flex-col gap-3">
-					<TableRow
-						nbGame={510}
-						playerAvatar="https://steamavatar.io/img/1477742911B8IH3.jpg"
-						playerName="KINSHIRO"
-						rank={4}
-						rp={8500}
-						winrate={50}
-					/>
-					<TableRow
-						nbGame={510}
-						playerAvatar="https://steamavatar.io/img/1477742911B8IH3.jpg"
-						playerName="KINSHIRO"
-						rank={4}
-						rp={8500}
-						winrate={50}
-					/>
-					<TableRow
-						nbGame={510}
-						playerAvatar="https://steamavatar.io/img/1477742911B8IH3.jpg"
-						playerName="KINSHIRO"
-						rank={4}
-						rp={8500}
-						winrate={50}
-					/>
-					<TableRow
-						nbGame={510}
-						playerAvatar="https://steamavatar.io/img/1477742911B8IH3.jpg"
-						playerName="KINSHIRO"
-						rank={4}
-						rp={8500}
-						winrate={50}
-					/>
-				</div>
+      <div className="flex gap-5 justify-around mb-8">
+        <div></div>
+        {leaderboard.map((e, index) => {
+          if (index < 3)
+            return (
+              <Podium
+                playerAvatar={e.avatarUrl}
+                playerName={e.username}
+                position={index + 1}
+                rp={e.profile.rating}
+              />
+            )
+        })}
+        <div className="order-5"></div>
+      </div>
 
-
-			</div>
-		</div>
-	)
+      <div className="flex flex-col ">
+        {leaderboard.length > 3 && (
+          <TableHead className="h-14 w-fill flex pl-8 pr-16 text-sm text-slate-600" />
+        )}
+        <div className="flex flex-col gap-3">
+          {leaderboard.map((e, index) => {
+            if (index > 2)
+              return (
+                <TableRow
+                  key={e.id}
+                  playerAvatar={e.avatarUrl}
+                  playerName={e.username}
+                  rank={index + 1}
+                  rp={e.profile.rating}
+                  winrate={e.winrate || "N/A"}
+                  nbGame={e.games}
+                />
+              )
+          })}
+        </div>
+      </div>
+      <MainButton onClick={onLoadMore}>Load More</MainButton>
+    </div>
+  )
 }
 
-
 Page.getLayout = function getLayout(page: ReactElement) {
-	return (
-		<Layout>
-			{page}
-		</Layout>
-	)
+  return <Layout>{page}</Layout>
 }
 
 export default Page

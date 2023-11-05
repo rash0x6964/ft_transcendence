@@ -71,7 +71,6 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
-        // if ()
         notify({
           message: "You left the channel successfully",
           title: "Leave Channel",

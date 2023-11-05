@@ -15,7 +15,7 @@ import cookieService from "@/services/CookiesService"
 import { Channel } from "@/models/Channel.model"
 import UploadService from "@/services/Upload.service"
 import Attachment from "@/models/Attachment.model"
-import DirectMessage from "@/models/DM.model"
+import DirectMessage from "@/models/DirectMessage.model"
 
 type Props = {
   channelData: DirectMessage | Channel | undefined

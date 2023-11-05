@@ -2,12 +2,64 @@ import Avatar from "@/components/BaseComponents/Avatar"
 import FriendAction from "./FriendAction"
 import RP from "@/components/svgs/RP"
 import User from "@/models/User.model"
+import DirectMessage from "@/models/DirectMessage.model"
+import DMService from "@/services/DirectMessageService"
 
 type Props = {
-  friend: User | undefined
+  dm: DirectMessage
+  takeAction: {
+    block: () => void
+    unblock: () => void
+    mute: () => void
+    unmute: () => void
+  }
 }
 
-export default function FriendCard({ friend }: Props) {
+export default function FriendCard({ dm, takeAction }: Props) {
+  const friend: User | undefined = dm?.friend
+
+  const obj: { senderID: string; receiverID: string } = {
+    senderID: dm?.senderID,
+    receiverID: dm?.receiverID,
+  }
+
+  const addFriend = () => {}
+  const unfriend = () => {}
+  const block = () => {
+    DMService.blockUser(obj)
+      .then((res) => {
+        console.log("res:", res.data)
+        takeAction.block()
+      })
+      .catch((err) => {
+        console.log("err:", err.data)
+      })
+  }
+  const unblock = () => {
+    DMService.unBlockUser(obj)
+      .then((res) => {
+        console.log("res:", res.data)
+        takeAction.unblock()
+      })
+      .catch((err) => {
+        console.log("err:", err.data)
+      })
+  }
+  const mute = () => {
+    DMService.muteUser(obj)
+      .then((res) => {
+        takeAction.mute()
+      })
+      .catch((err) => {})
+  }
+  const unmute = () => {
+    DMService.unMuteUser(obj)
+      .then((res) => {
+        takeAction.unmute()
+      })
+      .catch((err) => {})
+  }
+
   return (
     <div className=" gradient-border-2 w-96 max-h-[465px] drop-shadow-lg flex flex-col items-center justify-around p-10">
       <Avatar src={friend?.avatarUrl} className="w-40 h-40 mb-2" />
@@ -23,12 +75,25 @@ export default function FriendCard({ friend }: Props) {
 
       <div className="flex w-full space justify-around ">
         {true ? (
-          <FriendAction action="Unfriend" />
+          <FriendAction action="Unfriend" onclick={unfriend} />
         ) : (
-          <FriendAction action="Add friend" />
+          <FriendAction action="Add friend" onclick={addFriend} />
         )}
-        <FriendAction action="Block" />
-        <FriendAction action="Mute" />
+        {dm?.blockStatus == "NONE" ||
+        (dm?.blockStatus == "SENDER" && dm?.sender?.id == dm?.friend?.id) ||
+        (dm?.blockStatus == "RECEIVER" &&
+          dm?.receiver?.id == dm?.friend?.id) ? (
+          <FriendAction action="Block" onclick={block} />
+        ) : (
+          <FriendAction action="Unblock" onclick={unblock} />
+        )}
+        {dm?.muteStatus == "NONE" ||
+        (dm?.muteStatus == "SENDER" && dm?.sender?.id == dm?.friend?.id) ||
+        (dm?.muteStatus == "RECEIVER" && dm?.receiver?.id == dm?.friend?.id) ? (
+          <FriendAction action="Mute" onclick={mute} />
+        ) : (
+          <FriendAction action="Unmute" onclick={unmute} />
+        )}
       </div>
     </div>
   )

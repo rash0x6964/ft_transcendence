@@ -28,9 +28,9 @@ import {
   isMuted,
   useRightBarSocket,
 } from "./Helpers/RightBarHandlers"
-import DMService from "@/services/DMService"
+import DMService from "@/services/DirectMessageService"
 import { useRouter } from "next/router"
-import DirectMessage from "@/models/DM.model"
+import DirectMessage from "@/models/DirectMessage.model"
 type Props = {
   className?: string
 }

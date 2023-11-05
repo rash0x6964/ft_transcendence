@@ -1,139 +1,140 @@
-
-import FriendService from "@/services/Friend.service";
-import cookieService from "@/services/CookiesService";
-import FriendStatus from "@/models/FriendStatus.model";
-import { Socket } from "socket.io-client";
-import { useContext, useEffect, useState } from "react";
-import { NotifcationContext } from "@/UI/NotificationProvider";
-import DMService from "@/services/DMService";
-import DirectMessage from "@/models/DM.model";
+import FriendService from "@/services/Friend.service"
+import cookieService from "@/services/CookiesService"
+import FriendStatus from "@/models/FriendStatus.model"
+import { Socket } from "socket.io-client"
+import { useContext, useEffect, useState } from "react"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import DMService from "@/services/DirectMessageService"
+import DirectMessage from "@/models/DirectMessage.model"
 export const handleBlock = (selectedData: FriendStatus | null) => {
-	if (!selectedData)
-		return
+  if (!selectedData) return
 
-	DMService.blockUser(selectedData).then((data) => {
-		alert("success")
-	}).catch(err => {
-		alert("error")
-	})
+  DMService.blockUser(selectedData)
+    .then((data) => {
+      alert("success")
+    })
+    .catch((err) => {
+      alert("error")
+    })
 }
 
 export const handleUnblock = (selectedData: FriendStatus | null) => {
-	if (!selectedData)
-		return
-	DMService.unBlockUser(selectedData).then((data) => {
-		alert("success")
-	}).catch(err => {
-		alert("error")
-	})
+  if (!selectedData) return
+  DMService.unBlockUser(selectedData)
+    .then((data) => {
+      alert("success")
+    })
+    .catch((err) => {
+      alert("error")
+    })
 }
 
 export const handleMute = (selectedData: FriendStatus | null) => {
-	if (!selectedData)
-		return
-	DMService.blockUser(selectedData).then((data) => {
-		alert("success")
-	}).catch(err => {
-		alert("error")
-	})
+  if (!selectedData) return
+  DMService.blockUser(selectedData)
+    .then((data) => {
+      alert("success")
+    })
+    .catch((err) => {
+      alert("error")
+    })
 }
 
 export const handleUnMute = (selectedData: FriendStatus | null) => {
-	if (!selectedData)
-		return
-	DMService.unBlockUser(selectedData).then((data) => {
-		alert("success")
-	}).catch(err => {
-		alert("error")
-	})
+  if (!selectedData) return
+  DMService.unBlockUser(selectedData)
+    .then((data) => {
+      alert("success")
+    })
+    .catch((err) => {
+      alert("error")
+    })
 }
 
-export const handleFriendRemove = (selectedData: FriendStatus | null, socket: Socket | null) => {
-	if (!selectedData)
-		return
-	FriendService.removeFriend(selectedData).then(() => {
-		socket?.emit("friendAction", { token: cookieService.getJwtCookie(), data: selectedData });
-	}
-	).catch(err => {
-
-	})
-
+export const handleFriendRemove = (
+  selectedData: FriendStatus | null,
+  socket: Socket | null
+) => {
+  if (!selectedData) return
+  FriendService.removeFriend(selectedData)
+    .then(() => {
+      socket?.emit("friendAction", {
+        token: cookieService.getJwtCookie(),
+        data: selectedData,
+      })
+    })
+    .catch((err) => {})
 }
 
 export function isBlocked(data: DirectMessage | null): boolean {
-	if (data == null)
-		return false;
-	if (data.isSender)
-		return (data.blockStatus == "SENDER" || data.blockStatus == "BOTH")
-	if (!data.isSender)
-		return (data.blockStatus == "RECEIVER" || data.blockStatus == "BOTH")
-	return false;
+  if (data == null) return false
+  if (data.isSender)
+    return data.blockStatus == "SENDER" || data.blockStatus == "BOTH"
+  if (!data.isSender)
+    return data.blockStatus == "RECEIVER" || data.blockStatus == "BOTH"
+  return false
 }
 
 export function isMuted(data: DirectMessage | null): boolean {
-	if (data == null)
-		return false;
-	if (data.isSender)
-		return (data.muteStatus == "SENDER" || data.muteStatus == "BOTH")
-	if (!data.isSender)
-		return (data.muteStatus == "RECEIVER" || data.muteStatus == "BOTH")
-	return false;
+  if (data == null) return false
+  if (data.isSender)
+    return data.muteStatus == "SENDER" || data.muteStatus == "BOTH"
+  if (!data.isSender)
+    return data.muteStatus == "RECEIVER" || data.muteStatus == "BOTH"
+  return false
 }
 
+export function useRightBarSocket(
+  socket: Socket | null
+): [
+  friendList: FriendStatus[],
+  setFriendList: React.Dispatch<React.SetStateAction<FriendStatus[]>>
+] {
+  const [friendList, setFriendList] = useState<FriendStatus[]>([])
+  const [refresh, setRefresh] = useState(false)
 
+  useEffect(() => {
+    FriendService.getFriendList()
+      .then((data) => {
+        setFriendList(data.data)
+      })
+      .catch((err) => {})
+  }, [refresh])
 
-export function useRightBarSocket(socket: Socket | null): [friendList: FriendStatus[], setFriendList: React.Dispatch<React.SetStateAction<FriendStatus[]>>] {
-	const [friendList, setFriendList] = useState<FriendStatus[]>([])
-	const [refresh, setRefresh] = useState(false);
+  useEffect(() => {
+    const onConnect = (userId: string) => {
+      setFriendList((prevStatus: FriendStatus[]) => {
+        return prevStatus.map((data: FriendStatus) => {
+          if (data.friend && data.friend.id == userId)
+            data.friend.onlineStatus = true
+          return data
+        })
+      })
+    }
 
-	useEffect(() => {
-		FriendService.getFriendList().then((data) => {
-			setFriendList(data.data);
-		}).catch(err => {
+    const onDisconnect = (userId: string) => {
+      setFriendList((prevStatus: FriendStatus[]) => {
+        return prevStatus.map((data: FriendStatus) => {
+          if (data.friend && data.friend.id == userId)
+            data.friend.onlineStatus = false
+          return data
+        })
+      })
+    }
 
-		})
-	}, [refresh])
+    const onFriendAction = () => {
+      setRefresh((prevState) => !prevState)
+    }
 
+    socket?.on("connected", onConnect)
+    socket?.on("disconnected", onDisconnect)
+    socket?.on("friendAction", onFriendAction)
+    return () => {
+      socket?.off("connected", onConnect)
+      socket?.off("connected", onDisconnect)
+      socket?.off("friendAction", onFriendAction)
+    }
+  }, [])
 
-
-	useEffect(() => {
-		const onConnect = (userId: string) => {
-			setFriendList((prevStatus: FriendStatus[]) => {
-				return prevStatus.map((data: FriendStatus) => {
-					if (data.friend && data.friend.id == userId)
-						data.friend.onlineStatus = true;
-					return data;
-				})
-			})
-		}
-
-		const onDisconnect = (userId: string) => {
-			setFriendList((prevStatus: FriendStatus[]) => {
-				return prevStatus.map((data: FriendStatus) => {
-					if (data.friend && data.friend.id == userId)
-						data.friend.onlineStatus = false;
-					return data;
-				})
-			})
-		}
-
-		const onFriendAction = () => {
-			setRefresh(prevState => !prevState);
-		}
-
-
-		socket?.on("connected", onConnect);
-		socket?.on("disconnected", onDisconnect);
-		socket?.on("friendAction", onFriendAction);
-		return () => {
-			socket?.off("connected", onConnect)
-			socket?.off("connected", onDisconnect)
-			socket?.off("friendAction", onFriendAction);
-
-
-		}
-	}, [])
-
-
-	return [friendList, setFriendList]
+  return [friendList, setFriendList]
 }

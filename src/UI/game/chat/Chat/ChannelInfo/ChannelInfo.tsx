@@ -14,6 +14,10 @@ import LeaveRoom from "@/components/svgs/leaveRoom"
 import EditRoom from "@/components/svgs/editChannel"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import Dialogue from "@/components/Dialogue/Dialogue"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import { User } from "@/types/User"
+import cookieService from "@/services/CookiesService"
+
 
 type Props = {
   selectedChannel: Channel
@@ -21,6 +25,7 @@ type Props = {
 }
 
 export default function ChannelInfo({ selectedChannel, event }: Props) {
+  const socket = useContext(WebSocketContext)
   const notify = useContext(NotifcationContext)
 
   const menuRef = useRef<HTMLDivElement>(null)
@@ -62,6 +67,22 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
         )
       })
       .catch((err) => {})
+
+    const _join = (data: any) => {
+      setMemberList(memberList.concat(data))
+    }
+    const _left = (id: string) => {
+      setMemberList(memberList.filter((item) => item.userID != id))
+    }
+
+    socket?.on("new member joind", _join)
+    socket?.on("a member left", _left)
+
+    return () => {
+      socket?.off("new member joind", _join)
+      socket?.off("a member left", _left)
+    }
+
   }, [selectedChannel])
 
   const LeaveRoomEvent = (e: any) => {
@@ -71,6 +92,12 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
+
+        socket?.emit("channel left", {
+          token: cookieService.getJwtCookie(),
+          data: owner,
+        })
+
         notify({
           message: "You left the channel successfully",
           title: "Leave Channel",

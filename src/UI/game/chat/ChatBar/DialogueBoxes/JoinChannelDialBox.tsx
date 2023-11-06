@@ -1,64 +1,61 @@
-import Avatar from "@/components/BaseComponents/Avatar";
-import Input from "@/components/BaseComponents/Input";
-import MainButton from "@/components/BaseComponents/MainButton";
-import RadioGroup from "@/components/RadioGroup/RadioGroup";
-import Lock from "@/components/svgs/Lock";
-import TVIcn from "@/components/svgs/TVIcn";
-import { Channel, JoinChannel } from "@/models/Channel.model";
-import ChannelSevice from "@/services/Channel.sevice";
-import { useContext, useEffect, useState } from "react";
-import ChannelInfo from "../../Chat/ChannelInfo/ChannelInfo";
-import { it } from "node:test";
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import Avatar from "@/components/BaseComponents/Avatar"
+import Input from "@/components/BaseComponents/Input"
+import MainButton from "@/components/BaseComponents/MainButton"
+import Lock from "@/components/svgs/Lock"
+import { Channel, JoinChannel } from "@/models/Channel.model"
+import ChannelSevice from "@/services/Channel.sevice"
+import { useContext, useEffect, useState } from "react"
+import cookieService from "@/services/CookiesService"
 
 type Props = {
-  channelInfo: Channel;
-  event: (data: any) => void;
-};
+  channelInfo: Channel
+  event: (data: any) => void
+}
 
 export default function JoinChannelDialBox({ channelInfo, event }: Props) {
-  const [password, setPassword] = useState("");
-  const [lock, setLock] = useState(true);
-  const [channel, setChannel] = useState<Channel>();
+  const socket = useContext(WebSocketContext)
+  const [password, setPassword] = useState("")
+  const [lock, setLock] = useState(true)
 
-  const [errorLog, setErrorLog] = useState([]);
-  const [processing, setProcessing] = useState(false);
+  const [errorLog, setErrorLog] = useState([])
+  const [processing, setProcessing] = useState(false)
   const [memberStatus, setMemberStatus] = useState<any>({})
 
-
   useEffect(() => {
-      ChannelSevice.getChannelById(channelInfo.id)
+    ChannelSevice.getChannelById(channelInfo.id)
       .then((res) => {
-        setMemberStatus(res.data);
+        setMemberStatus(res.data)
       })
-      .catch((err) => {});
+      .catch((err) => {})
   }, [])
 
   const joinChannelHandler = () => {
     const body: JoinChannel = {
       channelID: channelInfo.id,
-    };
+    }
 
-    if (channelInfo.visibility == "PROTECTED") body["password"] = password;
+    if (channelInfo.visibility == "PROTECTED") body["password"] = password
 
-    setProcessing(true);
-    setErrorLog([]);
+    setProcessing(true)
+    setErrorLog([])
     ChannelSevice.joinChannel(body)
-    .then((res) => {
-      // ChannelSevice.getChannelById(channelInfo.id)
-      // .then((res) => {
-        event(channelInfo);
-      // })
-      // .catch((err) => {});
-    })
-    .catch((err) => {
-      setProcessing(false);
-      setErrorLog(err.response.data.message);
-    });
-  };
+      .then((res) => {
+        event(channelInfo)
+        socket?.emit("channel joined", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
+      })
+      .catch((err) => {
+        setProcessing(false)
+        setErrorLog(err.response.data.message)
+      })
+  }
 
   const lockEvent = (e: any) => {
-    setLock(() => !lock);
-  };
+    setLock(() => !lock)
+  }
 
   return (
     <div className="gradient-border-2  p-4 rounded-xl">
@@ -99,8 +96,8 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
           value={password}
           type={lock ? "password" : "text"}
           onChange={(e) => {
-            setErrorLog([]);
-            setPassword(e.target.value);
+            setErrorLog([])
+            setPassword(e.target.value)
           }}
         />
       )}
@@ -126,5 +123,5 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
         </MainButton>
       </div>
     </div>
-  );
+  )
 }

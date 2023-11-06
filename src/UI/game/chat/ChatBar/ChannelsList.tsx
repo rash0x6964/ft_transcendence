@@ -1,8 +1,5 @@
-import { useContext, useEffect, useState } from "react"
 import ChannelBar from "./ChannelBar"
-import ChannelSevice from "@/services/Channel.sevice"
 import { Channel } from "@/models/Channel.model"
-import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 
 type Prop = {
   selectedId: string,

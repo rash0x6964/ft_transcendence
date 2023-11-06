@@ -2,7 +2,7 @@ import Podium from "@/UI/game/leaderboard/Podium"
 import TableHead from "@/UI/game/leaderboard/TableHead"
 import TableRow from "@/UI/game/leaderboard/TableRow"
 import { NextPageWithLayout } from "../_app"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useEffect, useRef, useState } from "react"
 import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import profileService from "@/services/ProfileService"
@@ -11,7 +11,7 @@ import MainButton from "@/components/BaseComponents/MainButton"
 
 const Page: NextPageWithLayout = () => {
   const [leaderboard, setLeaderboard] = useState<ProfileLeaderboardData[]>([])
-  const [offset, setOffset] = useState(10)
+  const [shouldLoadMore, setShouldLoadMore] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,12 +27,14 @@ const Page: NextPageWithLayout = () => {
   }, [])
 
   const onLoadMore = async () => {
+    if (shouldLoadMore === false) return
+
     try {
       const _leaderboardAppend = await profileService.getLeaderboardOffset(
-        offset
+        leaderboard.length
       )
+      _leaderboardAppend.length === 0 && setShouldLoadMore(false)
       setLeaderboard(leaderboard.concat(_leaderboardAppend))
-      setOffset(offset + 20)
     } catch (error) {
       console.log("Couldn't load more profiles")
     }
@@ -79,7 +81,9 @@ const Page: NextPageWithLayout = () => {
           })}
         </div>
       </div>
-      <MainButton onClick={onLoadMore}>Load More</MainButton>
+      <MainButton className="py-4" onClick={onLoadMore}>
+        Load More
+      </MainButton>
     </div>
   )
 }

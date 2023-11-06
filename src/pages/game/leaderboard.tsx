@@ -81,7 +81,9 @@ const Page: NextPageWithLayout = () => {
           })}
         </div>
       </div>
-      <MainButton onClick={onLoadMore}>Load More</MainButton>
+      <MainButton className="py-4" onClick={onLoadMore}>
+        Load More
+      </MainButton>
     </div>
   )
 }

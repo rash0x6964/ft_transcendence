@@ -1,10 +1,15 @@
 import React from "react"
-
-export default function Trophy() {
+import SvgProps from "@/types/SvgProps"
+export default function Trophy({
+  width = 18,
+  height = 18,
+  className,
+}: SvgProps) {
   return (
     <svg
-      width="18"
-      height="18"
+      className={className}
+      width={width}
+      height={height}
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

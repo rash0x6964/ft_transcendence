@@ -118,7 +118,7 @@ export default function Chat({ channelData }: Props) {
       socket?.off("privateMessage", handler)
       socket?.off("channelMessage", handler)
     }
-  }, [channelData])
+  }, [channelData?.id])
 
   useEffect(() => {
     if (!channelData) return
@@ -140,7 +140,7 @@ export default function Chat({ channelData }: Props) {
         })
         setMessages([])
       })
-  }, [channelData])
+  }, [channelData?.id])
 
   return (
     <div className="w-full flex flex-col gap-2 h-full">

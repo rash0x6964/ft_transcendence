@@ -1,20 +1,22 @@
 import React, { MouseEventHandler } from 'react'
 import Avatar from '@/components/BaseComponents/Avatar'
 import { MouseEvent } from 'react'
+import { ChannelUser } from '@/models/Channel.model'
 type Props = {
 	playerAvatar: string
 	playerName: string
 	playerState: string
-	onContextMenu: (e:MouseEvent<HTMLDivElement>, playerName: string) => void // enum
+	data: ChannelUser | undefined
+	onContextMenu?: (e:MouseEvent<HTMLDivElement>, data: ChannelUser | undefined) => void // enum
 }
 
 
-export default function MemberCard({ playerAvatar, playerName, playerState, onContextMenu }: Props) {
+export default function MemberCard({ playerAvatar, playerName, playerState, data, onContextMenu }: Props) {
 
 
 	const handleMouseEvent = (e: MouseEvent<HTMLDivElement>) => {
 		e.preventDefault();
-		onContextMenu(e, playerName);
+		onContextMenu && onContextMenu(e, data);
 	};
 	return (
 		<div onContextMenu={handleMouseEvent}>

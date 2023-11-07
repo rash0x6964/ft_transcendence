@@ -36,14 +36,8 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
 
   const [dialogueState, setDialogueState] = useState(true)
+  const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(undefined)
 
-  const handleContextMenu = (
-    e: MouseEvent<HTMLDivElement>,
-    PlayerName: string
-  ) => {
-    setClicked(true)
-    setPosition(getMenuPos(e, menuRef))
-  }
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
@@ -111,6 +105,27 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       })
   }
 
+  const handleContextMenu = (
+    e: MouseEvent<HTMLDivElement>,
+    data: ChannelUser | undefined
+  ) => {
+    setSelectedData(data)
+    setClicked(true)
+    setPosition(getMenuPos(e, menuRef))
+  }
+
+  const handleKick = () => {
+    console.log('data', selectedData)
+  }
+
+  const handleMute = () => {
+
+  }
+
+  const handleBan = () => {
+
+  }
+
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
       {selectedChannel && selectedChannel.owner != "OWNER" ? (
@@ -128,10 +143,10 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       <div className="flex flex-1 flex-col gap-5 px-3 overflow-y-auto max-h-full">
         <span className="text-gray-400 text-sm">Owner - 👑</span>
         <MemberCard
-          onContextMenu={handleContextMenu}
           playerAvatar={owner?.user?.avatarUrl ?? ""}
           playerName={owner?.user?.userName ?? "Unknown"}
           playerState={owner?.status ?? "idle"}
+          data={selectedData}
         />
         {adminList.length ? (
           <span className="text-gray-400 text-sm">
@@ -148,6 +163,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
+              data={selectedData}
             />
           )
         })}
@@ -166,13 +182,14 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
+              data={selectedData}
             />
           )
         })}
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
-        <MenuBtn onClick={() => console.log("profile")} title="Profile" />
-        <MenuBtn title="Kick" />
+        {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
+        <MenuBtn title="Kick" onClick={handleKick}/>
         <MenuBtn title="Mute" />
         <MenuBtn title="Ban" />
       </ContextMenu>

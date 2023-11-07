@@ -1,92 +1,119 @@
-"use client";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import Avatar from "@/components/BaseComponents/Avatar";
-import MemberCard from "./MemberCard";
+"use client"
+import React, { useContext, useEffect, useRef, useState } from "react"
+import Avatar from "@/components/BaseComponents/Avatar"
+import MemberCard from "./MemberCard"
 import ContextMenu, {
   useContextMenu,
-} from "@/components/BaseComponents/ContextMenu";
-import { MouseEvent } from "react";
-import { MenuBtn } from "@/components/BaseComponents/ContextMenu";
-import { getMenuPos } from "@/components/BaseComponents/ContextMenu";
-import { Channel, ChannelUser } from "@/models/Channel.model";
-import ChannelUserService from "@/services/ChannelUser.service";
-import LeaveRoom from "@/components/svgs/leaveRoom";
-import EditRoom from "@/components/svgs/editChannel";
-import { NotifcationContext } from "@/UI/NotificationProvider";
+} from "@/components/BaseComponents/ContextMenu"
+import { MouseEvent } from "react"
+import { MenuBtn } from "@/components/BaseComponents/ContextMenu"
+import { getMenuPos } from "@/components/BaseComponents/ContextMenu"
+import { Channel, ChannelUser } from "@/models/Channel.model"
+import ChannelUserService from "@/services/ChannelUser.service"
+import LeaveRoom from "@/components/svgs/leaveRoom"
+import EditRoom from "@/components/svgs/editChannel"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import Dialogue from "@/components/Dialogue/Dialogue"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import { User } from "@/types/User"
+import cookieService from "@/services/CookiesService"
+
 
 type Props = {
-  selectedChannel: Channel;
-  event: (id: string) => void;
-};
+  selectedChannel: Channel
+  event: (id: string) => void
+}
 
 export default function ChannelInfo({ selectedChannel, event }: Props) {
-  const notify = useContext(NotifcationContext);
+  const socket = useContext(WebSocketContext)
+  const notify = useContext(NotifcationContext)
 
-  const menuRef = useRef<HTMLDivElement>(null);
-  const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef);
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef)
 
-  const [memberList, setMemberList] = useState<ChannelUser[]>([]);
-  const [adminList, setAdminList] = useState<ChannelUser[]>([]);
-  const [owner, setOwner] = useState<ChannelUser | undefined>(undefined);
+  const [memberList, setMemberList] = useState<ChannelUser[]>([])
+  const [adminList, setAdminList] = useState<ChannelUser[]>([])
+  const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
+
+  const [dialogueState, setDialogueState] = useState(true)
 
   const handleContextMenu = (
     e: MouseEvent<HTMLDivElement>,
     PlayerName: string
   ) => {
-    setClicked(true);
-    setPosition(getMenuPos(e, menuRef));
-  };
+    setClicked(true)
+    setPosition(getMenuPos(e, menuRef))
+  }
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
       .then(({ data }: { data: any }) => {
         setMemberList(
           data.filter((item: any) => {
-            return item.role == "MEMBER";
+            return item.role == "MEMBER"
           })
-        );
+        )
 
         setAdminList(
           data.filter((item: any) => {
-            return item.role == "ADMINISTRATOR";
+            return item.role == "ADMINISTRATOR"
           })
-        );
+        )
 
         setOwner(
           data.find((item: any) => {
-            return item.role == "OWNER";
+            return item.role == "OWNER"
           })
-        );
+        )
       })
-      .catch((err) => {});
-  }, [selectedChannel]);
+      .catch((err) => {})
 
-  // let memberList: ChannelUser[] = channelInfo.filter((item) => {
-  //   return item.role == "MEMBER";
-  // });
-  // let adminList: ChannelUser[] = channelInfo.filter((item) => {
-  //   return item.role == "ADMINISTRATOR";
-  // });
-  // let owner: ChannelUser | undefined = channelInfo.find((item) => {
-  //   return item.role == "OWNER";
-  // });
+    const _join = (data: any) => {
+      setMemberList(memberList.concat(data))
+    }
+    const _left = (id: string) => {
+      setMemberList(memberList.filter((item) => item.userID != id))
+    }
+
+    socket?.on("new member joind", _join)
+    socket?.on("a member left", _left)
+
+    return () => {
+      socket?.off("new member joind", _join)
+      socket?.off("a member left", _left)
+    }
+
+  }, [selectedChannel])
 
   const LeaveRoomEvent = (e: any) => {
+    setDialogueState(false)
+  }
+
+  const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
+
+        socket?.emit("channel left", {
+          token: cookieService.getJwtCookie(),
+          data: owner,
+        })
+
         notify({
-          message: "You leaved the channel successfully",
+          message: "You left the channel successfully",
           title: "Leave Channel",
           type: "success",
-        });
-        event(selectedChannel.id);
+        })
+        event(selectedChannel.id)
+        setDialogueState(true)
       })
-      .catch((err) => {});
-  };
+      .catch((err) => {
+        setDialogueState(true)
+      })
+  }
 
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
-      {selectedChannel && selectedChannel.owner != 'OWNER' ? (
+      {selectedChannel && selectedChannel.owner != "OWNER" ? (
         <LeaveRoom
           className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
           onClick={LeaveRoomEvent}
@@ -122,7 +149,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
             />
-          );
+          )
         })}
         {memberList.length ? (
           <span className="text-gray-400 text-sm">
@@ -140,7 +167,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
             />
-          );
+          )
         })}
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
@@ -149,6 +176,24 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
         <MenuBtn title="Mute" />
         <MenuBtn title="Ban" />
       </ContextMenu>
+      <Dialogue
+        onBackDropClick={() => setDialogueState(true)}
+        closed={dialogueState}
+      >
+        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
+          <p className="font-bold text-white ">Leaving Channel</p>
+          <p className="font-light mb-9">
+            are you sure you want to leave{" "}
+            <span className="text-primary">{selectedChannel.name}</span> ??
+          </p>
+          <button
+            className=" bg-red-500 py-2 px-5 rounded-md w-fit self-end"
+            onClick={acceptLeaving}
+          >
+            Accept
+          </button>
+        </div>
+      </Dialogue>
     </div>
-  );
+  )
 }

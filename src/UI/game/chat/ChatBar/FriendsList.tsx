@@ -1,16 +1,16 @@
-import FriendBar from "./FriendBar";
-import DirectMessage from "@/models/DM.model";
+import FriendBar from "./FriendBar"
+import DirectMessage from "@/models/DirectMessage.model"
 
 type Prop = {
-  selectedId: string;
-  DMList?: DirectMessage[];
-  handleClick: (id: string) => void;
-};
+  selectedId: string
+  DMList?: DirectMessage[]
+  handleClick: (id: string) => void
+}
 export default function FriendsList({ selectedId, handleClick, DMList }: Prop) {
   return (
-    <div className="flex flex-col h-[40%] gap-2 overflow-y-scroll">
+    <div className="flex flex-col h-[40%] gap-2 overflow-y-scroll animate__animated animate__fadeIn ">
       {DMList?.map((data: DirectMessage) => {
-        const date = new Date(data.message?.createdAt ?? Date.now());
+        const date = new Date(data.message?.createdAt ?? Date.now())
         return (
           <FriendBar
             key={data.id}
@@ -27,8 +27,8 @@ export default function FriendsList({ selectedId, handleClick, DMList }: Prop) {
             lastMessage={data.message?.content ?? "say hi!"}
             time={`${date.getHours()}:${date.getMinutes()}`}
           />
-        );
+        )
       })}
     </div>
-  );
+  )
 }

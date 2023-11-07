@@ -1,4 +1,5 @@
 import Avatar from "@/components/BaseComponents/Avatar"
+import { Channel } from "@/models/Channel.model"
 
 type Prop = {
 	src: string
@@ -8,7 +9,8 @@ type Prop = {
 	time: string
 	unread: number
 	id: string
-	handleClick: (id: string) => void
+	data: Channel
+	handleClick: (id: Channel) => void
 	isSelected: boolean
 }
 
@@ -20,12 +22,13 @@ export default function ChannelBar({
 	time,
 	unread,
 	isSelected,
+	data,
 	handleClick,
 	id,
 }: Prop) {
 	return (
 		<div
-			onClick={() => handleClick(id)}
+			onClick={() => handleClick(data)}
 			className={`bg-secondary flex  w-96 h-[73px] rounded-xl items-center p-2 transition-colors gap-x-2 relative hover:border-primary border-2 cursor-pointer  ${isSelected ? "border-primary" : "border-transparent"
 				}`}
 		>

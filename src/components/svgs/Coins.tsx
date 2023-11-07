@@ -1,8 +1,10 @@
-type Props = {
-  className: string
-}
+import SvgProps from "@/types/SvgProps"
 
-export default function coins({ className }: Props) {
+export default function Coins({
+  className,
+  width = 20,
+  height = 20,
+}: SvgProps) {
   return (
     <div className={className}>
       <svg

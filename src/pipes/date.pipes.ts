@@ -5,3 +5,8 @@ export default function datePipe(value: Date): string {
 	return (date.getHours() % 12).toString().padStart(2, "0") + ":" + date.getMinutes().toString().padStart(2, "0") + ampm;
 
 }
+
+
+export function timePipe(value: number): string {
+	return Math.floor(value / 60).toString().padStart(2, "0") + ":" + Math.floor(value % 60).toString().padStart(2, "0");
+}

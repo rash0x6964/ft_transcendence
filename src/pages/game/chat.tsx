@@ -14,6 +14,7 @@ import { useRouter } from "next/router"
 import DMService from "@/services/DirectMessageService"
 import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox"
 import ChannelSevice from "@/services/Channel.sevice"
+import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
 
 const Page: NextPageWithLayout = () => {
   const [channelList, setChannelList] = useState<Channel[]>([])
@@ -131,6 +132,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomJoined = (data: Channel) => {
+    setSearchFor("")
     setSelected(data)
     setDialogueState(true)
   }
@@ -146,8 +148,10 @@ const Page: NextPageWithLayout = () => {
 
   const onBlock = () => {
     let dm: DirectMessage = selected as DirectMessage
+    const currentUser =
+      dm.friend?.id == dm.senderID ? dm.receiverID : dm.senderID
     const blockValue: "BOTH" | "NONE" | "SENDER" | "RECEIVER" =
-      dm.senderID == dm.friend?.id ? "SENDER" : "RECEIVER"
+      dm.senderID == currentUser ? "SENDER" : "RECEIVER"
     if (dm.blockStatus == blockValue || dm.blockStatus == "BOTH") {
       console.log("User already blocked")
       return
@@ -161,8 +165,10 @@ const Page: NextPageWithLayout = () => {
 
   const unBlock = () => {
     let dm: DirectMessage = selected as DirectMessage
+    const currentUser =
+      dm.friend?.id == dm.senderID ? dm.receiverID : dm.senderID
     const blockValue: "BOTH" | "NONE" | "SENDER" | "RECEIVER" =
-      dm.senderID == dm.friend?.id ? "RECEIVER" : "SENDER"
+      dm.senderID == currentUser ? "RECEIVER" : "SENDER"
     if (dm.blockStatus == "NONE" || dm.blockStatus == blockValue) {
       console.log("User is not Blocked")
       return
@@ -176,8 +182,10 @@ const Page: NextPageWithLayout = () => {
 
   const onMute = () => {
     let dm: DirectMessage = selected as DirectMessage
+    const currentUser =
+      dm.friend?.id == dm.senderID ? dm.receiverID : dm.senderID
     const muteValue: "BOTH" | "NONE" | "SENDER" | "RECEIVER" =
-      dm.senderID == dm.friend?.id ? "SENDER" : "RECEIVER"
+      dm.senderID == currentUser ? "SENDER" : "RECEIVER"
     if (dm.muteStatus == muteValue || dm.muteStatus == "BOTH") {
       console.log("User already muted")
       return
@@ -191,8 +199,10 @@ const Page: NextPageWithLayout = () => {
 
   const unmute = () => {
     let dm: DirectMessage = selected as DirectMessage
+    const currentUser =
+      dm.friend?.id == dm.senderID ? dm.receiverID : dm.senderID
     const muteValue: "BOTH" | "NONE" | "SENDER" | "RECEIVER" =
-      dm.senderID == dm.friend?.id ? "RECEIVER" : "SENDER"
+      dm.senderID == currentUser ? "RECEIVER" : "SENDER"
     if (dm.muteStatus == "NONE" || dm.muteStatus == muteValue) {
       console.log("User is not muted")
       return
@@ -251,6 +261,10 @@ const Page: NextPageWithLayout = () => {
           channelInfo={channelTryingToJoin as Channel}
           event={roomJoined}
         />
+      </Dialogue>
+
+      <Dialogue closed={true}>
+        <ChannelSetting />
       </Dialogue>
     </div>
   )

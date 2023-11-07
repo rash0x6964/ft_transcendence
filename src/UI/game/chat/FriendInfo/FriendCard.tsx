@@ -80,16 +80,15 @@ export default function FriendCard({ dm, takeAction }: Props) {
           <FriendAction action="Add friend" onclick={addFriend} />
         )}
         {dm?.blockStatus == "NONE" ||
-        (dm?.blockStatus == "SENDER" && dm?.sender?.id == dm?.friend?.id) ||
-        (dm?.blockStatus == "RECEIVER" &&
-          dm?.receiver?.id == dm?.friend?.id) ? (
+        (dm?.blockStatus == "SENDER" && dm.senderID == dm?.friend?.id) ||
+        (dm?.blockStatus == "RECEIVER" && dm.receiverID == dm?.friend?.id) ? (
           <FriendAction action="Block" onclick={block} />
         ) : (
           <FriendAction action="Unblock" onclick={unblock} />
         )}
         {dm?.muteStatus == "NONE" ||
-        (dm?.muteStatus == "SENDER" && dm?.sender?.id == dm?.friend?.id) ||
-        (dm?.muteStatus == "RECEIVER" && dm?.receiver?.id == dm?.friend?.id) ? (
+        (dm?.muteStatus == "SENDER" && dm.senderID == dm?.friend?.id) ||
+        (dm?.muteStatus == "RECEIVER" && dm.receiverID == dm?.friend?.id) ? (
           <FriendAction action="Mute" onclick={mute} />
         ) : (
           <FriendAction action="Unmute" onclick={unmute} />

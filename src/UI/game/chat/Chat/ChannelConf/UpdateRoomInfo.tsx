@@ -1,39 +1,53 @@
 "use client"
 import UploadService from "@/services/Upload.service"
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Image from "next/image"
 import Change from "@/UI/settings/icons/Change"
 import Input from "@/components/BaseComponents/Input"
 import Pen from "@/components/svgs/Pen"
 import MainButton from "@/components/BaseComponents/MainButton"
+import { Channel } from "@/models/Channel.model"
+import ChannelSevice from "@/services/Channel.sevice"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 
-export default function UpdateRoomInfo() {
+type Props = {
+  selectedChannel: Channel
+  updateSelectedChannel: (data: any) => void
+}
+
+export default function UpdateRoomInfo({ selectedChannel, updateSelectedChannel }: Props) {
   const [avatar, setAvatar] = useState("")
   const [channelName, setChannelName] = useState("")
   const [errorLog, setErrorLog] = useState([])
 
+  const notify = useContext(NotifcationContext)
+
+  useEffect(() => {
+    setAvatar(selectedChannel.imageUrl)
+    setChannelName(selectedChannel.name)
+  }, [])
+
   const onSave = () => {
-    // let body: CreateChannel = {
-    //   imageUrl:
-    //     avatar != ""
-    //       ? avatar
-    //       : "https://i.pinimg.com/564x/7b/fa/54/7bfa549dcba2f80b494eb825f64527e1.jpg",
-    //   name: channelName,
-    //   visibility:
-    //     visibility == "PUBLIC" && password.length ? "PROTECTED" : visibility,
-    // };
-    // if (body.visibility == "PROTECTED") body["password"] = password;
-    // setErrorLog([]);
-    // setProcessing(true);
-    // ChannelSevice.createChannel(body)
-    //   .then((res) => {
-    //     createChannelEvent(res.data);
-    //     handler();
-    //   })
-    //   .catch((err) => {
-    //     setErrorLog(err.response.data.message);
-    //     setProcessing(false);
-    //   });
+    let body: any = {
+      id: selectedChannel.id,
+      imageUrl: avatar,
+      name: channelName,
+    };
+
+    setErrorLog([]);
+    ChannelSevice.updateChannel(body)
+      .then((res) => {
+        notify({
+          message: "Saved successfully",
+          title: "Updated Channel",
+          type: "success",
+        })
+        updateSelectedChannel(res.data)
+      })
+      .catch((err) => {
+        // console.log(err)
+        setErrorLog(err);
+      });
   }
 
   const onFileChange = (e: any) => {
@@ -92,3 +106,7 @@ export default function UpdateRoomInfo() {
     </div>
   )
 }
+function notify(arg0: { message: string; title: string; type: string }) {
+  throw new Error("Function not implemented.")
+}
+

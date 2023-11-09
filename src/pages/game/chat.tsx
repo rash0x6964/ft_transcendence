@@ -214,6 +214,19 @@ const Page: NextPageWithLayout = () => {
     })
   }
 
+  const [channelConfDialog, setChannelConfDialog] = useState(true)
+
+  const updateSelectedChannel = (data: any) => {
+    let updatedList: any = channelList.map((item) => {
+      if (item.id == data.id) {
+        item = { ...item, ...data }
+        setSelected(item)
+        return item
+      }
+    })
+    setChannelList(updatedList)
+  }
+
   return (
     <div className="w-full  h-full flex gap-2">
       <HeadTitle>Pong Fury | Chat</HeadTitle>
@@ -235,10 +248,20 @@ const Page: NextPageWithLayout = () => {
       </div>
       <div className=" h-full w-96">
         {isChannel() && (
-          <ChannelInfo
-            selectedChannel={selected as Channel}
-            event={roomLeaved}
-          />
+          <>
+            <ChannelInfo
+              onEdit={() => setChannelConfDialog(false)}
+              selectedChannel={selected as Channel}
+              event={roomLeaved}
+            />
+            <Dialogue closed={channelConfDialog}>
+              <ChannelSetting
+                close={() => setChannelConfDialog(true)}
+                channel={selected as Channel}
+                updateSelectedChannel={updateSelectedChannel}
+              />
+            </Dialogue>
+          </>
         )}
         {!isChannel() && (
           <FriendInfo
@@ -263,9 +286,7 @@ const Page: NextPageWithLayout = () => {
         />
       </Dialogue>
 
-      {/* <Dialogue closed={true}>
-        <ChannelSetting />
-      </Dialogue> */}
+      {/* channel settings */}
     </div>
   )
 }

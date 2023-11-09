@@ -15,16 +15,15 @@ import EditRoom from "@/components/svgs/editChannel"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
-import { User } from "@/types/User"
 import cookieService from "@/services/CookiesService"
-import ChannelSetting from "../ChannelSetting"
 
 type Props = {
+  onEdit: () => void
   selectedChannel: Channel
   event: (id: string) => void
 }
 
-export default function ChannelInfo({ selectedChannel, event }: Props) {
+export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   const socket = useContext(WebSocketContext)
   const notify = useContext(NotifcationContext)
 
@@ -39,9 +38,6 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(
     undefined
   )
-
-  // setting conf state
-  const [channelConfDialog, setChannelConfDialog] = useState(true)
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
@@ -84,10 +80,6 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
 
   const LeaveRoomEvent = (e: any) => {
     setDialogueState(false)
-  }
-
-  const editRoom = () => {
-    setChannelConfDialog(false)
   }
 
   const acceptLeaving = (e: any) => {
@@ -138,7 +130,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       ) : (
         <EditRoom
           className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
-          onClick={editRoom}
+          onClick={onEdit}
         />
       )}
       <div className="flex flex-col gap-5 py-10">
@@ -215,10 +207,6 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
             Accept
           </button>
         </div>
-      </Dialogue>
-      {/* channel settings */}
-      <Dialogue closed={channelConfDialog}>
-        <ChannelSetting onClick={() => setChannelConfDialog(true)} channelId={selectedChannel.id} />
       </Dialogue>
     </div>
   )

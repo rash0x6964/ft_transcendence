@@ -26,6 +26,10 @@ class ChannelService {
 		return HttpClient.post(`${this.channelUserEndPoint}/joinChannel`, body)
 	}
 
+	updateChannel(body: any) {
+		return HttpClient.patch(`${this.channelEndPoint}`, body)
+	}
+
 }
 
 export default new ChannelService()

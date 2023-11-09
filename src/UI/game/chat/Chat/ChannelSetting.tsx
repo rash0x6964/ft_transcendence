@@ -6,13 +6,15 @@ import UpdateRoomInfo from "./ChannelConf/UpdateRoomInfo"
 import RoomSec from "./ChannelConf/RoomSec"
 import DelRoom from "./ChannelConf/DelRoom"
 import BannedList from "./ChannelConf/BannedList"
+import { Channel } from "@/models/Channel.model"
 
 type Props = {
-  onClick: (e: any) => void
-  channelId: string
+  close: (e: any) => void
+  channel: Channel
+  updateSelectedChannel: (data: any) => void
 }
 
-export default function ChannelSetting({ onClick, channelId }: Props) {
+export default function ChannelSetting({ close, channel, updateSelectedChannel}: Props) {
   const [selected, setSelectedBtn] = useState<"CHANNEL" | "BANLIST">("CHANNEL")
 
   return (
@@ -27,7 +29,7 @@ export default function ChannelSetting({ onClick, channelId }: Props) {
           width={30}
           height={30}
           className="cursor-pointer"
-          onClick={onClick}
+          onClick={close}
         />
       </div>
       <div className="flex flex-col md:flex-row justify-center">
@@ -57,12 +59,12 @@ export default function ChannelSetting({ onClick, channelId }: Props) {
         <div className="w-[823px] flex flex-col gap-2">
           {selected == "CHANNEL" ? (
             <>
-              <UpdateRoomInfo />
+              <UpdateRoomInfo selectedChannel={channel} updateSelectedChannel={updateSelectedChannel}/>
               <RoomSec />
               <DelRoom />
             </>
           ) : (
-            <BannedList channelId={channelId}/>
+            <BannedList channelId={channel.id}/>
           )}
         </div>
       </div>

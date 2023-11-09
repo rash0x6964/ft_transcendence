@@ -1,20 +1,20 @@
 import SvgProps from "@/types/SvgProps"
 
-export default function Unmute({width, height, className }: SvgProps) {
+export default function Unmute({ width, height, className }: SvgProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-			width={width}
-			height={height}
+      width={width}
+      height={height}
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       ></g>
       <g id="SVGRepo_iconCarrier">
         {" "}
@@ -23,8 +23,8 @@ export default function Unmute({width, height, className }: SvgProps) {
           fill="#ffffff"
         ></path>{" "}
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M6.237 7.70074C6.3759 5.48001 8.21749 3.75 10.4426 3.75H11V3C11 2.44772 11.4477 2 12 2C12.5523 2 13 2.44772 13 3V3.75H13.5574C15.7825 3.75 17.6241 5.48001 17.763 7.70074L17.984 11.2342C18.0682 12.5814 18.5205 13.8797 19.2916 14.9876C19.9882 15.9886 19.368 17.3712 18.1571 17.5165L14.75 17.9254V19C14.75 20.5188 13.5188 21.75 12 21.75C10.4812 21.75 9.24998 20.5188 9.24998 19V17.9254L5.84285 17.5165C4.63192 17.3712 4.0117 15.9886 4.70839 14.9876C5.47945 13.8797 5.93173 12.5814 6.016 11.2342L6.237 7.70074ZM10.4426 5.25C9.00956 5.25 7.82353 6.36417 7.73407 7.79438L7.51307 11.3278C7.41168 12.949 6.86742 14.5112 5.93957 15.8444C5.88922 15.9168 5.93405 16.0167 6.02157 16.0272L9.75923 16.4757C11.2477 16.6543 12.7522 16.6543 14.2407 16.4757L17.9784 16.0272C18.0659 16.0167 18.1107 15.9168 18.0604 15.8444C17.1325 14.5112 16.5883 12.949 16.4869 11.3278L16.2659 7.79438C16.1764 6.36417 14.9904 5.25 13.5574 5.25H10.4426ZM12 20.25C11.3096 20.25 10.75 19.6904 10.75 19V18.25H13.25V19C13.25 19.6904 12.6903 20.25 12 20.25Z"
           fill="#ffffff"
         ></path>{" "}

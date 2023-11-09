@@ -9,8 +9,16 @@ class ChannelUserService {
 		return HttpClient.get(`${this.endPoint}/${roomId}`);
 	}
 
+	getChannelBlockedMember(roomId: string) {
+		return HttpClient.get(`${this.endPoint}/blockedList/${roomId}`);
+	}
+
 	leaveChannel(roomId: string) {
 		return HttpClient.delete(`${this.endPoint}/${roomId}`,);
+	}
+
+	free(data: any) {
+		return HttpClient.patch(`${this.endPoint}/free`, data);
 	}
 }
 

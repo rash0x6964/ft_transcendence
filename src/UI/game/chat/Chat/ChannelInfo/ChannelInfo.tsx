@@ -17,7 +17,7 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { User } from "@/types/User"
 import cookieService from "@/services/CookiesService"
-
+import ChannelSetting from "../ChannelSetting"
 
 type Props = {
   selectedChannel: Channel
@@ -36,8 +36,12 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
 
   const [dialogueState, setDialogueState] = useState(true)
-  const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(undefined)
+  const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(
+    undefined
+  )
 
+  // setting conf state
+  const [channelConfDialog, setChannelConfDialog] = useState(true)
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
@@ -76,17 +80,19 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       socket?.off("new member joind", _join)
       socket?.off("a member left", _left)
     }
-
   }, [selectedChannel])
 
   const LeaveRoomEvent = (e: any) => {
     setDialogueState(false)
   }
 
+  const editRoom = () => {
+    setChannelConfDialog(false)
+  }
+
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
-
         socket?.emit("channel left", {
           token: cookieService.getJwtCookie(),
           data: owner,
@@ -115,16 +121,12 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   }
 
   const handleKick = () => {
-    console.log('data', selectedData)
+    console.log("data", selectedData)
   }
 
-  const handleMute = () => {
+  const handleMute = () => {}
 
-  }
-
-  const handleBan = () => {
-
-  }
+  const handleBan = () => {}
 
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
@@ -134,7 +136,10 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
           onClick={LeaveRoomEvent}
         />
       ) : (
-        <EditRoom className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all" />
+        <EditRoom
+          className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
+          onClick={editRoom}
+        />
       )}
       <div className="flex flex-col gap-5 py-10">
         <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
@@ -189,7 +194,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
-        <MenuBtn title="Kick" onClick={handleKick}/>
+        <MenuBtn title="Kick" onClick={handleKick} />
         <MenuBtn title="Mute" />
         <MenuBtn title="Ban" />
       </ContextMenu>
@@ -210,6 +215,10 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
             Accept
           </button>
         </div>
+      </Dialogue>
+      {/* channel settings */}
+      <Dialogue closed={channelConfDialog}>
+        <ChannelSetting onClick={() => setChannelConfDialog(true)} channelId={selectedChannel.id} />
       </Dialogue>
     </div>
   )

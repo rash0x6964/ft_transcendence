@@ -263,9 +263,9 @@ const Page: NextPageWithLayout = () => {
         />
       </Dialogue>
 
-      <Dialogue closed={true}>
+      {/* <Dialogue closed={true}>
         <ChannelSetting />
-      </Dialogue>
+      </Dialogue> */}
     </div>
   )
 }

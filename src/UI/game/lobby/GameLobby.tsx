@@ -1,7 +1,4 @@
-import Avatar from "@/components/BaseComponents/Avatar"
-import Swords from "@/components/svgs/Swords"
 import Lobby from "@/models/Lobby.model"
-import lobby from "@/pages/game/lobby"
 import PlayersScore from "./PlayersScore"
 import Game from "./Game"
 import { useEffect, useRef, useState } from "react"
@@ -11,28 +8,29 @@ type Props = {
   lobby: Lobby
 }
 export default function GameLobby({ className, lobby }: Props) {
-  const canvasRef = useRef(null)
-  const [w, setW] = useState<number>(0)
-  const [h, setH] = useState<number>(0)
+  const divRef = useRef<HTMLDivElement | null>(null)
+  const [width, setWidth] = useState<number>(0)
+  const [height, setHeight] = useState<number>(0)
 
   useEffect(() => {
-    setH(canvasRef.current.clientHeight)
-    setW(canvasRef.current.clientWidth)
-    const handleResize = (e) => {
-      setH(canvasRef.current.clientHeight)
-      setW(canvasRef.current.clientWidth)
+    const updateDimensions = () => {
+      setHeight(divRef.current!.clientHeight)
+      setWidth(divRef.current!.clientWidth)
     }
-    window.onresize = handleResize
-
+    updateDimensions()
+    const handleResize = () => {
+      updateDimensions()
+    }
+    window.addEventListener("resize", handleResize)
     return () => {
-      window.onresize = null
+      window.removeEventListener("resize", handleResize)
     }
   }, [])
 
   return (
     <div className={`w-full h-full flex flex-col ${className} `}>
-      <div ref={canvasRef} className="w-full bg-secondary  h-[80%]">
-        <Game width={w} height={h} />
+      <div ref={divRef} className="w-full bg-secondary  h-[80%]">
+        <Game width={width} height={height} />
       </div>
       <div className="flex-1  flex flex-col justify-center">
         <PlayersScore

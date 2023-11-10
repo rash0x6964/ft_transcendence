@@ -1,8 +1,6 @@
-import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import MainButton from "@/components/BaseComponents/MainButton"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import RadioGroup from "@/components/RadioGroup/RadioGroup"
-import { profile } from "console"
 import FriendsInviteDialBox from "../chat/ChatBar/DialogueBoxes/FriendsInviteDialBox"
 import GameModBar from "./GameModBar"
 import OpponentCard from "./OpponentCard"

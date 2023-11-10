@@ -1,17 +1,37 @@
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import CookiesService from "@/services/CookiesService"
 import Ball from "@/types/Ball"
 import Paddle from "@/types/Paddle"
-import { useRef, useEffect, useState } from "react"
+import {
+  useRef,
+  useEffect,
+  useState,
+  useContext,
+  KeyboardEventHandler,
+} from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
 const white: string = "#FFFFFF"
 
-export default function Game({ width, height }) {
-  const canvasRef = useRef(null)
+type Props = {
+  width: number
+  height: number
+}
+
+export default function Game({ width, height }: Props) {
+  const socket = useContext(WebSocketContext)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
   const [leftPaddle, setLeftPaddle] = useState<Paddle>(new Paddle(1, 40))
   const [rightPaddle, setRightPaddle] = useState<Paddle>(new Paddle(97, 40))
   const [ball, setBall] = useState<Ball>(new Ball(50, 50))
-  const draw = (context: CanvasRenderingContext2D) => {
+
+  const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
+    let canvas: HTMLCanvasElement = canvasRef.current!
+    const context: CanvasRenderingContext2D = canvas.getContext("2d")!
+    context.clearRect(0, 0, width, height)
+    context.beginPath()
     context.fillStyle = secondary
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
     context.fillStyle = primary
@@ -21,31 +41,62 @@ export default function Game({ width, height }) {
     ball.draw(context, white)
   }
 
+  const keyDownHandler = (ev: any) => {
+    if (ev.key == "w") {
+      socket?.emit("paddleUp", {
+        token: CookiesService.getJwtCookie(),
+        data: { isUP: true },
+      })
+    }
+    if (ev.key == "s") {
+      socket?.emit("paddleDown", {
+        token: CookiesService.getJwtCookie(),
+        data: { isDown: true },
+      })
+    }
+  }
+
+  const keyUpHandler = (ev: any) => {
+    if (ev.key == "w") {
+      socket?.emit("paddleUp", {
+        token: CookiesService.getJwtCookie(),
+        data: { isUP: false },
+      })
+    }
+    if (ev.key == "s") {
+      socket?.emit("paddleDown", {
+        token: CookiesService.getJwtCookie(),
+        data: { isDown: false },
+      })
+    }
+  }
+
   useEffect(() => {
-    let dpi = window.devicePixelRatio
-    let canvas: HTMLCanvasElement = canvasRef.current
-    const context: CanvasRenderingContext2D = canvas.getContext("2d")
-    // function fix_dpi() {
-    //   let style_height = +getComputedStyle(canvas)
-    //     .getPropertyValue("height")
-    //     .slice(0, -2)
-    //   let style_width = +getComputedStyle(canvas)
-    //     .getPropertyValue("width")
-    //     .slice(0, -2)
-    //   console.log(style_height * dpi)
-    //   canvas.setAttribute("height", style_height * dpi)
-    //   canvas.setAttribute("width", style_width * dpi)
-    // }
-    // fix_dpi()
-    context.imageSmoothingEnabled = false
-    draw(context)
+    if (!socket) return
+    let handler = (data: any) => {
+      draw(
+        new Ball(data.ball.x, data.ball.y),
+        new Paddle(data.paddle1.x, data.paddle1.y),
+        new Paddle(data.paddle2.x, data.paddle2.y)
+      )
+    }
+    socket?.on("gameData", handler)
+    return () => {
+      socket?.off("gameData")
+    }
   }, [])
 
+  //   useEffect(() => {
+  //     draw(ball)
+  //   }, [width, height])
 
   return (
     <canvas
+      onKeyDown={keyDownHandler}
+      onKeyUp={keyUpHandler}
+      tabIndex={0}
       style={{ imageRendering: "pixelated" }}
-      className="w-full h-full "
+      className="w-full h-full focus:outline-none "
       ref={canvasRef}
       width={width}
       height={height}

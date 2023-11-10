@@ -13,7 +13,7 @@ export default class Ball {
     context.arc(
       (this.x * context.canvas.width) / 100,
       (this.y * context.canvas.height) / 100,
-	//   10,
+      //   10,
       (this.r * (context.canvas.width / 2 + context.canvas.height / 2)) / 100,
       0,
       2 * Math.PI

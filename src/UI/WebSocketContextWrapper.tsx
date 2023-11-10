@@ -31,7 +31,6 @@ export default function WebSocketContextProvider({
           })
           .catch((err) => {})
       }
-
       socket.on("connect", onConnect)
 
       return () => {

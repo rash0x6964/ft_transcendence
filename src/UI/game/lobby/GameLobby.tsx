@@ -1,7 +1,8 @@
 import Lobby from "@/models/Lobby.model"
 import PlayersScore from "./PlayersScore"
 import Game from "./Game"
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 
 type Props = {
   className?: string
@@ -11,6 +12,8 @@ export default function GameLobby({ className, lobby }: Props) {
   const divRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState<number>(0)
   const [height, setHeight] = useState<number>(0)
+  const [score, setScore] = useState<number[]>([0, 0])
+  const socket = useContext(WebSocketContext)
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -22,8 +25,14 @@ export default function GameLobby({ className, lobby }: Props) {
       updateDimensions()
     }
     window.addEventListener("resize", handleResize)
+
+    socket?.on("scoreChange", (data) => {
+      setScore(data)
+    })
+
     return () => {
       window.removeEventListener("resize", handleResize)
+      socket?.off("scoreChange")
     }
   }, [])
 
@@ -38,6 +47,7 @@ export default function GameLobby({ className, lobby }: Props) {
           className="mx-auto"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
+          score={score}
         />
       </div>
     </div>

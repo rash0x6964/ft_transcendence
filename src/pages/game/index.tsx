@@ -1,24 +1,19 @@
 import { NextPageWithLayout } from "../_app"
-import { ReactElement } from "react";
-import Layout from "@/UI/Layout";
-import UrlPipe from "@/pipes/url.pipe";
+import { ReactElement } from "react"
+import Layout from "@/UI/Layout"
+import UrlPipe from "@/pipes/url.pipe"
+import HeadTitle from "@/components/BaseComponents/HeadTitle"
 
 const Page: NextPageWithLayout = () => {
-
-	return (
-		<div>
-			yes
-		</div>
-	)
+  return (
+    <div>
+      <HeadTitle>Pong Fury | Home</HeadTitle>
+    </div>
+  )
 }
 
-
 Page.getLayout = function getLayout(page: ReactElement) {
-	return (
-		<Layout>
-			{page}
-		</Layout>
-	)
+  return <Layout>{page}</Layout>
 }
 
 export default Page

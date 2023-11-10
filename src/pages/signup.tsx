@@ -65,7 +65,7 @@ const Page: NextPageWithLayout = () => {
     try {
       const { access_token } = await authService.signUp(parsedUser)
       cookieService.setJwtCookie(access_token)
-      router.push("/")
+      router.push("/game")
     } catch (err) {
       if (axios.isAxiosError(err)) {
         notify({

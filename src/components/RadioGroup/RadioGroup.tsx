@@ -19,6 +19,7 @@ export default function RadioGroup({
 }: Props) {
   let radiosSet: string[] = Array.from(new Set(radios))
   const handleChange = (value: string) => {
+    console.log(value)
     onChange && onChange(value)
     setSelectedVal(value)
   }
@@ -34,7 +35,7 @@ export default function RadioGroup({
             label={val}
             value={val}
             glow={glow}
-            selected={selectedVal == val}
+            selected={selectedVal == val || selectedVal == "Protected" && val == "Public"}
           />
         )
       })}

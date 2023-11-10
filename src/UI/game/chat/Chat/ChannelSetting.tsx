@@ -11,10 +11,16 @@ import { Channel } from "@/models/Channel.model"
 type Props = {
   close: (e: any) => void
   channel: Channel
-  updateSelectedChannel: (data: any) => void
+  // updateSelectedChannel: (data: any) => void
+  // deleteChannelEvent: (data: any) => void
 }
 
-export default function ChannelSetting({ close, channel, updateSelectedChannel}: Props) {
+export default function ChannelSetting({
+  close,
+  channel,
+  // updateSelectedChannel,
+  // deleteChannelEvent,
+}: Props) {
   const [selected, setSelectedBtn] = useState<"CHANNEL" | "BANLIST">("CHANNEL")
 
   return (
@@ -59,12 +65,19 @@ export default function ChannelSetting({ close, channel, updateSelectedChannel}:
         <div className="w-[823px] flex flex-col gap-2">
           {selected == "CHANNEL" ? (
             <>
-              <UpdateRoomInfo selectedChannel={channel} updateSelectedChannel={updateSelectedChannel}/>
-              <RoomSec />
-              <DelRoom />
+              <UpdateRoomInfo
+                selectedChannel={channel}
+              />
+              <RoomSec
+                selectedChannel={channel}
+                // updateSelectedChannel={updateSelectedChannel}
+              />
+              <DelRoom
+                selectedChannel={channel}
+              />
             </>
           ) : (
-            <BannedList channelId={channel.id}/>
+            <BannedList channelId={channel.id} />
           )}
         </div>
       </div>

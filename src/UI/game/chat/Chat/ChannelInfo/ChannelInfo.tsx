@@ -62,6 +62,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       })
       .catch((err) => {})
 
+  }, [selectedChannel])
+
+  useEffect(() => {
     const _join = (data: any) => {
       setMemberList(memberList.concat(data))
     }
@@ -76,7 +79,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       socket?.off("new member joind", _join)
       socket?.off("a member left", _left)
     }
-  }, [selectedChannel])
+  }, [])
 
   const LeaveRoomEvent = (e: any) => {
     setDialogueState(false)

@@ -14,7 +14,7 @@ class ChannelUserService {
 	}
 
 	leaveChannel(roomId: string) {
-		return HttpClient.delete(`${this.endPoint}/${roomId}`,);
+		return HttpClient.delete(`${this.endPoint}/${roomId}`);
 	}
 
 	free(data: any) {

@@ -1,16 +1,22 @@
 "use client"
-import UploadService from "@/services/Upload.service"
-import React, { useState } from "react"
-import Image from "next/image"
-import Change from "@/UI/settings/icons/Change"
+import React, { useContext, useEffect, useState } from "react"
 import Input from "@/components/BaseComponents/Input"
-import Pen from "@/components/svgs/Pen"
-import TVIcn from "@/components/svgs/TVIcn"
 import Lock from "@/components/svgs/Lock"
 import RadioGroup from "@/components/RadioGroup/RadioGroup"
 import MainButton from "@/components/BaseComponents/MainButton"
+import { Channel } from "@/models/Channel.model"
+import ChannelSevice from "@/services/Channel.sevice"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 
-export default function RoomSec() {
+type Props = {
+  selectedChannel: Channel
+  // updateSelectedChannel: (data: any) => void
+}
+
+export default function RoomSec({
+  selectedChannel,
+  // updateSelectedChannel,
+}: Props) {
   const [visibility, setVisibility] = useState<
     "PRIVATE" | "PUBLIC" | "PROTECTED" | any
   >("PUBLIC")
@@ -23,34 +29,52 @@ export default function RoomSec() {
   const [lock, setLock] = useState(true)
   const [lock_, setLock_] = useState(true)
 
+  useEffect(() => {
+    setVisibility(selectedChannel.visibility)
+    console.log(visibility)
+  }, [])
+
+  const notify = useContext(NotifcationContext)
+
   const onSave = () => {
-    // let body: CreateChannel = {
-    //   imageUrl:
-    //     avatar != ""
-    //       ? avatar
-    //       : "https://i.pinimg.com/564x/7b/fa/54/7bfa549dcba2f80b494eb825f64527e1.jpg",
-    //   name: channelName,
-    //   visibility:
-    //     visibility == "PUBLIC" && password.length ? "PROTECTED" : visibility,
-    // };
-    // if (body.visibility == "PROTECTED") body["password"] = password;
-    // setErrorLog([]);
-    // setProcessing(true);
-    // ChannelSevice.createChannel(body)
-    //   .then((res) => {
-    //     createChannelEvent(res.data);
-    //     handler();
-    //   })
-    //   .catch((err) => {
-    //     setErrorLog(err.response.data.message);
-    //     setProcessing(false);
-    //   });
+    // check if the old password is correct
+    // currPassword
+    // if (visibility == "PROTECTED") {
+    //   currPassword ==
+    // }
+
+    let body: any = {
+      id: selectedChannel.id,
+      visibility:
+        visibility == "PUBLIC" && newPassword != ""
+          ? "PROTECTED"
+          : visibility == "PROTECTED" && newPassword == ""
+          ? "PUBLIC"
+          : visibility,
+    }
+
+    if (newPassword != "") body["password"] = newPassword
+
+    setErrorLog([])
+    ChannelSevice.updateChannel(body)
+      .then((res) => {
+        notify({
+          message: "Saved successfully",
+          title: "Updated Channel Sec",
+          type: "success",
+        })
+        // updateSelectedChannel(res.data)
+      })
+      .catch((err) => {
+        // console.log(err)
+        setErrorLog(err)
+      })
   }
 
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 px-5 pb-5 flex flex-col gap-5">
       <p className="text-base my-5">Channel Sec</p>
-      {visibility == "PUBLIC" ? (
+      {visibility == "PUBLIC" || visibility == "PROTECTED" ? (
         <>
           <Input
             placeholder="Current password"
@@ -84,7 +108,10 @@ export default function RoomSec() {
         <></>
       )}
       <RadioGroup
-        defaultVal={visibility}
+        defaultVal={
+          visibility.toLowerCase().charAt(0).toUpperCase() +
+          visibility.toLowerCase().slice(1)
+        }
         radios={options}
         onChange={(value) => setVisibility(value.toUpperCase())}
         className="flex gap-10"

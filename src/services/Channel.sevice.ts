@@ -30,6 +30,10 @@ class ChannelService {
 		return HttpClient.patch(`${this.channelEndPoint}`, body)
 	}
 
+	deleteChannel(channelId: string) {
+		return HttpClient.delete(`${this.channelEndPoint}/${channelId}`)
+	}
+
 }
 
 export default new ChannelService()

@@ -131,7 +131,7 @@ export default function CreateChannelDialBox({
         <></>
       )}
       <RadioGroup
-        defaultVal={visibility}
+        defaultVal={visibility.toLowerCase().charAt(0).toUpperCase() + visibility.toLowerCase().slice(1)}
         radios={options}
         onChange={(value) => setVisibility(value.toUpperCase())}
         className="flex justify-center gap-10"

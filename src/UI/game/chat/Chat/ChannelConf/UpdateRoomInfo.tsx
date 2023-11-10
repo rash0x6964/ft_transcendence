@@ -9,13 +9,18 @@ import MainButton from "@/components/BaseComponents/MainButton"
 import { Channel } from "@/models/Channel.model"
 import ChannelSevice from "@/services/Channel.sevice"
 import { NotifcationContext } from "@/UI/NotificationProvider"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import cookieService from "@/services/CookiesService"
+
 
 type Props = {
   selectedChannel: Channel
-  updateSelectedChannel: (data: any) => void
 }
 
-export default function UpdateRoomInfo({ selectedChannel, updateSelectedChannel }: Props) {
+export default function UpdateRoomInfo({
+  selectedChannel,
+}: Props) {
+  const socket = useContext(WebSocketContext)
   const [avatar, setAvatar] = useState("")
   const [channelName, setChannelName] = useState("")
   const [errorLog, setErrorLog] = useState([])
@@ -32,9 +37,9 @@ export default function UpdateRoomInfo({ selectedChannel, updateSelectedChannel 
       id: selectedChannel.id,
       imageUrl: avatar,
       name: channelName,
-    };
+    }
 
-    setErrorLog([]);
+    setErrorLog([])
     ChannelSevice.updateChannel(body)
       .then((res) => {
         notify({
@@ -42,12 +47,14 @@ export default function UpdateRoomInfo({ selectedChannel, updateSelectedChannel 
           title: "Updated Channel",
           type: "success",
         })
-        updateSelectedChannel(res.data)
+        socket?.emit("updateChannelInfo", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
       })
       .catch((err) => {
-        // console.log(err)
-        setErrorLog(err);
-      });
+        setErrorLog(err)
+      })
   }
 
   const onFileChange = (e: any) => {
@@ -109,4 +116,3 @@ export default function UpdateRoomInfo({ selectedChannel, updateSelectedChannel 
 function notify(arg0: { message: string; title: string; type: string }) {
   throw new Error("Function not implemented.")
 }
-

@@ -1,38 +1,53 @@
 "use client"
 import UploadService from "@/services/Upload.service"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import Image from "next/image"
 import Change from "@/UI/settings/icons/Change"
 import Input from "@/components/BaseComponents/Input"
 import Pen from "@/components/svgs/Pen"
 import MainButton from "@/components/BaseComponents/MainButton"
+import ChannelSevice from "@/services/Channel.sevice"
+import { Channel } from "@/models/Channel.model"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import CookiesService from "@/services/CookiesService"
 
-export default function DelRoom() {
+type Props = {
+  selectedChannel: Channel
+}
+
+export default function DelRoom({
+  selectedChannel,
+}: Props) {
+  const socket = useContext(WebSocketContext)
   const [channelName, setChannelName] = useState("")
-  const [errorLog, setErrorLog] = useState([])
+  const [errorLog, setErrorLog] = useState([""])
+
+  const notify = useContext(NotifcationContext)
 
   const onDelete = () => {
-    // let body: CreateChannel = {
-    //   imageUrl:
-    //     avatar != ""
-    //       ? avatar
-    //       : "https://i.pinimg.com/564x/7b/fa/54/7bfa549dcba2f80b494eb825f64527e1.jpg",
-    //   name: channelName,
-    //   visibility:
-    //     visibility == "PUBLIC" && password.length ? "PROTECTED" : visibility,
-    // };
-    // if (body.visibility == "PROTECTED") body["password"] = password;
-    // setErrorLog([]);
-    // setProcessing(true);
-    // ChannelSevice.createChannel(body)
-    //   .then((res) => {
-    //     createChannelEvent(res.data);
-    //     handler();
-    //   })
-    //   .catch((err) => {
-    //     setErrorLog(err.response.data.message);
-    //     setProcessing(false);
-    //   });
+    setErrorLog([])
+
+    if (channelName != selectedChannel.name) {
+      setErrorLog(["Channel Name if wrong"])
+      return
+    }
+
+    ChannelSevice.deleteChannel(selectedChannel.id)
+      .then((res) => {
+        notify({
+          message: "channel was deleted successfully",
+          title: "Delete Channel",
+          type: "success",
+        })
+        socket?.emit("deleteChannel", {
+          token: CookiesService.getJwtCookie(),
+          data: selectedChannel,
+        })
+      })
+      .catch((err) => {
+        setErrorLog(err)
+      })
   }
 
   return (

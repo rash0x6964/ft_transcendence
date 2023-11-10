@@ -8,15 +8,17 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 import { Channel } from "@/models/Channel.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import ChannelService from "@/services/Channel.sevice"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useContext, useEffect, useState } from "react"
 import { NextPageWithLayout } from "../_app"
 import { useRouter } from "next/router"
 import DMService from "@/services/DirectMessageService"
 import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox"
 import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 
 const Page: NextPageWithLayout = () => {
+  const socket = useContext(WebSocketContext)
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
   const [selected, setSelected] = useState<DirectMessage | Channel>()
@@ -110,6 +112,37 @@ const Page: NextPageWithLayout = () => {
       clearTimeout(timeout)
     }
   }, [searchFor])
+
+  useEffect(() => {
+    const _updateSelectedChannel = (data: any) => {
+      let updatedList: any = channelList.map((item) => {
+        if (item.id == data.id) {
+          item = { ...item, ...data }
+          setSelected(item)
+          return item
+        }
+      })
+      setChannelList(updatedList)
+    }
+
+    const _deleteChannelEvent = (data: any) => {
+      setChannelList(
+        channelList.filter((item) => {
+          return item.id != data.id
+        })
+      )
+      setRefresh((prevState) => !prevState)
+      setChannelConfDialog(true)
+    }
+
+    socket?.on("channelUpdated", _updateSelectedChannel)
+    socket?.on("roomRemoved", _deleteChannelEvent)
+
+    return () => {
+      socket?.off("channelUpdated", _updateSelectedChannel)
+      socket?.off("roomRemoved", _deleteChannelEvent)
+    }
+  }, [])
 
   const clickOnChannel = (data: Channel) => {
     const obj = channelList.find((item) => item.id == data.id)
@@ -216,16 +249,26 @@ const Page: NextPageWithLayout = () => {
 
   const [channelConfDialog, setChannelConfDialog] = useState(true)
 
-  const updateSelectedChannel = (data: any) => {
-    let updatedList: any = channelList.map((item) => {
-      if (item.id == data.id) {
-        item = { ...item, ...data }
-        setSelected(item)
-        return item
-      }
-    })
-    setChannelList(updatedList)
-  }
+  // const updateSelectedChannel = (data: any) => {
+  //   let updatedList: any = channelList.map((item) => {
+  //     if (item.id == data.id) {
+  //       item = { ...item, ...data }
+  //       setSelected(item)
+  //       return item
+  //     }
+  //   })
+  //   setChannelList(updatedList)
+  // }
+
+  // const deleteChannelEvent = (data: any) => {
+  //   setChannelList(
+  //     channelList.filter((item) => {
+  //       return item.id != data.id
+  //     })
+  //   )
+  //   setRefresh((prevState) => !prevState)
+  //   setChannelConfDialog(true);
+  // }
 
   return (
     <div className="w-full  h-full flex gap-2">
@@ -258,7 +301,8 @@ const Page: NextPageWithLayout = () => {
               <ChannelSetting
                 close={() => setChannelConfDialog(true)}
                 channel={selected as Channel}
-                updateSelectedChannel={updateSelectedChannel}
+                // updateSelectedChannel={updateSelectedChannel}
+                // deleteChannelEvent={deleteChannelEvent}
               />
             </Dialogue>
           </>

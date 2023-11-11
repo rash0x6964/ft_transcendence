@@ -16,7 +16,7 @@ const Page: NextPage = () => {
     } else {
       cookieService.setJwtCookie(infoCookie)
       cookieService.deleteInfoCookie()
-      router.replace("/")
+      router.replace("/game")
     }
   }
 
@@ -38,7 +38,7 @@ const Page: NextPage = () => {
         cookieService.setJwtCookie(res.access_token)
       })
       .catch((err) => console.log(err))
-    router.replace("/")
+    router.replace("/game")
   }
 
   useEffect(() => {

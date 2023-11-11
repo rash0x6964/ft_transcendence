@@ -24,8 +24,10 @@ HttpClient.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response && error.response.status == "401")
-      document.location = "/signup"
+    if (error.response && error.response.status == "401") {
+      cookieService.deleteUserCookie()
+      document.location = "/signin"
+    }
     return Promise.reject(error)
   }
 )

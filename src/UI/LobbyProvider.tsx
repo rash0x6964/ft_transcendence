@@ -41,7 +41,6 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!socket) return
-    socket.emit("getLobbyData", { token: CookiesService.getJwtCookie() })
 
     const onlobbyInvite = (data: any) => {
       notify({
@@ -95,8 +94,6 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     }
 
     const onMatchStarting = (counter: number) => {
-      console.log("yes")
-
       setTimer(counter)
     }
 

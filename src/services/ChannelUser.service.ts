@@ -24,6 +24,10 @@ class ChannelUserService {
     return HttpClient.patch(`${this.endPoint}/ban`, data)
   }
 
+  muteUserAtChannel(data: any) {
+    return HttpClient.patch(`${this.endPoint}/mute`, data)
+  }
+
   kickUserFromChannel(
     channelID: string | undefined,
     userID: string | undefined

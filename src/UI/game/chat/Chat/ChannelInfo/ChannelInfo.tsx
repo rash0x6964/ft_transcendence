@@ -96,11 +96,33 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
         })
     }
 
+    const _muted = (data: any) => {
+      console.log('muted: ', data)
+
+      if (data.role == "MEMBER")
+        setMemberList((prevMemberList) => {
+          return prevMemberList.map((item) => {
+            if (item.userID == data.userID)
+              item.status = data.status
+            return item
+          })
+        })
+      else if (data.role == "ADMINISTRATOR")
+        setAdminList((prevAdminList) => {
+          return prevAdminList.map((item) => {
+            if (item.userID == data.userID)
+              item.status = data.status
+            return item
+          })
+        })
+    }
+
     socket?.on("new member joind", _join)
     socket?.on("a member left", _left)
     socket?.on("aMemberUnbanned", _unbanned)
     socket?.on("aMemberBanned", _banned)
     socket?.on("aMemberKicked", _banned)
+    socket?.on("aMemberMuted", _muted)
 
     return () => {
       socket?.off("new member joind", _join)
@@ -108,6 +130,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       socket?.off("aMemberUnbanned", _unbanned)
       socket?.off("aMemberBanned", _banned)
       socket?.off("aMemberKicked", _banned)
+      socket?.off("aMemberMuted", _muted)
     }
   }, [])
 
@@ -143,9 +166,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
   const handleKick = () => {
     let data: any = {
-      userID: selectedData?.userID,
       channelID: selectedData?.channelID,
-      role: selectedData?.role
+      userID: selectedData?.userID,
+      role: selectedData?.role,
     }
 
     ChannelUserService.kickUserFromChannel(
@@ -165,6 +188,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
   const handleBan = () => {
     let data: any = {
+      channelID: selectedData?.channelID,
       userID: selectedData?.userID,
       status: "BANNED",
     }
@@ -179,6 +203,28 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       .catch((err) => {
         // console.log(err)
       })
+  }
+
+  const handleMute = (duration: number) => {
+    let data: any = {
+      channelID: selectedData?.channelID,
+      userID: selectedData?.userID,
+      status: "MUTED",
+      duration: duration,
+    }
+
+    ChannelUserService.muteUserAtChannel(data)
+      .then((res) => {
+        console.log('muted...')
+        socket?.emit("getMuted", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    setDialogueMuteState(true)
   }
 
   return (
@@ -248,7 +294,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
         <MenuBtn title="Kick" onClick={handleKick} />
-        <MenuBtn title="Mute" onClick={() => setDialogueMuteState(false)}/>
+        <MenuBtn title="Mute" onClick={() => setDialogueMuteState(false)} />
         <MenuBtn title="Ban" onClick={handleBan} />
       </ContextMenu>
       <Dialogue
@@ -273,10 +319,31 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
         onBackDropClick={() => setDialogueMuteState(true)}
         closed={dialogueMuteState}
       >
-        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col">
-          <p className="font-light w-full py-2 text-white text-center hover:bg-primary-500 hover:text-slate-700 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 ">1 s</p>
-          <p className="font-light text-white self-center">10 min</p>
-          <p className="font-light text-white self-center">15 min</p>
+        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-fit flex flex-col">
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(1)}
+          >
+            1 s
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(16 * 5)}
+          >
+            5 min
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(10 * 60)}
+          >
+            10 min
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(15 * 60)}
+          >
+            15 min
+          </button>
         </div>
       </Dialogue>
     </div>

@@ -24,7 +24,8 @@ export default function BannedList({ channelId }: { channelId: string }) {
   const unblock = (id: string) => {
     let data: any = {
       userID: id,
-      status: "FREE"
+      channelID: channelId,
+      status: "FREE",
     }
 
     ChannelUserService.free(data).then((res) => {

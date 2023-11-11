@@ -5,11 +5,13 @@ import Camera from "@/components/svgs/Camera";
 import Lock from "@/components/svgs/Lock";
 import Plus from "@/components/svgs/Plus";
 import TVIcn from "@/components/svgs/TVIcn";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ChannelSevice from "@/services/Channel.sevice";
 import { Channel, CreateChannel } from "@/models/Channel.model";
 import UploadService from "@/services/Upload.service";
 import Image from "next/image";
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
+import cookieService from "@/services/CookiesService"
 
 type Props = {
   handler: () => void;
@@ -20,6 +22,7 @@ export default function CreateChannelDialBox({
   handler,
   createChannelEvent,
 }: Props) {
+  const socket = useContext(WebSocketContext)
   const [visibility, setVisibility] = useState<
     "PRIVATE" | "PUBLIC" | "PROTECTED" | any
   >("PUBLIC");
@@ -52,6 +55,10 @@ export default function CreateChannelDialBox({
       .then((res) => {
         createChannelEvent(res.data);
         handler();
+        socket?.emit('channelCreated', {
+          token: cookieService.getJwtCookie(),
+          data: res.data.id,
+        })
       })
       .catch((err) => {
         setErrorLog(err.response.data.message);

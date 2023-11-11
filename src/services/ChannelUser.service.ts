@@ -20,6 +20,10 @@ class ChannelUserService {
 	free(data: any) {
 		return HttpClient.patch(`${this.endPoint}/free`, data);
 	}
+
+	blockUserAtChannel(data: any) {
+		return HttpClient.patch(`${this.endPoint}/free`, data);
+	}
 }
 
 export default new ChannelUserService()

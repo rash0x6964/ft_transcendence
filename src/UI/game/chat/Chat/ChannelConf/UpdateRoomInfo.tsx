@@ -47,6 +47,7 @@ export default function UpdateRoomInfo({
           title: "Updated Channel",
           type: "success",
         })
+        selectedChannel = {...res.data}
         socket?.emit("updateChannelInfo", {
           token: cookieService.getJwtCookie(),
           data: res.data,

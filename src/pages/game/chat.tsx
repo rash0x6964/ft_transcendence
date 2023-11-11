@@ -115,22 +115,25 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     const _updateSelectedChannel = (data: any) => {
-      let updatedList: any = channelList.map((item) => {
-        if (item.id == data.id) {
-          item = { ...item, ...data }
-          setSelected(item)
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((item) => {
+          if (item.id == data.id) {
+            item = { ...item, ...data }
+            if ((selected as Channel) && item.id == (selected as Channel).id) {
+              setSelected(item)
+            }
+          }
           return item
-        }
+        })
       })
-      setChannelList(updatedList)
     }
 
     const _deleteChannelEvent = (data: any) => {
-      setChannelList(
-        channelList.filter((item) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
           return item.id != data.id
         })
-      )
+      })
       setRefresh((prevState) => !prevState)
       setChannelConfDialog(true)
     }
@@ -142,7 +145,7 @@ const Page: NextPageWithLayout = () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
     }
-  }, [])
+  }, [selected])
 
   const clickOnChannel = (data: Channel) => {
     const obj = channelList.find((item) => item.id == data.id)
@@ -160,18 +163,18 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomCreated = (data: Channel) => {
-    setChannelList(channelList.concat(data))
+    setChannelList((prevChannelList) => prevChannelList.concat(data))
     setSelected(data)
   }
 
   const roomJoined = (data: Channel) => {
-    setSearchFor("")
+    // setSearchFor("")
     setSelected(data)
     setDialogueState(true)
   }
 
   const roomLeaved = (channel_id: string) => {
-    setChannelList(channelList.filter((item) => item.id != channel_id))
+    setChannelList((prevChannelList) => prevChannelList.filter((item) => item.id != channel_id))
     setRefresh((prevState) => !prevState)
   }
 
@@ -249,27 +252,6 @@ const Page: NextPageWithLayout = () => {
 
   const [channelConfDialog, setChannelConfDialog] = useState(true)
 
-  // const updateSelectedChannel = (data: any) => {
-  //   let updatedList: any = channelList.map((item) => {
-  //     if (item.id == data.id) {
-  //       item = { ...item, ...data }
-  //       setSelected(item)
-  //       return item
-  //     }
-  //   })
-  //   setChannelList(updatedList)
-  // }
-
-  // const deleteChannelEvent = (data: any) => {
-  //   setChannelList(
-  //     channelList.filter((item) => {
-  //       return item.id != data.id
-  //     })
-  //   )
-  //   setRefresh((prevState) => !prevState)
-  //   setChannelConfDialog(true);
-  // }
-
   return (
     <div className="w-full  h-full flex gap-2">
       <HeadTitle>Pong Fury | Chat</HeadTitle>
@@ -301,8 +283,6 @@ const Page: NextPageWithLayout = () => {
               <ChannelSetting
                 close={() => setChannelConfDialog(true)}
                 channel={selected as Channel}
-                // updateSelectedChannel={updateSelectedChannel}
-                // deleteChannelEvent={deleteChannelEvent}
               />
             </Dialogue>
           </>

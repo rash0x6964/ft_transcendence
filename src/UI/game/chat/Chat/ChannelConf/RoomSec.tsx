@@ -7,19 +7,19 @@ import MainButton from "@/components/BaseComponents/MainButton"
 import { Channel } from "@/models/Channel.model"
 import ChannelSevice from "@/services/Channel.sevice"
 import { NotifcationContext } from "@/UI/NotificationProvider"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import cookieService from "@/services/CookiesService"
+
 
 type Props = {
   selectedChannel: Channel
-  // updateSelectedChannel: (data: any) => void
 }
 
-export default function RoomSec({
-  selectedChannel,
-  // updateSelectedChannel,
-}: Props) {
+export default function RoomSec({ selectedChannel }: Props) {
+  const socket = useContext(WebSocketContext)
   const [visibility, setVisibility] = useState<
     "PRIVATE" | "PUBLIC" | "PROTECTED" | any
-  >("PUBLIC")
+  >(selectedChannel.visibility)
   const options = ["Public", "Private"]
 
   const [currPassword, setCurrPassword] = useState("")
@@ -31,7 +31,6 @@ export default function RoomSec({
 
   useEffect(() => {
     setVisibility(selectedChannel.visibility)
-    console.log(visibility)
   }, [])
 
   const notify = useContext(NotifcationContext)
@@ -54,6 +53,7 @@ export default function RoomSec({
     }
 
     if (newPassword != "") body["password"] = newPassword
+    else body["password"] = null
 
     setErrorLog([])
     ChannelSevice.updateChannel(body)
@@ -63,10 +63,12 @@ export default function RoomSec({
           title: "Updated Channel Sec",
           type: "success",
         })
-        // updateSelectedChannel(res.data)
+        socket?.emit("updateChannelInfo", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
       })
       .catch((err) => {
-        // console.log(err)
         setErrorLog(err)
       })
   }

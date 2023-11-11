@@ -11,15 +11,11 @@ import { Channel } from "@/models/Channel.model"
 type Props = {
   close: (e: any) => void
   channel: Channel
-  // updateSelectedChannel: (data: any) => void
-  // deleteChannelEvent: (data: any) => void
 }
 
 export default function ChannelSetting({
   close,
   channel,
-  // updateSelectedChannel,
-  // deleteChannelEvent,
 }: Props) {
   const [selected, setSelectedBtn] = useState<"CHANNEL" | "BANLIST">("CHANNEL")
 
@@ -70,7 +66,6 @@ export default function ChannelSetting({
               />
               <RoomSec
                 selectedChannel={channel}
-                // updateSelectedChannel={updateSelectedChannel}
               />
               <DelRoom
                 selectedChannel={channel}

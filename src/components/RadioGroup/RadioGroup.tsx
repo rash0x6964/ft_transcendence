@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import RadioButton from "@/components/RadioGroup/RadioButton"
 
 type Props = {
@@ -17,13 +17,15 @@ export default function RadioGroup({
   glow = false,
   disabled = false,
 }: Props) {
+
+  const [selectedVal, setSelectedVal] = useState(defaultVal)
+
   let radiosSet: string[] = Array.from(new Set(radios))
   const handleChange = (value: string) => {
-    console.log(value)
     onChange && onChange(value)
     setSelectedVal(value)
   }
-  const [selectedVal, setSelectedVal] = useState(defaultVal)
+
   return (
     <div className={`${className}  ${disabled ? "opacity-70" : ""}`}>
       {radios.map((val, i) => {
@@ -35,7 +37,10 @@ export default function RadioGroup({
             label={val}
             value={val}
             glow={glow}
-            selected={selectedVal == val || selectedVal == "Protected" && val == "Public"}
+            selected={
+              selectedVal == val ||
+              (selectedVal == "Protected" && val == "Public")
+            }
           />
         )
       })}

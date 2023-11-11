@@ -66,10 +66,10 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
   useEffect(() => {
     const _join = (data: any) => {
-      setMemberList(memberList.concat(data))
+      setMemberList((prevMemberList) => { return prevMemberList.concat(data) })
     }
     const _left = (id: string) => {
-      setMemberList(memberList.filter((item) => item.userID != id))
+      setMemberList((prevMemberList) => { return prevMemberList.filter((item) => item.userID != id) })
     }
 
     socket?.on("new member joind", _join)
@@ -116,12 +116,14 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   }
 
   const handleKick = () => {
-    console.log("data", selectedData)
+    // console.log("data", selectedData)
   }
 
   const handleMute = () => {}
 
-  const handleBan = () => {}
+  const handleBan = () => {
+
+  }
 
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
@@ -146,7 +148,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
           playerAvatar={owner?.user?.avatarUrl ?? ""}
           playerName={owner?.user?.userName ?? "Unknown"}
           playerState={owner?.status ?? "idle"}
-          data={selectedData}
+          data={owner}
         />
         {adminList.length ? (
           <span className="text-gray-400 text-sm">
@@ -163,7 +165,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
-              data={selectedData}
+              data={item}
             />
           )
         })}
@@ -182,16 +184,16 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
-              data={selectedData}
+              data={item}
             />
           )
         })}
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
-        <MenuBtn title="Kick" onClick={handleKick} />
+        <MenuBtn title="Kick" />
         <MenuBtn title="Mute" />
-        <MenuBtn title="Ban" />
+        <MenuBtn title="Ban" onClick={handleBan}/>
       </ContextMenu>
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}

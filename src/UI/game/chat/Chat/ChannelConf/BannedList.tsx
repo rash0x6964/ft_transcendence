@@ -1,12 +1,15 @@
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Avatar from "@/components/BaseComponents/Avatar"
 import Cross from "@/components/svgs/CloseBox"
 import UnblockAtList from "@/components/svgs/UnblockAtList"
 import { ChannelUser } from "@/models/Channel.model"
 import ChannelUserService from "@/services/ChannelUser.service"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
+import cookieService from "@/services/CookiesService"
 
 export default function BannedList({ channelId }: { channelId: string }) {
   const [bannedList, setBannedList] = useState<ChannelUser[]>([])
+  const socket = useContext(WebSocketContext)
 
   useEffect(() => {
     ChannelUserService.getChannelBlockedMember(channelId)
@@ -26,8 +29,12 @@ export default function BannedList({ channelId }: { channelId: string }) {
 
     ChannelUserService.free(data).then((res) => {
       setBannedList(bannedList.filter((x) => x.userID != id))
+      socket?.emit('getUnbanned', {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
     }).catch((err) => {
-      console.log(err)
+      // console.log(err)
     })
   }
 

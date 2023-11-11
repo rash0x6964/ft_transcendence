@@ -138,12 +138,34 @@ const Page: NextPageWithLayout = () => {
       setChannelConfDialog(true)
     }
 
+    const _ubannedFromChannel = (data: any) => {
+
+      data.channel['isMemeber'] = true;
+      data.channel['owner'] = data.role;
+
+      setChannelList((prevChannelList) => {
+        return prevChannelList.concat(data.channel)
+      })
+    }
+
+    const _bannedFromChannel = (data: any) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
+    socket?.on("youGetUnbanned", _ubannedFromChannel)
+    socket?.on("youGetBanned", _bannedFromChannel)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
+      socket?.off("youGetUnbanned", _ubannedFromChannel)
+      socket?.off("youGetBanned", _bannedFromChannel)
     }
   }, [selected])
 
@@ -168,13 +190,15 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomJoined = (data: Channel) => {
-    // setSearchFor("")
+    setSearchFor("")
     setSelected(data)
     setDialogueState(true)
   }
 
   const roomLeaved = (channel_id: string) => {
-    setChannelList((prevChannelList) => prevChannelList.filter((item) => item.id != channel_id))
+    setChannelList((prevChannelList) =>
+      prevChannelList.filter((item) => item.id != channel_id)
+    )
     setRefresh((prevState) => !prevState)
   }
 

@@ -22,7 +22,7 @@ class ChannelUserService {
 	}
 
 	blockUserAtChannel(data: any) {
-		return HttpClient.patch(`${this.endPoint}/free`, data);
+		return HttpClient.patch(`${this.endPoint}/ban`, data);
 	}
 }
 

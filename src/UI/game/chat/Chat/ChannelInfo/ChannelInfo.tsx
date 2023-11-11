@@ -61,23 +61,50 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
         )
       })
       .catch((err) => {})
-
   }, [selectedChannel])
 
   useEffect(() => {
     const _join = (data: any) => {
-      setMemberList((prevMemberList) => { return prevMemberList.concat(data) })
+      setMemberList((prevMemberList) => {
+        return prevMemberList.concat(data)
+      })
     }
     const _left = (id: string) => {
-      setMemberList((prevMemberList) => { return prevMemberList.filter((item) => item.userID != id) })
+      setMemberList((prevMemberList) => {
+        return prevMemberList.filter((item) => item.userID != id)
+      })
+    }
+    const _unbanned = (data: any) => {
+      if (data.role == "MEMBER")
+        setMemberList((prevMemberList) => {
+          return prevMemberList.concat(data)
+        })
+      else if (data.role == "ADMINISTRATOR")
+        setAdminList((prevAdminList) => {
+          return prevAdminList.concat(data)
+        })
+    }
+    const _banned = (data: any) => {
+      if (data.role == "MEMBER")
+        setMemberList((prevMemberList) => {
+          return prevMemberList.filter((item) => item.userID != data.userID)
+        })
+      else if (data.role == "ADMINISTRATOR")
+        setAdminList((prevAdminList) => {
+          return prevAdminList.filter((item) => item.userID != data.userID)
+        })
     }
 
     socket?.on("new member joind", _join)
     socket?.on("a member left", _left)
+    socket?.on("aMemberUnbanned", _unbanned)
+    socket?.on("aMemberBanned", _banned)
 
     return () => {
       socket?.off("new member joind", _join)
       socket?.off("a member left", _left)
+      socket?.off("aMemberUnbanned", _unbanned)
+      socket?.off("aMemberBanned", _banned)
     }
   }, [])
 
@@ -122,7 +149,21 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   const handleMute = () => {}
 
   const handleBan = () => {
+    let data: any = {
+      userID: selectedData?.userID,
+      status: "BANNED",
+    }
 
+    ChannelUserService.blockUserAtChannel(data)
+      .then((res) => {
+        socket?.emit("getBanned", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
   }
 
   return (
@@ -191,9 +232,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
-        <MenuBtn title="Kick" />
+        <MenuBtn title="Kick" onClick={() => console.log("kick")} />
         <MenuBtn title="Mute" />
-        <MenuBtn title="Ban" onClick={handleBan}/>
+        <MenuBtn title="Ban" onClick={handleBan} />
       </ContextMenu>
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}

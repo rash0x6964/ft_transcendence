@@ -35,6 +35,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
 
   const [dialogueState, setDialogueState] = useState(true)
+  const [dialogueMuteState, setDialogueMuteState] = useState(true)
   const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(
     undefined
   )
@@ -99,18 +100,16 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
     socket?.on("a member left", _left)
     socket?.on("aMemberUnbanned", _unbanned)
     socket?.on("aMemberBanned", _banned)
+    socket?.on("aMemberKicked", _banned)
 
     return () => {
       socket?.off("new member joind", _join)
       socket?.off("a member left", _left)
       socket?.off("aMemberUnbanned", _unbanned)
       socket?.off("aMemberBanned", _banned)
+      socket?.off("aMemberKicked", _banned)
     }
   }, [])
-
-  const LeaveRoomEvent = (e: any) => {
-    setDialogueState(false)
-  }
 
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
@@ -143,10 +142,26 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   }
 
   const handleKick = () => {
-    // console.log("data", selectedData)
-  }
+    let data: any = {
+      userID: selectedData?.userID,
+      channelID: selectedData?.channelID,
+      role: selectedData?.role
+    }
 
-  const handleMute = () => {}
+    ChannelUserService.kickUserFromChannel(
+      selectedData?.channelID,
+      selectedData?.userID
+    )
+      .then((res) => {
+        socket?.emit("getKicked", {
+          token: cookieService.getJwtCookie(),
+          data: data,
+        })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
+  }
 
   const handleBan = () => {
     let data: any = {
@@ -171,7 +186,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       {selectedChannel && selectedChannel.owner != "OWNER" ? (
         <LeaveRoom
           className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
-          onClick={LeaveRoomEvent}
+          onClick={() => setDialogueState(false)}
         />
       ) : (
         <EditRoom
@@ -232,8 +247,8 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
-        <MenuBtn title="Kick" onClick={() => console.log("kick")} />
-        <MenuBtn title="Mute" />
+        <MenuBtn title="Kick" onClick={handleKick} />
+        <MenuBtn title="Mute" onClick={() => setDialogueMuteState(false)}/>
         <MenuBtn title="Ban" onClick={handleBan} />
       </ContextMenu>
       <Dialogue
@@ -241,7 +256,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
         closed={dialogueState}
       >
         <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
-          <p className="font-bold text-white ">Leaving Channel</p>
+          <p className="font-light text-white ">Leaving Channel</p>
           <p className="font-light mb-9">
             are you sure you want to leave{" "}
             <span className="text-primary">{selectedChannel.name}</span> ??
@@ -252,6 +267,16 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
           >
             Accept
           </button>
+        </div>
+      </Dialogue>
+      <Dialogue
+        onBackDropClick={() => setDialogueMuteState(true)}
+        closed={dialogueMuteState}
+      >
+        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col">
+          <p className="font-light w-full py-2 text-white text-center hover:bg-primary-500 hover:text-slate-700 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 ">1 s</p>
+          <p className="font-light text-white self-center">10 min</p>
+          <p className="font-light text-white self-center">15 min</p>
         </div>
       </Dialogue>
     </div>

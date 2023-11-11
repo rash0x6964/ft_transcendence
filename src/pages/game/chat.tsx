@@ -139,16 +139,15 @@ const Page: NextPageWithLayout = () => {
     }
 
     const _ubannedFromChannel = (data: any) => {
-
-      data.channel['isMemeber'] = true;
-      data.channel['owner'] = data.role;
+      data.channel["isMemeber"] = true
+      data.channel["owner"] = data.role
 
       setChannelList((prevChannelList) => {
         return prevChannelList.concat(data.channel)
       })
     }
 
-    const _bannedFromChannel = (data: any) => {
+    const _outOfChannel = (data: any) => {
       setChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.channelID
@@ -156,16 +155,26 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
+    // const _kickedFromChannel = (data: any) => {
+    //   setChannelList((prevChannelList) => {
+    //     return prevChannelList.filter((item) => {
+    //       return item.id != data.channelID
+    //     })
+    //   })
+    // }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
-    socket?.on("youGetBanned", _bannedFromChannel)
+    socket?.on("youGetBanned", _outOfChannel)
+    socket?.on("youGetKicked", _outOfChannel)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
       socket?.off("youGetUnbanned", _ubannedFromChannel)
-      socket?.off("youGetBanned", _bannedFromChannel)
+      socket?.off("youGetBanned", _outOfChannel)
+      socket?.off("youGetKicked", _outOfChannel)
     }
   }, [selected])
 

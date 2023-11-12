@@ -53,12 +53,12 @@ export default function RoomSec({ selectedChannel }: Props) {
       body["oldPass"] = currPassword
     }
 
-    if (newPassword != "") body["password"] = newPassword
+    if (newPassword != "") body["newPassword"] = newPassword
     if (body.visibility == "PRIVATE" || newPassword == "")
-      body["password"] = null
+      body["newPassword"] = null
 
     setErrorLog([""])
-    ChannelSevice.updateChannel(body)
+    ChannelSevice.updatePassword(body)
       .then((res) => {
         notify({
           message: "Saved successfully",

@@ -30,6 +30,10 @@ class ChannelService {
 		return HttpClient.patch(`${this.channelEndPoint}`, body)
 	}
 
+	updatePassword(body: any) {
+		return HttpClient.patch(`${this.channelEndPoint}/password`, body)
+	}
+
 	deleteChannel(channelId: string) {
 		return HttpClient.delete(`${this.channelEndPoint}/${channelId}`)
 	}

@@ -12,6 +12,8 @@ import UploadService from "@/services/Upload.service";
 import Image from "next/image";
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
 import cookieService from "@/services/CookiesService"
+import axios from "axios";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
 type Props = {
   handler: () => void;
@@ -35,6 +37,7 @@ export default function CreateChannelDialBox({
   const [processing, setProcessing] = useState(false);
 
   const [lock, setLock] = useState(true);
+  const notify = useContext(NotifcationContext)
 
   const onCreate = () => {
     let body: CreateChannel = {
@@ -75,7 +78,13 @@ export default function CreateChannelDialBox({
         setAvatar(res.data[0].url);
       })
       .catch((err) => {
-        console.log(err.data);
+        if (axios.isAxiosError(err)) {
+          notify({
+            message: err.response?.data?.message,
+            title: "Validation Error",
+            type: "error",
+          })
+        }
       });
   };
 

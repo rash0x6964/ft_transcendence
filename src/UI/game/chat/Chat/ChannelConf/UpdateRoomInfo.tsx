@@ -11,15 +11,13 @@ import ChannelSevice from "@/services/Channel.sevice"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
-
+import axios from "axios"
 
 type Props = {
   selectedChannel: Channel
 }
 
-export default function UpdateRoomInfo({
-  selectedChannel,
-}: Props) {
+export default function UpdateRoomInfo({ selectedChannel }: Props) {
   const socket = useContext(WebSocketContext)
   const [avatar, setAvatar] = useState("")
   const [channelName, setChannelName] = useState("")
@@ -47,7 +45,7 @@ export default function UpdateRoomInfo({
           title: "Updated Channel",
           type: "success",
         })
-        selectedChannel = {...res.data}
+        selectedChannel = { ...res.data }
         socket?.emit("updateChannelInfo", {
           token: cookieService.getJwtCookie(),
           data: res.data,
@@ -58,17 +56,37 @@ export default function UpdateRoomInfo({
       })
   }
 
-  const onFileChange = (e: any) => {
+  const uploadPic = (url: string) => {
+    let body: any = {
+      id: selectedChannel.id,
+      imageUrl: url,
+    }
+    return ChannelSevice.updateChannel(body)
+  }
+
+  const onFileChange = async (e: any) => {
     if (!e.target.files[0]) return
     const formdata = new FormData()
     formdata.append("files", e.target.files[0], e.target.files[0].name)
-    UploadService.uploadFiles("avatars", formdata)
-      .then((res) => {
-        setAvatar(res.data[0].url)
+    try {
+      const res = await UploadService.uploadFiles("avatars", formdata)
+      const channel = await uploadPic(res.data[0].url)
+      // console.log('test', channel)
+      setAvatar(channel.data.imageUrl)
+      selectedChannel = { ...channel.data }
+      socket?.emit("updateChannelInfo", {
+        token: cookieService.getJwtCookie(),
+        data: channel.data,
       })
-      .catch((err) => {
-        console.log(err.data)
-      })
+    } catch (err) {
+        if (axios.isAxiosError(err)) {
+          notify({
+            message: err.response?.data?.message,
+            title: "Validation Error",
+            type: "error",
+          })
+        }
+    }
   }
 
   return (

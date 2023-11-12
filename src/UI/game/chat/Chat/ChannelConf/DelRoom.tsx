@@ -68,7 +68,7 @@ export default function DelRoom({
         <></>
       )}
       <MainButton className="self-end bg-red-500 text-white" onClick={onDelete}>
-        <p className="font-light pt-3 pb-3 pr-8 pl-8 rounded-xl flex justify-center">
+        <p className="font-normal pt-3 pb-3 pr-8 pl-8 rounded-xl flex justify-center">
           Delete
         </p>
       </MainButton>

@@ -5,18 +5,35 @@ import SvgProps from "@/types/SvgProps"
 export default function Cross({ width, height, className, onClick }: SvgProps) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 30 30"
       width={width}
       height={height}
+      viewBox="0 0 30 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
       className={className}
     >
       <path
+        d="M15 27.5C21.9036 27.5 27.5 21.9036 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z"
         stroke="#D1D5DB"
-        d="M15 27.5c6.904 0 12.5-5.596 12.5-12.5S21.904 2.5 15 2.5 2.5 8.096 2.5 15 8.096 27.5 15 27.5zM18.75 11.25l-7.5 7.5M11.25 11.25l7.5 7.5"
-      ></path>
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.75 11.25L11.25 18.75"
+        stroke="#D1D5DB"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.25 11.25L18.75 18.75"
+        stroke="#D1D5DB"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }

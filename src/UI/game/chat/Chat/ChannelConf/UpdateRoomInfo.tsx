@@ -125,7 +125,7 @@ export default function UpdateRoomInfo({ selectedChannel }: Props) {
         <></>
       )}
       <MainButton className="self-end" onClick={onSave}>
-        <p className="font-light pt-3 pb-3 pr-8 pl-8 rounded-xl flex justify-center">
+        <p className="font-normal pt-3 pb-3 pr-8 pl-8 rounded-xl flex justify-center">
           Save
         </p>
       </MainButton>

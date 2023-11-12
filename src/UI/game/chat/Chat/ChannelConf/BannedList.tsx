@@ -51,7 +51,7 @@ export default function BannedList({ channelId }: { channelId: string }) {
           <span className="self-center pr-24">Join Date</span>
           <span className="self-center pr-20">Member Since</span>
           {/* <span className="self-center">Unblock</span> */}
-        </div> : <p className="text-center opacity-25">No one blocked</p>}
+        </div> : <p className="text-center opacity-25">No one banned</p>}
 
         {bannedList.map((item, index) => {
           // if (index > 2)

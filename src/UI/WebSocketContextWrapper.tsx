@@ -20,24 +20,8 @@ export default function WebSocketContextProvider({
     []
   )
   useEffect(() => {
-    if (socket) {
-      const onConnect = () => {
-        HttpClient.get("/channelUser/myChannels")
-          .then(({ data }: { data: string[] }) => {
-            socket.emit("connected", {
-              token: cookieService.getJwtCookie(),
-              data: data,
-            })
-          })
-          .catch((err) => {})
-      }
-
-      socket.on("connect", onConnect)
-
-      return () => {
-        socket.off("connected", onConnect)
-        socket.disconnect()
-      }
+    return () => {
+      socket.disconnect()
     }
   }, [])
   return (

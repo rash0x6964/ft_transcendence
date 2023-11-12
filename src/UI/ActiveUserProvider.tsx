@@ -1,13 +1,6 @@
 import ProfileData from "@/models/ProfileData.model"
 import profileService from "@/services/ProfileService"
-import {
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useEffect,
-  useState,
-} from "react"
+import { PropsWithChildren, createContext, useEffect, useState } from "react"
 
 export const ProfileContext = createContext<any>({})
 export default function ActiveUserProvider({ children }: PropsWithChildren) {

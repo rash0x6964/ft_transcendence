@@ -11,21 +11,22 @@ export default function EndGame({ lobby }: Props) {
     <div className="w-full h-full justify-between flex flex-col py-1">
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" mr-auto w-full h-2 bg-primary"></div>
-          <div className=" w-[50%] h-2 bg-primary"></div>
-          <div className=" w-[25%] h-2 bg-primary"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
+          <div className=" w-[50%] h-2 bg-primary animate-pulse"></div>
+          <div className=" w-[25%] h-2 bg-primary animate-pulse"></div>
         </div>
 
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" mr-auto w-full h-2 bg-primary"></div>
-          <div className="ml-auto  w-[50%] h-2 bg-primary"></div>
-          <div className="ml-auto  w-[25%] h-2 bg-primary"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
+          <div className="ml-auto  w-[50%] h-2 bg-primary animate-pulse"></div>
+          <div className="ml-auto  w-[25%] h-2 bg-primary animate-pulse"></div>
         </div>
       </div>
 
       <div className="w-full">
         <PlayersScore
           time="2:50"
+          score={lobby.gameData.score}
           className="mb-8 mx-auto"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
@@ -75,15 +76,15 @@ export default function EndGame({ lobby }: Props) {
 
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" w-[25%] h-2 bg-primary"></div>
-          <div className=" w-[50%] h-2 bg-primary"></div>
-          <div className=" mr-auto w-full h-2 bg-primary"></div>
+          <div className=" w-[25%] h-2 bg-primary animate-pulse"></div>
+          <div className=" w-[50%] h-2 bg-primary animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
         </div>
 
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className="ml-auto  w-[25%] h-2 bg-primary"></div>
-          <div className="ml-auto  w-[50%] h-2 bg-primary"></div>
-          <div className=" mr-auto w-full h-2 bg-primary"></div>
+          <div className="ml-auto  w-[25%] h-2 bg-primary animate-pulse"></div>
+          <div className="ml-auto  w-[50%] h-2 bg-primary animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
         </div>
       </div>
     </div>

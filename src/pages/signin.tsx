@@ -34,7 +34,7 @@ const Page: NextPageWithLayout = () => {
 
   const setToken = (access_token: string) => {
     cookieService.setJwtCookie(access_token)
-    router.push("/")
+    router.push("/game")
   }
   const handleSubmit = async (e: any) => {
     e.preventDefault()

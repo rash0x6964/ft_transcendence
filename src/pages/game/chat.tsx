@@ -8,15 +8,17 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 import { Channel } from "@/models/Channel.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import ChannelService from "@/services/Channel.sevice"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useContext, useEffect, useState } from "react"
 import { NextPageWithLayout } from "../_app"
 import { useRouter } from "next/router"
 import DMService from "@/services/DirectMessageService"
 import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannelDialBox"
 import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 
 const Page: NextPageWithLayout = () => {
+  const socket = useContext(WebSocketContext)
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
   const [selected, setSelected] = useState<DirectMessage | Channel>()
@@ -111,6 +113,71 @@ const Page: NextPageWithLayout = () => {
     }
   }, [searchFor])
 
+  useEffect(() => {
+    const _updateSelectedChannel = (data: any) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((item) => {
+          if (item.id == data.id) {
+            item = { ...item, ...data }
+            if ((selected as Channel) && item.id == (selected as Channel).id) {
+              setSelected(item)
+            }
+          }
+          return item
+        })
+      })
+    }
+
+    const _deleteChannelEvent = (data: any) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.id
+        })
+      })
+      setRefresh((prevState) => !prevState)
+      setChannelConfDialog(true)
+    }
+
+    const _ubannedFromChannel = (data: any) => {
+      data.channel["isMemeber"] = true
+      data.channel["owner"] = data.role
+
+      setChannelList((prevChannelList) => {
+        return prevChannelList.concat(data.channel)
+      })
+    }
+
+    const _outOfChannel = (data: any) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+    }
+
+    // const _kickedFromChannel = (data: any) => {
+    //   setChannelList((prevChannelList) => {
+    //     return prevChannelList.filter((item) => {
+    //       return item.id != data.channelID
+    //     })
+    //   })
+    // }
+
+    socket?.on("channelUpdated", _updateSelectedChannel)
+    socket?.on("roomRemoved", _deleteChannelEvent)
+    socket?.on("youGetUnbanned", _ubannedFromChannel)
+    socket?.on("youGetBanned", _outOfChannel)
+    socket?.on("youGetKicked", _outOfChannel)
+
+    return () => {
+      socket?.off("channelUpdated", _updateSelectedChannel)
+      socket?.off("roomRemoved", _deleteChannelEvent)
+      socket?.off("youGetUnbanned", _ubannedFromChannel)
+      socket?.off("youGetBanned", _outOfChannel)
+      socket?.off("youGetKicked", _outOfChannel)
+    }
+  }, [selected])
+
   const clickOnChannel = (data: Channel) => {
     const obj = channelList.find((item) => item.id == data.id)
     if (obj?.isMemeber == true) {
@@ -127,18 +194,20 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomCreated = (data: Channel) => {
-    setChannelList(channelList.concat(data))
+    setChannelList((prevChannelList) => prevChannelList.concat(data))
     setSelected(data)
   }
 
   const roomJoined = (data: Channel) => {
-    setSearchFor("")
+    // setSearchFor("")
     setSelected(data)
     setDialogueState(true)
   }
 
   const roomLeaved = (channel_id: string) => {
-    setChannelList(channelList.filter((item) => item.id != channel_id))
+    setChannelList((prevChannelList) =>
+      prevChannelList.filter((item) => item.id != channel_id)
+    )
     setRefresh((prevState) => !prevState)
   }
 
@@ -214,6 +283,8 @@ const Page: NextPageWithLayout = () => {
     })
   }
 
+  const [channelConfDialog, setChannelConfDialog] = useState(true)
+
   return (
     <div className="w-full  h-full flex gap-2">
       <HeadTitle>Pong Fury | Chat</HeadTitle>
@@ -235,10 +306,19 @@ const Page: NextPageWithLayout = () => {
       </div>
       <div className=" h-full w-96">
         {isChannel() && (
-          <ChannelInfo
-            selectedChannel={selected as Channel}
-            event={roomLeaved}
-          />
+          <>
+            <ChannelInfo
+              onEdit={() => setChannelConfDialog(false)}
+              selectedChannel={selected as Channel}
+              event={roomLeaved}
+            />
+            <Dialogue closed={channelConfDialog}>
+              <ChannelSetting
+                close={() => setChannelConfDialog(true)}
+                channel={selected as Channel}
+              />
+            </Dialogue>
+          </>
         )}
         {!isChannel() && (
           <FriendInfo
@@ -263,9 +343,7 @@ const Page: NextPageWithLayout = () => {
         />
       </Dialogue>
 
-      <Dialogue closed={true}>
-        <ChannelSetting />
-      </Dialogue>
+      {/* channel settings */}
     </div>
   )
 }

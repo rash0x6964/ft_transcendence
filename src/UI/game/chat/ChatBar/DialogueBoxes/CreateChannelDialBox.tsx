@@ -5,11 +5,15 @@ import Camera from "@/components/svgs/Camera";
 import Lock from "@/components/svgs/Lock";
 import Plus from "@/components/svgs/Plus";
 import TVIcn from "@/components/svgs/TVIcn";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ChannelSevice from "@/services/Channel.sevice";
 import { Channel, CreateChannel } from "@/models/Channel.model";
 import UploadService from "@/services/Upload.service";
 import Image from "next/image";
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
+import cookieService from "@/services/CookiesService"
+import axios from "axios";
+import { NotifcationContext } from "@/UI/NotificationProvider";
 
 type Props = {
   handler: () => void;
@@ -20,6 +24,7 @@ export default function CreateChannelDialBox({
   handler,
   createChannelEvent,
 }: Props) {
+  const socket = useContext(WebSocketContext)
   const [visibility, setVisibility] = useState<
     "PRIVATE" | "PUBLIC" | "PROTECTED" | any
   >("PUBLIC");
@@ -32,6 +37,7 @@ export default function CreateChannelDialBox({
   const [processing, setProcessing] = useState(false);
 
   const [lock, setLock] = useState(true);
+  const notify = useContext(NotifcationContext)
 
   const onCreate = () => {
     let body: CreateChannel = {
@@ -52,6 +58,10 @@ export default function CreateChannelDialBox({
       .then((res) => {
         createChannelEvent(res.data);
         handler();
+        socket?.emit('channelCreated', {
+          token: cookieService.getJwtCookie(),
+          data: res.data.id,
+        })
       })
       .catch((err) => {
         setErrorLog(err.response.data.message);
@@ -68,7 +78,13 @@ export default function CreateChannelDialBox({
         setAvatar(res.data[0].url);
       })
       .catch((err) => {
-        console.log(err.data);
+        if (axios.isAxiosError(err)) {
+          notify({
+            message: err.response?.data?.message,
+            title: "Validation Error",
+            type: "error",
+          })
+        }
       });
   };
 
@@ -131,7 +147,7 @@ export default function CreateChannelDialBox({
         <></>
       )}
       <RadioGroup
-        defaultVal={visibility}
+        defaultVal={visibility.toLowerCase().charAt(0).toUpperCase() + visibility.toLowerCase().slice(1)}
         radios={options}
         onChange={(value) => setVisibility(value.toUpperCase())}
         className="flex justify-center gap-10"

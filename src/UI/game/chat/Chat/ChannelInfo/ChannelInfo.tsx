@@ -15,16 +15,15 @@ import EditRoom from "@/components/svgs/editChannel"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
-import { User } from "@/types/User"
 import cookieService from "@/services/CookiesService"
 
-
 type Props = {
+  onEdit: () => void
   selectedChannel: Channel
   event: (id: string) => void
 }
 
-export default function ChannelInfo({ selectedChannel, event }: Props) {
+export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
   const socket = useContext(WebSocketContext)
   const notify = useContext(NotifcationContext)
 
@@ -36,8 +35,10 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
 
   const [dialogueState, setDialogueState] = useState(true)
-  const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(undefined)
-
+  const [dialogueMuteState, setDialogueMuteState] = useState(true)
+  const [selectedData, setSelectedData] = useState<ChannelUser | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
@@ -61,33 +62,88 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
         )
       })
       .catch((err) => {})
-
-    const _join = (data: any) => {
-      setMemberList(memberList.concat(data))
-    }
-    const _left = (id: string) => {
-      setMemberList(memberList.filter((item) => item.userID != id))
-    }
-
-    socket?.on("new member joind", _join)
-    socket?.on("a member left", _left)
-
-    return () => {
-      socket?.off("new member joind", _join)
-      socket?.off("a member left", _left)
-    }
-
   }, [selectedChannel])
 
-  const LeaveRoomEvent = (e: any) => {
-    setDialogueState(false)
-  }
+  useEffect(() => {
+    const _join = (data: any) => {
+      if (data.channelID == selectedChannel.id) {
+        setMemberList((prevMemberList) => {
+          return prevMemberList.concat(data)
+        })
+      }
+    }
+    const _left = (data: any) => {
+      if (data.data.channelID == selectedChannel.id) {
+        setMemberList((prevMemberList) => {
+          return prevMemberList.filter((item) => item.userID != data.sender.id)
+        })
+      }
+    }
+    const _unbanned = (data: any) => {
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.concat(data)
+          })
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.concat(data)
+          })
+      }
+    }
+    const _banned = (data: any) => {
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.filter((item) => item.userID != data.userID)
+          })
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.filter((item) => item.userID != data.userID)
+          })
+      }
+    }
+
+    const _muted = (data: any) => {
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.map((item) => {
+              if (item.userID == data.userID) item.status = data.status
+              return item
+            })
+          })
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.map((item) => {
+              if (item.userID == data.userID) item.status = data.status
+              return item
+            })
+          })
+      }
+    }
+
+    socket?.on("newMemberJoind", _join)
+    socket?.on("aMemberLeft", _left)
+    socket?.on("aMemberUnbanned", _unbanned)
+    socket?.on("aMemberBanned", _banned)
+    socket?.on("aMemberKicked", _banned)
+    socket?.on("aMemberMuted", _muted)
+
+    return () => {
+      socket?.off("newMemberJoind", _join)
+      socket?.off("aMemberLeft", _left)
+      socket?.off("aMemberUnbanned", _unbanned)
+      socket?.off("aMemberBanned", _banned)
+      socket?.off("aMemberKicked", _banned)
+      socket?.off("aMemberMuted", _muted)
+    }
+  }, [selectedChannel])
 
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
-
-        socket?.emit("channel left", {
+        socket?.emit("channelLeft", {
           token: cookieService.getJwtCookie(),
           data: owner,
         })
@@ -115,15 +171,66 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
   }
 
   const handleKick = () => {
-    console.log('data', selectedData)
-  }
+    let data: any = {
+      channelID: selectedData?.channelID,
+      userID: selectedData?.userID,
+      role: selectedData?.role,
+    }
 
-  const handleMute = () => {
-
+    ChannelUserService.kickUserFromChannel(
+      selectedData?.channelID,
+      selectedData?.userID
+    )
+      .then((res) => {
+        socket?.emit("getKicked", {
+          token: cookieService.getJwtCookie(),
+          data: data,
+        })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
   }
 
   const handleBan = () => {
+    let data: any = {
+      channelID: selectedData?.channelID,
+      userID: selectedData?.userID,
+      status: "BANNED",
+    }
 
+    ChannelUserService.blockUserAtChannel(data)
+      .then((res) => {
+        socket?.emit("getBanned", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
+  }
+
+  const handleMute = (duration: number) => {
+    let data: any = {
+      channelID: selectedData?.channelID,
+      userID: selectedData?.userID,
+      status: "MUTED",
+      duration: duration,
+    }
+
+    ChannelUserService.muteUserAtChannel(data)
+      .then((res) => {
+        console.log("muted...")
+        socket?.emit("getMuted", {
+          token: cookieService.getJwtCookie(),
+          data: res.data,
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    setDialogueMuteState(true)
   }
 
   return (
@@ -131,10 +238,13 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
       {selectedChannel && selectedChannel.owner != "OWNER" ? (
         <LeaveRoom
           className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
-          onClick={LeaveRoomEvent}
+          onClick={() => setDialogueState(false)}
         />
       ) : (
-        <EditRoom className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all" />
+        <EditRoom
+          className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
+          onClick={onEdit}
+        />
       )}
       <div className="flex flex-col gap-5 py-10">
         <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
@@ -146,7 +256,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
           playerAvatar={owner?.user?.avatarUrl ?? ""}
           playerName={owner?.user?.userName ?? "Unknown"}
           playerState={owner?.status ?? "idle"}
-          data={selectedData}
+          data={owner}
         />
         {adminList.length ? (
           <span className="text-gray-400 text-sm">
@@ -163,7 +273,7 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
-              data={selectedData}
+              data={item}
             />
           )
         })}
@@ -182,23 +292,23 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
               playerState={item.status}
-              data={selectedData}
+              data={item}
             />
           )
         })}
       </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
-        <MenuBtn title="Kick" onClick={handleKick}/>
-        <MenuBtn title="Mute" />
-        <MenuBtn title="Ban" />
+        <MenuBtn title="Kick" onClick={handleKick} />
+        <MenuBtn title="Mute" onClick={() => setDialogueMuteState(false)} />
+        <MenuBtn title="Ban" onClick={handleBan} />
       </ContextMenu>
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}
         closed={dialogueState}
       >
         <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
-          <p className="font-bold text-white ">Leaving Channel</p>
+          <p className="font-light text-white ">Leaving Channel</p>
           <p className="font-light mb-9">
             are you sure you want to leave{" "}
             <span className="text-primary">{selectedChannel.name}</span> ??
@@ -208,6 +318,37 @@ export default function ChannelInfo({ selectedChannel, event }: Props) {
             onClick={acceptLeaving}
           >
             Accept
+          </button>
+        </div>
+      </Dialogue>
+      <Dialogue
+        onBackDropClick={() => setDialogueMuteState(true)}
+        closed={dialogueMuteState}
+      >
+        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-fit flex flex-col">
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(1)}
+          >
+            1 s
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(16 * 5)}
+          >
+            5 min
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(10 * 60)}
+          >
+            10 min
+          </button>
+          <button
+            className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
+            onClick={() => handleMute(15 * 60)}
+          >
+            15 min
           </button>
         </div>
       </Dialogue>

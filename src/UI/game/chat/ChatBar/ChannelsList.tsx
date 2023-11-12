@@ -15,7 +15,7 @@ export default function ChannelsList({ selectedId, handleClick, channelList}: Pr
     <div className="flex flex-col gap-2 overflow-y-scroll animate__animated animate__fadeIn">
       {
         channelList?.map((data) => {
-				  const date = new Date((data.message && data.message[0]?.createdAt) || Date.now())
+				  const date = new Date((data.message && data.message[0] && data.message[0]?.createdAt) || Date.now())
           return <ChannelBar
             key={data.id}
             id={data.id}

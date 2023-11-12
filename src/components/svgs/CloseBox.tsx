@@ -1,39 +1,35 @@
+"use client"
 import React from "react"
 import SvgProps from "@/types/SvgProps"
 
-export default function LeaveRoom({
-  width,
-  height,
-  className,
-  onClick,
-}: SvgProps) {
+export default function Cross({ width, height, className, onClick }: SvgProps) {
   return (
     <svg
       width={width}
       height={height}
-      viewBox="0 0 24 24"
+      viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
       onClick={onClick}
+      className={className}
     >
       <path
-        d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
-        stroke="#CBD5E1"
+        d="M15 27.5C21.9036 27.5 27.5 21.9036 27.5 15C27.5 8.09644 21.9036 2.5 15 2.5C8.09644 2.5 2.5 8.09644 2.5 15C2.5 21.9036 8.09644 27.5 15 27.5Z"
+        stroke="#D1D5DB"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M16 17L21 12L16 7"
-        stroke="#CBD5E1"
+        d="M18.75 11.25L11.25 18.75"
+        stroke="#D1D5DB"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M21 12H9"
-        stroke="#CBD5E1"
+        d="M11.25 11.25L18.75 18.75"
+        stroke="#D1D5DB"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

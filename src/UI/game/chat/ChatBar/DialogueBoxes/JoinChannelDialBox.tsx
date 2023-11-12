@@ -42,7 +42,7 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
     ChannelSevice.joinChannel(body)
       .then((res) => {
         event(channelInfo)
-        socket?.emit("channel joined", {
+        socket?.emit("channelJoined", {
           token: cookieService.getJwtCookie(),
           data: res.data,
         })
@@ -58,7 +58,7 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
   }
 
   return (
-    <div className="gradient-border-2  p-4 rounded-xl">
+    <div className="animate__animated  animate__fadeIn gradient-border-2  p-4 rounded-xl">
       <div className="flex relative">
         <Avatar
           src={channelInfo.imageUrl}

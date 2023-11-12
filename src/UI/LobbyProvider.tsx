@@ -13,6 +13,7 @@ import Lobby from "@/models/Lobby.model"
 import { useRouter } from "next/router"
 import ProfileData from "@/models/ProfileData.model"
 import interval from "@/services/QueueService"
+import QueueData from "@/types/QueueData"
 
 export const LobbyContext = createContext<any | null>(null)
 export default function LobbyProvider({ children }: PropsWithChildren) {
@@ -97,12 +98,24 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       setTimer(counter)
     }
 
+    const onEnterQueue = (data: QueueData) => {
+      setTimer((Date.now() - data.startDate) / 1000)
+
+      setInQueue(true)
+    }
+
+    const onLeaveQueue = () => {
+      setInQueue(false)
+    }
+
     socket.on("lobbyData", onLobbyCreated)
     socket.on("lobbyInvite", onlobbyInvite)
     socket.on("leaveLobby", onLeaveLobby)
     socket.on("lobbyChange", onLobbyChange)
     socket.on("matchFound", onMatchFound)
     socket.on("matchStarting", onMatchStarting)
+    socket.on("enterQueue", onEnterQueue)
+    socket.on("leaveQueue", onLeaveQueue)
     return () => {
       socket.off("lobbyData", onLobbyCreated)
       socket.off("lobbyInvite", onlobbyInvite)
@@ -110,6 +123,8 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       socket.off("lobbyChange", onLobbyChange)
       socket.off("matchFound", onMatchFound)
       socket.off("matchStarting", onMatchStarting)
+      socket.off("enterQueue", onEnterQueue)
+      socket.off("leaveQueue", onLeaveQueue)
     }
   }, [])
   return (

@@ -34,7 +34,6 @@ export default function DefaultLobby({
   const [inQueue, setInQueue]: [boolean, any] = queueState
 
   const handleFindMatch = () => {
-    setTimer(0)
     socket?.emit("presence", {
       token: CookiesService.getJwtCookie(),
       data: "In-Queue",
@@ -48,7 +47,6 @@ export default function DefaultLobby({
         ranked: ranked == "Ranked",
       },
     })
-    setInQueue(true)
   }
 
   const handleCancelQueue = () => {
@@ -60,8 +58,6 @@ export default function DefaultLobby({
     socket?.emit("leaveQueue", {
       token: CookiesService.getJwtCookie(),
     })
-
-    setInQueue(false)
   }
   return (
     <>

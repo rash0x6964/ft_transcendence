@@ -66,78 +66,84 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
   useEffect(() => {
     const _join = (data: any) => {
-      setMemberList((prevMemberList) => {
-        return prevMemberList.concat(data)
-      })
-    }
-    const _left = (id: string) => {
-      setMemberList((prevMemberList) => {
-        return prevMemberList.filter((item) => item.userID != id)
-      })
-    }
-    const _unbanned = (data: any) => {
-      if (data.role == "MEMBER")
+      if (data.channelID == selectedChannel.id) {
         setMemberList((prevMemberList) => {
           return prevMemberList.concat(data)
         })
-      else if (data.role == "ADMINISTRATOR")
-        setAdminList((prevAdminList) => {
-          return prevAdminList.concat(data)
+      }
+    }
+    const _left = (data: any) => {
+      if (data.data.channelID == selectedChannel.id) {
+        setMemberList((prevMemberList) => {
+          return prevMemberList.filter((item) => item.userID != data.sender.id)
         })
+      }
+    }
+    const _unbanned = (data: any) => {
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.concat(data)
+          })
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.concat(data)
+          })
+      }
     }
     const _banned = (data: any) => {
-      if (data.role == "MEMBER")
-        setMemberList((prevMemberList) => {
-          return prevMemberList.filter((item) => item.userID != data.userID)
-        })
-      else if (data.role == "ADMINISTRATOR")
-        setAdminList((prevAdminList) => {
-          return prevAdminList.filter((item) => item.userID != data.userID)
-        })
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.filter((item) => item.userID != data.userID)
+          })
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.filter((item) => item.userID != data.userID)
+          })
+      }
     }
 
     const _muted = (data: any) => {
-      console.log('muted: ', data)
-
-      if (data.role == "MEMBER")
-        setMemberList((prevMemberList) => {
-          return prevMemberList.map((item) => {
-            if (item.userID == data.userID)
-              item.status = data.status
-            return item
+      if (data.channelID == selectedChannel.id) {
+        if (data.role == "MEMBER")
+          setMemberList((prevMemberList) => {
+            return prevMemberList.map((item) => {
+              if (item.userID == data.userID) item.status = data.status
+              return item
+            })
           })
-        })
-      else if (data.role == "ADMINISTRATOR")
-        setAdminList((prevAdminList) => {
-          return prevAdminList.map((item) => {
-            if (item.userID == data.userID)
-              item.status = data.status
-            return item
+        else if (data.role == "ADMINISTRATOR")
+          setAdminList((prevAdminList) => {
+            return prevAdminList.map((item) => {
+              if (item.userID == data.userID) item.status = data.status
+              return item
+            })
           })
-        })
+      }
     }
 
-    socket?.on("new member joind", _join)
-    socket?.on("a member left", _left)
+    socket?.on("newMemberJoind", _join)
+    socket?.on("aMemberLeft", _left)
     socket?.on("aMemberUnbanned", _unbanned)
     socket?.on("aMemberBanned", _banned)
     socket?.on("aMemberKicked", _banned)
     socket?.on("aMemberMuted", _muted)
 
     return () => {
-      socket?.off("new member joind", _join)
-      socket?.off("a member left", _left)
+      socket?.off("newMemberJoind", _join)
+      socket?.off("aMemberLeft", _left)
       socket?.off("aMemberUnbanned", _unbanned)
       socket?.off("aMemberBanned", _banned)
       socket?.off("aMemberKicked", _banned)
       socket?.off("aMemberMuted", _muted)
     }
-  }, [])
+  }, [selectedChannel])
 
   const acceptLeaving = (e: any) => {
     ChannelUserService.leaveChannel(selectedChannel.id)
       .then((res) => {
-        socket?.emit("channel left", {
+        socket?.emit("channelLeft", {
           token: cookieService.getJwtCookie(),
           data: owner,
         })
@@ -215,7 +221,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
     ChannelUserService.muteUserAtChannel(data)
       .then((res) => {
-        console.log('muted...')
+        console.log("muted...")
         socket?.emit("getMuted", {
           token: cookieService.getJwtCookie(),
           data: res.data,

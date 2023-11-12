@@ -50,7 +50,7 @@ export default function BannedList({ channelId }: { channelId: string }) {
             <span className="self-center">Unblock</span>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 bg-secondary rounded-xl gradient-border-2 px-5 pb-5 pt-5">
           {bannedList.map((item, index) => {
             // if (index > 2)
             const to_year =
@@ -58,7 +58,7 @@ export default function BannedList({ channelId }: { channelId: string }) {
               new Date(item.joinedAt).getFullYear()
 
             return (
-              <div className="h-14 w-fill bg-secondary drop-shadow-lg rounded-lg flex   pl-7 pr-16 text-sm">
+              <div className="h-14 w-fill bg-secondary drop-shadow-lg rounded-lg flex pl-7 pr-16 text-sm ">
                 <div className="flex  justify-around flex-1">
                   {/* Member */}
                   <div className="self-center flex gap-3">

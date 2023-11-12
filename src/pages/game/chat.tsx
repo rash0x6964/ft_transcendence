@@ -199,7 +199,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomJoined = (data: Channel) => {
-    setSearchFor("")
+    // setSearchFor("")
     setSelected(data)
     setDialogueState(true)
   }

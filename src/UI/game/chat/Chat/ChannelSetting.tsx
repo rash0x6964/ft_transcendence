@@ -22,7 +22,7 @@ export default function ChannelSetting({
   return (
     <main
       className={
-        "animate__animated  animate__fadeIn flex flex-col items-center w-screen h-screen"
+        "animate__animated animate__fadeIn flex flex-col items-center w-screen h-screen"
       }
     >
       <div className="w-screen fixed h-screen  bg-gradient-to-br from-10% to-90% from-backdrop to-mirage -z-10"></div>

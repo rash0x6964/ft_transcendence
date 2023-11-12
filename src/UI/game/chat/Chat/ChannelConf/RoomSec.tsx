@@ -10,7 +10,6 @@ import { NotifcationContext } from "@/UI/NotificationProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
 
-
 type Props = {
   selectedChannel: Channel
 }
@@ -24,7 +23,7 @@ export default function RoomSec({ selectedChannel }: Props) {
 
   const [currPassword, setCurrPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
-  const [errorLog, setErrorLog] = useState([])
+  const [errorLog, setErrorLog] = useState<[string]>([""])
 
   const [lock, setLock] = useState(true)
   const [lock_, setLock_] = useState(true)
@@ -36,12 +35,7 @@ export default function RoomSec({ selectedChannel }: Props) {
   const notify = useContext(NotifcationContext)
 
   const onSave = () => {
-    // check if the old password is correct
-    // currPassword
-    // if (visibility == "PROTECTED") {
-    //   currPassword ==
-    // }
-
+    setErrorLog([""])
     let body: any = {
       id: selectedChannel.id,
       visibility:
@@ -52,10 +46,18 @@ export default function RoomSec({ selectedChannel }: Props) {
           : visibility,
     }
 
-    if (newPassword != "") body["password"] = newPassword
-    else body["password"] = null
+    if (selectedChannel.visibility == "PROTECTED" && currPassword == "") {
+      setErrorLog(["you left one fild empty current password"])
+      return
+    } else if (selectedChannel.visibility == "PROTECTED" && currPassword != "") {
+      body["oldPass"] = currPassword
+    }
 
-    setErrorLog([])
+    if (newPassword != "") body["password"] = newPassword
+    if (body.visibility == "PRIVATE" || newPassword == "")
+      body["password"] = null
+
+    setErrorLog([""])
     ChannelSevice.updateChannel(body)
       .then((res) => {
         notify({
@@ -67,47 +69,45 @@ export default function RoomSec({ selectedChannel }: Props) {
           token: cookieService.getJwtCookie(),
           data: res.data,
         })
+        setVisibility(body.visibility)
       })
       .catch((err) => {
-        setErrorLog(err)
+        setErrorLog(err.response.data.message)
       })
   }
 
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 px-5 pb-5 flex flex-col gap-5">
       <p className="text-base my-5">Channel Sec</p>
-      {visibility == "PUBLIC" || visibility == "PROTECTED" ? (
-        <>
-          <Input
-            placeholder="Current password"
-            icon={
-              <Lock
-                onClick={() => setLock_((prevLock) => !prevLock)}
-                className="hover:scale-110 transition-transform"
-              />
-            }
-            className="w-80 h-11 bg-big-stone"
-            value={currPassword}
-            type={lock_ ? "password" : "text"}
-            onChange={(e) => setCurrPassword(e.target.value)}
-          />
-
-          <Input
-            placeholder="New passowrd"
-            icon={
-              <Lock
-                onClick={() => setLock((prevLock) => !prevLock)}
-                className="hover:scale-110 transition-transform"
-              />
-            }
-            className="w-80 h-11 bg-big-stone"
-            value={newPassword}
-            type={lock ? "password" : "text"}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </>
-      ) : (
-        <></>
+      {(selectedChannel.visibility == "PROTECTED") && (
+        <Input
+          placeholder="Current password"
+          icon={
+            <Lock
+              onClick={() => setLock_((prevLock) => !prevLock)}
+              className="hover:scale-110 transition-transform"
+            />
+          }
+          className="w-80 h-11 bg-big-stone"
+          value={currPassword}
+          type={lock_ ? "password" : "text"}
+          onChange={(e) => setCurrPassword(e.target.value)}
+        />
+      )}
+      {(visibility == "PUBLIC" || (selectedChannel.visibility == "PROTECTED" && visibility != "PRIVATE")) && (
+        <Input
+          placeholder="New passowrd"
+          icon={
+            <Lock
+              onClick={() => setLock((prevLock) => !prevLock)}
+              className="hover:scale-110 transition-transform"
+            />
+          }
+          className="w-80 h-11 bg-big-stone"
+          value={newPassword}
+          type={lock ? "password" : "text"}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
       )}
       <RadioGroup
         defaultVal={

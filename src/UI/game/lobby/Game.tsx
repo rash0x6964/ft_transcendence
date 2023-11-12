@@ -23,10 +23,6 @@ export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const [leftPaddle, setLeftPaddle] = useState<Paddle>(new Paddle(1, 40))
-  const [rightPaddle, setRightPaddle] = useState<Paddle>(new Paddle(97, 40))
-  const [ball, setBall] = useState<Ball>(new Ball(50, 50))
-
   const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
     let canvas: HTMLCanvasElement = canvasRef.current!
     const context: CanvasRenderingContext2D = canvas.getContext("2d")!

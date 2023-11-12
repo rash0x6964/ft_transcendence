@@ -38,7 +38,7 @@ export default function GameLobby({ className, lobby }: Props) {
 
   return (
     <div className={`w-full h-full flex flex-col ${className} `}>
-      <div ref={divRef} className="w-full bg-secondary  h-[80%]">
+      <div ref={divRef} className="w-full bg-secondary  h-[80%] border border-primary border-2">
         <Game width={width} height={height} />
       </div>
       <div className="flex-1  flex flex-col justify-center">

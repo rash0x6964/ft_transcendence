@@ -5,7 +5,6 @@ import Paddle from "@/types/Paddle"
 import {
   useRef,
   useEffect,
-  useState,
   useContext,
   KeyboardEventHandler,
 } from "react"
@@ -77,8 +76,12 @@ export default function Game({ width, height }: Props) {
       )
     }
     socket?.on("gameData", handler)
+	document.addEventListener("keydown", keyDownHandler);
+	document.addEventListener("keyup", keyUpHandler);
     return () => {
       socket?.off("gameData")
+	  document.removeEventListener("keydown", keyDownHandler);
+	  document.removeEventListener("keyup", keyUpHandler);
     }
   }, [])
 
@@ -88,9 +91,6 @@ export default function Game({ width, height }: Props) {
 
   return (
     <canvas
-      onKeyDown={keyDownHandler}
-      onKeyUp={keyUpHandler}
-      tabIndex={0}
       style={{ imageRendering: "pixelated" }}
       className="w-full h-full focus:outline-none "
       ref={canvasRef}

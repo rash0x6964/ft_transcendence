@@ -55,7 +55,11 @@ const Page: NextPage = () => {
     }
   }, [])
 
-  return <>hello logic</>
+  return (
+    <div className="h-screen w-screen  bg-gradient-to-r from-10% to-80% from-backdrop to-mirage flex flex-col justify-center">
+      <span className="loaderLobby mx-auto"></span>
+    </div>
+  )
 }
 
 export default Page

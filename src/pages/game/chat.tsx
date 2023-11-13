@@ -1,11 +1,11 @@
 import Layout from "@/UI/Layout"
-import Chat from "@/UI/game/chat/Chat"
+import InnerChat from "@/UI/game/chat/InnerChat"
 import ChannelInfo from "@/UI/game/chat/Chat/ChannelInfo/ChannelInfo"
 import ChatBar from "@/UI/game/chat/ChatBar/ChatBar"
 import FriendInfo from "@/UI/game/chat/FriendInfo/FriendInfo"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import Dialogue from "@/components/Dialogue/Dialogue"
-import { Channel } from "@/models/Channel.model"
+import { Channel, ChannelUser } from "@/models/Channel.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import ChannelService from "@/services/Channel.sevice"
 import { ReactElement, useContext, useEffect, useState } from "react"
@@ -24,6 +24,7 @@ const Page: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
+  const [showInfo, setShowInfo] = useState(true)
   const router = useRouter()
 
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
@@ -155,6 +156,17 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
+    const _getMuted = (data: ChannelUser) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((item: Channel) => {
+          if (item.id == data.channelID) {
+            item = { ...item, muteDuration: data.duration }
+          }
+          return item
+        })
+      })
+    }
+
     // const _kickedFromChannel = (data: any) => {
     //   setChannelList((prevChannelList) => {
     //     return prevChannelList.filter((item) => {
@@ -168,6 +180,7 @@ const Page: NextPageWithLayout = () => {
     socket?.on("youGetUnbanned", _ubannedFromChannel)
     socket?.on("youGetBanned", _outOfChannel)
     socket?.on("youGetKicked", _outOfChannel)
+    socket?.on("youGetMuted", _getMuted)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -175,6 +188,7 @@ const Page: NextPageWithLayout = () => {
       socket?.off("youGetUnbanned", _ubannedFromChannel)
       socket?.off("youGetBanned", _outOfChannel)
       socket?.off("youGetKicked", _outOfChannel)
+      socket?.off("youGetMuted", _getMuted)
     }
   }, [selected])
 
@@ -284,9 +298,14 @@ const Page: NextPageWithLayout = () => {
   }
 
   const [channelConfDialog, setChannelConfDialog] = useState(true)
-
+  //   if (isLoading.dm || isLoading.room)
+  //     return (
+  //       <div className="h-screen w-screen   bg-gradient-to-r from-10% to-80% from-backdrop to-mirage flex flex-col justify-center">
+  //         <span className="loaderLobby mx-auto"></span>
+  //       </div>
+  //     )
   return (
-    <div className="w-full  h-full flex gap-2">
+    <div className="w-full animate__animated animate__fadeIn h-full flex gap-2">
       <HeadTitle>Pong Fury | Chat</HeadTitle>
 
       <div className="h-full w-96">
@@ -302,25 +321,29 @@ const Page: NextPageWithLayout = () => {
         />
       </div>
       <div className="flex-1 flex flex-col   h-full">
-        <Chat channelData={selected} />
+        <InnerChat
+          isChannel={isChannel()}
+          onInfoClick={() => setShowInfo((prev) => !prev)}
+          channelData={selected}
+        />
       </div>
-      <div className=" h-full w-96">
-        {isChannel() && (
-          <>
-            <ChannelInfo
-              onEdit={() => setChannelConfDialog(false)}
-              selectedChannel={selected as Channel}
-              event={roomLeaved}
+      {isChannel() && showInfo && (
+        <div className=" h-full w-96">
+          <ChannelInfo
+            onEdit={() => setChannelConfDialog(false)}
+            selectedChannel={selected as Channel}
+            event={roomLeaved}
+          />
+          <Dialogue closed={channelConfDialog}>
+            <ChannelSetting
+              close={() => setChannelConfDialog(true)}
+              channel={selected as Channel}
             />
-            <Dialogue closed={channelConfDialog}>
-              <ChannelSetting
-                close={() => setChannelConfDialog(true)}
-                channel={selected as Channel}
-              />
-            </Dialogue>
-          </>
-        )}
-        {!isChannel() && (
+          </Dialogue>
+        </div>
+      )}
+      {!isChannel() && showInfo && (
+        <div className=" h-full w-96">
           <FriendInfo
             dm={selected as DirectMessage}
             takeAction={{
@@ -330,8 +353,8 @@ const Page: NextPageWithLayout = () => {
               unmute: unmute,
             }}
           />
-        )}
-      </div>
+        </div>
+      )}
 
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}

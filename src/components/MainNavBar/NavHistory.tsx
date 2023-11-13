@@ -19,7 +19,7 @@ export default function NavHistory({ matches, className, id }: Props) {
   return (
     <div className={className}>
       <div className="flex  gap-1 ">
-        <MatchHistory className="my-auto" />
+        <MatchHistory className="my-auto text-primary" />
         {history.map((x, i) => {
           let color
           switch (x) {

@@ -41,12 +41,12 @@ export default function TopBar({
         }}
         value={search}
       />
-      <div
-        className="flex items-center justify-center bg-big-stone rounded-lg h-14 w-14"
+      <button
+        className="flex items-center justify-center bg-big-stone hover:opacity-50 duration-500 rounded-lg h-14 w-14"
         onClick={createChannel}
       >
         <CreateChanelIcn />
-      </div>
+      </button>
 
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}

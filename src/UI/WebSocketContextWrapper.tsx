@@ -20,6 +20,7 @@ export default function WebSocketContextProvider({
     []
   )
   useEffect(() => {
+    socket.connect()
     return () => {
       socket.disconnect()
     }

@@ -215,7 +215,6 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
     let data: any = {
       channelID: selectedData?.channelID,
       userID: selectedData?.userID,
-      status: "MUTED",
       duration: duration,
     }
 
@@ -255,7 +254,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
         <MemberCard
           playerAvatar={owner?.user?.avatarUrl ?? ""}
           playerName={owner?.user?.userName ?? "Unknown"}
-          playerState={owner?.status ?? "idle"}
+          playerState={"test"}
           data={owner}
         />
         {adminList.length ? (
@@ -272,7 +271,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
               onContextMenu={handleContextMenu}
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
-              playerState={item.status}
+              playerState={"test"}
               data={item}
             />
           )
@@ -291,7 +290,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
               onContextMenu={handleContextMenu}
               playerAvatar={item.user?.avatarUrl ?? ""}
               playerName={item.user?.userName ?? "Unknown"}
-              playerState={item.status}
+              playerState={"test"}
               data={item}
             />
           )

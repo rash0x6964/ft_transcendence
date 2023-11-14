@@ -34,7 +34,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   if (lobby && lobby.lobbySate == "ingame") return <GameLobby lobby={lobby} />
-  if (lobby && lobby.lobbySate == "finished") return <EndGame lobby={lobby} />
+//   if (lobby && lobby.lobbySate == "finished") return <EndGame lobby={lobby} />
 
   if (lobby && lobby.lobbySate != "ingame")
     return (

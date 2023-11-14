@@ -6,7 +6,6 @@ import {
   useRef,
   useEffect,
   useContext,
-  KeyboardEventHandler,
 } from "react"
 
 const secondary: string = "#0F1921"
@@ -84,10 +83,6 @@ export default function Game({ width, height }: Props) {
 	  document.removeEventListener("keyup", keyUpHandler);
     }
   }, [])
-
-  //   useEffect(() => {
-  //     draw(ball)
-  //   }, [width, height])
 
   return (
     <canvas

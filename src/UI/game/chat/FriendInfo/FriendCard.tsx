@@ -62,7 +62,11 @@ export default function FriendCard({ dm, takeAction }: Props) {
 
   return (
     <div className=" gradient-border-2 w-96 max-h-[465px] drop-shadow-lg flex flex-col items-center justify-around p-10">
-      <Avatar src={friend?.avatarUrl} className="w-40 h-40 mb-2" />
+      <Avatar
+        href={`/game/profile/${friend?.userName}`}
+        src={friend?.avatarUrl}
+        className="w-40 h-40 mb-2"
+      />
       <p className="text-xl text-gray-300 font-semibold mb-1 ">
         {friend?.userName}
       </p>

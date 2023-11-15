@@ -30,6 +30,7 @@ export default function Message({
         {avatar && (
           <div className="flex flex-col  ">
             <Avatar
+              href={`/game/profile/${message?.sender?.userName}`}
               className="w-12 h-12 mb-2"
               src={message?.sender?.avatarUrl}
             />
@@ -85,7 +86,11 @@ export default function Message({
     <div className={`flex gap-3 ${!mine && "flex-row-reverse"} `}>
       {avatar && (
         <div className="flex flex-col  ">
-          <Avatar className="w-12 h-12 mb-2" src={message?.sender?.avatarUrl} />
+          <Avatar
+            href={`/game/profile/${message?.sender?.userName}`}
+            className="w-12 h-12 mb-2"
+            src={message?.sender?.avatarUrl}
+          />
           <span className="text-[10px] text-gray-600 ">
             {message && datePipe(message?.createdAt)}
           </span>

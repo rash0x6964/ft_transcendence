@@ -99,9 +99,7 @@ export default function RightBar({ className }: Props) {
         onBackDropClick={() => setDialogueClosedFriends(true)}
         closed={dialogueClosedFriends}
       >
-        <SearchPersonDialBox
-          closeDialogue={() => setDialogueClosedFriends(true)}
-        />
+        <SearchPersonDialBox />
       </Dialogue>
 
       <div

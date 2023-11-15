@@ -230,6 +230,9 @@ export default function Chat({
 
       {!isChannel && (
         <Header
+          href={`/game/profile/${
+            (channelData as DirectMessage)?.friend?.userName
+          }`}
           onInfoClick={onInfoClick}
           playerName={(channelData as DirectMessage)?.friend?.userName}
           self={

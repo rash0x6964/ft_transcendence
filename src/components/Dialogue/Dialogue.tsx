@@ -1,4 +1,5 @@
-import React, { Children, PropsWithChildren } from "react"
+import { useRouter } from "next/router"
+import React, { Children, PropsWithChildren, useEffect } from "react"
 import { useState } from "react"
 
 type Props = {
@@ -11,6 +12,10 @@ export default function Dialogue({
   closed = true,
   children,
 }: Props & PropsWithChildren) {
+  const router = useRouter()
+  useEffect(() => {
+    onBackDropClick && onBackDropClick()
+  }, [router])
   return (
     <div
       className={`h-screen w-screen  z-50 fixed left-0 top-0  flex flex-col justify-center   ${

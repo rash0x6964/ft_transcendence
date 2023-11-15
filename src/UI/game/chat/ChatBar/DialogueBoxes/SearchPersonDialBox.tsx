@@ -15,10 +15,7 @@ import DirectMessageService from "@/services/DirectMessageService"
 import { useRouter } from "next/router"
 import DirectMessage from "@/models/DirectMessage.model"
 
-type Props = {
-  closeDialogue: () => void
-}
-export default function SearchPersonDialBox({ closeDialogue }: Props) {
+export default function SearchPersonDialBox() {
   const socket = useContext(WebSocketContext)
   const [val, setVal] = useState("")
   const [users, setUsers] = useState<User[]>([])
@@ -105,10 +102,7 @@ export default function SearchPersonDialBox({ closeDialogue }: Props) {
         users.length > 0 &&
         users.map((data: User) => (
           <ChannelMember
-            onMessage={() => {
-              handleSendMessage(data.id)
-              closeDialogue()
-            }}
+            onMessage={() => handleSendMessage(data.id)}
             key={data.id}
             onSendRequest={() => handleSendRequest(data.id)}
             className="animate__animated animate__fadeIn"

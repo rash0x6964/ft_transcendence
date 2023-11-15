@@ -42,14 +42,14 @@ export default function ChannelInvite({
   if (!channel)
     return (
       <div
-        className={`bg-mirage text-xs w-96 border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
+        className={`bg-mirage text-xs w-[450px] border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
       >
         <span className="loaderLobby  my-auto "></span>
       </div>
     )
   return (
     <div
-      className={`bg-mirage text-xs w-96  border flex gap-2  flex-col rounded-md  border-gray-600 p-3  ${className}`}
+      className={`bg-mirage text-xs w-[450px]  border flex gap-2  flex-col rounded-md  border-gray-600 p-3  ${className}`}
     >
       <div className="text-gray-600">Channel Invite </div>
       <div className="flex justify-between">

@@ -245,6 +245,25 @@ const Page: NextPageWithLayout = () => {
         })
       })
     }
+
+    const _blocked_DM = (data: DirectMessage) => {
+      setDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (dm.id == data.id) dm.blockStatus = data.blockStatus
+          return dm
+        })
+      })
+    }
+
+    const _unblocked_DM = (data: DirectMessage) => {
+      setDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (dm.id == data.id) dm.blockStatus = data.blockStatus
+          return dm
+        })
+      })
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
@@ -257,6 +276,9 @@ const Page: NextPageWithLayout = () => {
     socket?.on("channelMessage", channelMsg)
 
     socket?.on("privateMessage", privateMsg)
+
+    socket?.on("youGotBlocked_DM", _blocked_DM)
+    socket?.on("youGotUnblocked_DM", _unblocked_DM)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -271,6 +293,9 @@ const Page: NextPageWithLayout = () => {
       socket?.off("channelMessage", channelMsg)
 
       socket?.off("privateMessage", privateMsg)
+
+      socket?.off("youGotBlocked_DM", _blocked_DM)
+      socket?.off("youGotUnblocked_DM", _unblocked_DM)
     }
   }, [selected])
 
@@ -326,6 +351,7 @@ const Page: NextPageWithLayout = () => {
     setSelected((obj) => {
       return { ...(obj as DirectMessage), blockStatus: dm.blockStatus }
     })
+    socket?.emit("DM_blockUser", { data: dm })
   }
 
   const unBlock = () => {
@@ -343,6 +369,7 @@ const Page: NextPageWithLayout = () => {
     setSelected((obj) => {
       return { ...(obj as DirectMessage), blockStatus: dm.blockStatus }
     })
+    socket?.emit("DM_unblockUser", { data: dm })
   }
 
   const onMute = () => {

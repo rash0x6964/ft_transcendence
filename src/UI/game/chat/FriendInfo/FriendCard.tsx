@@ -24,7 +24,9 @@ export default function FriendCard({ dm, takeAction }: Props) {
   }
 
   const addFriend = () => {}
+
   const unfriend = () => {}
+
   const block = () => {
     DMService.blockUser(obj)
       .then((res) => {
@@ -35,6 +37,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
         console.log("err:", err.data)
       })
   }
+
   const unblock = () => {
     DMService.unBlockUser(obj)
       .then((res) => {
@@ -45,6 +48,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
         console.log("err:", err.data)
       })
   }
+
   const mute = () => {
     DMService.muteUser(obj)
       .then((res) => {
@@ -52,6 +56,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
       })
       .catch((err) => {})
   }
+  
   const unmute = () => {
     DMService.unMuteUser(obj)
       .then((res) => {

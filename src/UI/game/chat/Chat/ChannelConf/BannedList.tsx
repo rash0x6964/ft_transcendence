@@ -46,12 +46,16 @@ export default function BannedList({ channelId }: { channelId: string }) {
       <div className="flex flex-col gap-3 bg-secondary rounded-xl gradient-border-2 px-5 pb-5 pt-5">
         <p>Banned members</p>
         <br />
-        {bannedList.length > 0 ? <div className="h-14 w-fill flex text-sm text-slate-600">
-          <span className="self-center pl-5 pr-60">Member</span>
-          <span className="self-center pr-24">Join Date</span>
-          <span className="self-center pr-20">Member Since</span>
-          {/* <span className="self-center">Unblock</span> */}
-        </div> : <p className="text-center opacity-25">No one banned</p>}
+        {bannedList.length > 0 ? (
+          <div className=" grid grid-cols-6 w-fill pl-7 pr-16 text-sm text-slate-600">
+            <span className="col-span-3 pr-60">Member</span>
+            <span className=" col-span-1">Join Date</span>
+            <span className="col-span-1">Member Since</span>
+            {/* <span className="self-center">Unblock</span> */}
+          </div>
+        ) : (
+          <p className="text-center opacity-25">No one banned</p>
+        )}
 
         {bannedList.map((item, index) => {
           // if (index > 2)
@@ -60,10 +64,10 @@ export default function BannedList({ channelId }: { channelId: string }) {
             new Date(item.joinedAt).getFullYear()
 
           return (
-            <div className="h-14 w-fill bg-secondary drop-shadow-lg rounded-lg flex pl-7 pr-16 text-sm ">
-              <div className="flex  justify-between flex-1">
+            <div className="h-14 w-fill bg-secondary   rounded-lg flex pl-7 pr-16 text-sm ">
+              <div className="grid grid-cols-6  flex-1">
                 {/* Member */}
-                <div className="self-center flex gap-3">
+                <div className="self-center col-span-3 flex gap-3">
                   <Avatar
                     key={item.userID}
                     className="w-8 h-8"
@@ -74,7 +78,7 @@ export default function BannedList({ channelId }: { channelId: string }) {
                 </div>
 
                 {/* Join Date */}
-                <div className="self-center flex gap-3">
+                <div className="self-center col-span-1 flex gap-3">
                   <span className="self-center">
                     {`${new Date(item.joinedAt).getFullYear()}/${new Date(
                       item.joinedAt
@@ -83,15 +87,15 @@ export default function BannedList({ channelId }: { channelId: string }) {
                 </div>
 
                 {/* Member Since */}
-                <div className="self-center flex gap-3">
+                <div className="self-center col-span-1 flex gap-3">
                   <span>{to_year} Years ago</span>
                 </div>
 
                 {/* Unblock */}
-                <div className="self-center flex gap-3">
+                <div className="self-center col-span-1 flex gap-3">
                   {/* <button className="p-3"> */}
                   <button
-                    className="p-3 rounded-md bg-slate-800"
+                    className="p-3 self-end ml-auto rounded-md bg-slate-800"
                     onClick={() => {
                       unblock && unblock(item.userID)
                     }}

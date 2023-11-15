@@ -23,12 +23,18 @@ import { timePipe } from "@/pipes/date.pipes"
 import MatchHistory from "@/components/svgs/MatchHistory"
 
 type Props = {
+  blockedUsers: string[]
   isChannel: boolean
   channelData: DirectMessage | Channel | undefined
   onInfoClick: () => void
 }
 
-export default function Chat({ channelData, onInfoClick, isChannel }: Props) {
+export default function Chat({
+  channelData,
+  onInfoClick,
+  isChannel,
+  blockedUsers,
+}: Props) {
   const { profileData } = useContext(ProfileContext)
   const notify = useContext(NotifcationContext)
   const socket = useContext(WebSocketContext)
@@ -234,6 +240,7 @@ export default function Chat({ channelData, onInfoClick, isChannel }: Props) {
         />
       )}
       <MainChat
+        blockedUsers={blockedUsers}
         onPaginate={handlePaginate}
         paginating={loaders.paginating}
         loading={loaders.loadingMsgs}

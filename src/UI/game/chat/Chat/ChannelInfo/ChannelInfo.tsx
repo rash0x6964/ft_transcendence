@@ -16,6 +16,8 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
 import MemberSection from "./MemberSection"
+import AddUser from "@/components/svgs/AddUser"
+import env from "@/environment/environment"
 
 type Props = {
   onEdit: () => void
@@ -233,6 +235,16 @@ export default function ChannelInfo({
     setDialogueMuteState(true)
   }
 
+  const handleClipBoard = () => {
+    navigator.clipboard.writeText(
+      window.location.host + `/game/chat/?type=invite&id=${selectedChannel.id}`
+    )
+
+    notify({
+      title: "clipboard notice",
+      message: "channel invite link copied to clipboard",
+    })
+  }
   const getMembers = (role: "OWNER" | "ADMINISTRATOR" | "MEMBER") => {
     return channelMembers.filter((user) => {
       return user.role == role && user.user?.onlineStatus == true
@@ -304,17 +316,26 @@ export default function ChannelInfo({
         </div>
       </Dialogue>
 
-      {selectedChannel && selectedChannel.role != "OWNER" ? (
-        <LeaveRoom
-          className="cursor-pointer w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
-          onClick={() => setDialogueState(false)}
-        />
-      ) : (
-        <EditRoom
-          className="cursor-pointer w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
-          onClick={onEdit}
-        />
-      )}
+      <div className="flex justify-between mx-4">
+        <button
+          className="cursor-pointer w-6 h-6   hover:scale-110 transition-all"
+          onClick={() => handleClipBoard()}
+        >
+          <AddUser width={20} height={20} />
+        </button>
+
+        {selectedChannel && selectedChannel.role != "OWNER" ? (
+          <LeaveRoom
+            className="cursor-pointer w-6 h-6   hover:scale-110 transition-all"
+            onClick={() => setDialogueState(false)}
+          />
+        ) : (
+          <EditRoom
+            className="cursor-pointer w-8 h-8   hover:scale-110 transition-all"
+            onClick={onEdit}
+          />
+        )}
+      </div>
       <div className="flex flex-col gap-5 py-10">
         <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
         <span className="self-center">{selectedChannel.name}</span>

@@ -25,17 +25,32 @@ const Page: NextPageWithLayout = () => {
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
-  const router = useRouter()
-
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
 
+  const [searchFor, setSearchFor] = useState("")
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
     room: false,
   })
-  const [searchFor, setSearchFor] = useState("")
+
+  const [blockedUsers, setBlockerUsers] = useState<string[]>([])
+
+  const initBlockedUser = (dms: DirectMessage[]) => {
+    setBlockerUsers(
+      dms
+        .filter((Dm) => {
+          let value = Dm.isSender ? "SENDER" : "RECEIVER"
+          return Dm.blockStatus == value || Dm.blockStatus == "BOTH"
+        })
+        .map((data) => {
+          return data.isSender ? data.receiverID : data.senderID
+        })
+    )
+  }
+
+  const router = useRouter()
 
   const isChannel = () => {
     return (selected as Channel)?.visibility != undefined
@@ -47,8 +62,16 @@ const Page: NextPageWithLayout = () => {
   }, [refresh])
 
   useEffect(() => {
-    if (router.query?.type == "DM")
+    if (router.query?.type == "DM" && router.query?.id)
       setSelected(DMList.find((x) => x.id == router.query?.id))
+    if (router.query?.type == "invite" && router.query?.id) {
+      ChannelService.getChannelById(router.query?.id as string)
+        .then(({ data }) => {
+          setChannelTryingToJoin(data)
+          setDialogueState(false)
+        })
+        .catch((err) => {})
+    }
   }, [router])
 
   useEffect(() => {
@@ -58,6 +81,7 @@ const Page: NextPageWithLayout = () => {
       timeout = setTimeout(() => {
         DMService.getDMList()
           .then(({ data }: { data: DirectMessage[] }) => {
+            initBlockedUser(data)
             setDMList(data)
             setIsLoading((obj) => {
               return { ...obj, dm: false }
@@ -174,14 +198,6 @@ const Page: NextPageWithLayout = () => {
         })
       })
     }
-
-    // const _kickedFromChannel = (data: any) => {
-    //   setChannelList((prevChannelList) => {
-    //     return prevChannelList.filter((item) => {
-    //       return item.id != data.channelID
-    //     })
-    //   })
-    // }
 
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
@@ -330,6 +346,7 @@ const Page: NextPageWithLayout = () => {
       </div>
       <div className="flex-1 flex flex-col   h-full">
         <InnerChat
+          blockedUsers={blockedUsers}
           isChannel={isChannel()}
           onInfoClick={() => setShowInfo((prev) => !prev)}
           channelData={selected}
@@ -370,7 +387,7 @@ const Page: NextPageWithLayout = () => {
       >
         <JoinChannelDialBox
           channelInfo={channelTryingToJoin as Channel}
-          event={roomJoined}
+          onJoin={roomJoined}
         />
       </Dialogue>
 

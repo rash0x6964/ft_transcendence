@@ -10,10 +10,10 @@ import cookieService from "@/services/CookiesService"
 
 type Props = {
   channelInfo: Channel
-  event: (data: any) => void
+  onJoin: (data: any) => void
 }
 
-export default function JoinChannelDialBox({ channelInfo, event }: Props) {
+export default function JoinChannelDialBox({ channelInfo, onJoin }: Props) {
   const socket = useContext(WebSocketContext)
   const [password, setPassword] = useState("")
   const [lock, setLock] = useState(true)
@@ -41,7 +41,7 @@ export default function JoinChannelDialBox({ channelInfo, event }: Props) {
     setErrorLog([])
     ChannelSevice.joinChannel(body)
       .then((res) => {
-        event(channelInfo)
+        onJoin(channelInfo)
         socket?.emit("channelJoined", {
           token: cookieService.getJwtCookie(),
           data: res.data,

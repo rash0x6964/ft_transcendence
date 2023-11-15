@@ -91,9 +91,16 @@ export function useContextMenu(
         }
       }
     }
+
+    let resizeHandler = () => {
+      setClicked(false)
+      setPosition({ x: -500, y: -500 })
+    }
+    window.addEventListener("resize", resizeHandler)
     document.addEventListener("mousedown", handler)
     return () => {
       document.removeEventListener("mousedown", handler)
+      window.removeEventListener("resize", resizeHandler)
     }
   }, [])
 

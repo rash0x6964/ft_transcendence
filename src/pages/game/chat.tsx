@@ -199,12 +199,32 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
+    const _connect = (userId: string) => {
+      setDMList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == userId) user.friend.onlineStatus = true
+          return user
+        })
+      })
+    }
+
+    const _disconnect = (userId: string) => {
+      setDMList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == userId) user.friend.onlineStatus = false
+          return user
+        })
+      })
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
     socket?.on("youGetBanned", _outOfChannel)
     socket?.on("youGetKicked", _outOfChannel)
     socket?.on("youGetMuted", _getMuted)
+    socket?.on("disconnected", _disconnect)
+    socket?.on("connected", _connect)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -213,6 +233,8 @@ const Page: NextPageWithLayout = () => {
       socket?.off("youGetBanned", _outOfChannel)
       socket?.off("youGetKicked", _outOfChannel)
       socket?.off("youGetMuted", _getMuted)
+      socket?.off("disconnected", _disconnect)
+      socket?.off("connected", _connect)
     }
   }, [selected])
 

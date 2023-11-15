@@ -40,7 +40,10 @@ export default function FriendRequestsDialBox() {
       .then(() => {
         socket
           ?.emit("friendAction", { token: cookieService.getJwtCookie(), data })
-          .emit("friendReqAction", { token: cookieService.getJwtCookie(), data })
+          .emit("friendReqAction", {
+            token: cookieService.getJwtCookie(),
+            data,
+          })
         setRefresh((prevState) => !prevState)
       })
       .catch((err) => {

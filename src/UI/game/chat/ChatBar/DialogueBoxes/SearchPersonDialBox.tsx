@@ -10,12 +10,34 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
 import { AxiosError } from "axios"
 import { NotifcationContext } from "@/UI/NotificationProvider"
+
+import DirectMessageService from "@/services/DirectMessageService"
+import { useRouter } from "next/router"
+import DirectMessage from "@/models/DirectMessage.model"
+
 export default function SearchPersonDialBox() {
   const socket = useContext(WebSocketContext)
   const [val, setVal] = useState("")
   const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const notify = useContext(NotifcationContext)
+  const router = useRouter()
+  const handleSendMessage = (receiverID: string) => {
+    DirectMessageService.create(receiverID)
+      .then(({ data }: { data: DirectMessage }) => {
+        router.push(
+          {
+            pathname: "/game/chat",
+            query: {
+              type: "DM",
+              id: data.id,
+            },
+          },
+          "/game/chat"
+        )
+      })
+      .catch((err) => {})
+  }
   useEffect(() => {
     if (val == "") {
       setIsLoading(false)
@@ -80,7 +102,7 @@ export default function SearchPersonDialBox() {
         users.length > 0 &&
         users.map((data: User) => (
           <ChannelMember
-            onMessage={() => alert("yes")}
+            onMessage={() => handleSendMessage(data.id)}
             key={data.id}
             onSendRequest={() => handleSendRequest(data.id)}
             className="animate__animated animate__fadeIn"

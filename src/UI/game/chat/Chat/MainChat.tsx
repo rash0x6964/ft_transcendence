@@ -8,9 +8,11 @@ type Props = {
   paginating: boolean
   messages: MessageModel[]
   className?: string
+  blockedUsers: string[]
   chatRef: React.RefObject<HTMLDivElement>
 }
 export default function MainChat({
+  blockedUsers,
   className,
   messages,
   chatRef,
@@ -71,6 +73,7 @@ export default function MainChat({
             )
           return (
             <Message
+              blocked={blockedUsers.includes(message.senderID)}
               avatar={displayAvatar}
               message={message}
               key={message.id}

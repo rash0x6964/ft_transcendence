@@ -54,12 +54,8 @@ export default function MainNavBar({ coins, className }: Props) {
           <Logo width={24} height={24} className="text-primary my-auto" />
         </Link>
         <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-          <Link href={`/game/profile/${profileData.username}`}>
-            <PlayerName
-              src={profileData.avatarUrl}
-              name={profileData.username}
-            />
-          </Link>
+          <PlayerName src={profileData.avatarUrl} name={profileData.username} />
+
           <PlayerCoins className="my-auto" coins={profileData.profile.coins} />
           <NavHistory
             className="my-auto"

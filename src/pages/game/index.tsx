@@ -1,7 +1,7 @@
 import { NextPageWithLayout } from "../_app"
 import { ReactElement } from "react"
 import Layout from "@/UI/Layout"
-import UrlPipe from "@/pipes/url.pipe"
+import UrlPipe from "@/UI/game/chat/Chat/Messages/Transformer"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 
 const Page: NextPageWithLayout = () => {

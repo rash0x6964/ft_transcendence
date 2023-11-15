@@ -25,6 +25,7 @@ export default function Person({
       className="w-9 relative flex flex-col items-center"
     >
       <Avatar
+        href={`/game/profile/${userName}`}
         className="rounded-full border-2 h-9 w-9"
         src={src || ""}
         alt={userName}

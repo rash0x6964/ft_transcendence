@@ -1,11 +1,11 @@
 import Layout from "@/UI/Layout"
-import Chat from "@/UI/game/chat/Chat"
+import InnerChat from "@/UI/game/chat/InnerChat"
 import ChannelInfo from "@/UI/game/chat/Chat/ChannelInfo/ChannelInfo"
 import ChatBar from "@/UI/game/chat/ChatBar/ChatBar"
 import FriendInfo from "@/UI/game/chat/FriendInfo/FriendInfo"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import Dialogue from "@/components/Dialogue/Dialogue"
-import { Channel } from "@/models/Channel.model"
+import { Channel, ChannelUser } from "@/models/Channel.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import ChannelService from "@/services/Channel.sevice"
 import { ReactElement, useContext, useEffect, useState } from "react"
@@ -16,6 +16,7 @@ import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannel
 import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import Message from "@/models/Message.model"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -24,17 +25,33 @@ const Page: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
-  const router = useRouter()
-
+  const [showInfo, setShowInfo] = useState(true)
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
 
+  const [searchFor, setSearchFor] = useState("")
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
     room: false,
   })
-  const [searchFor, setSearchFor] = useState("")
+
+  const [blockedUsers, setBlockerUsers] = useState<string[]>([])
+
+  const initBlockedUser = (dms: DirectMessage[]) => {
+    setBlockerUsers(
+      dms
+        .filter((Dm) => {
+          let value = Dm.isSender ? "SENDER" : "RECEIVER"
+          return Dm.blockStatus == value || Dm.blockStatus == "BOTH"
+        })
+        .map((data) => {
+          return data.isSender ? data.receiverID : data.senderID
+        })
+    )
+  }
+
+  const router = useRouter()
 
   const isChannel = () => {
     return (selected as Channel)?.visibility != undefined
@@ -46,12 +63,26 @@ const Page: NextPageWithLayout = () => {
   }, [refresh])
 
   useEffect(() => {
+    if (router.query?.type == "DM" && router.query?.id)
+      setSelected(DMList.find((x) => x.id == router.query?.id))
+    if (router.query?.type == "invite" && router.query?.id) {
+      ChannelService.getChannelById(router.query?.id as string)
+        .then(({ data }) => {
+          setChannelTryingToJoin(data)
+          setDialogueState(false)
+        })
+        .catch((err) => {})
+    }
+  }, [router])
+
+  useEffect(() => {
     let timeout: any
     setIsLoading({ dm: true, room: true })
     if (searchFor == "") {
       timeout = setTimeout(() => {
         DMService.getDMList()
           .then(({ data }: { data: DirectMessage[] }) => {
+            initBlockedUser(data)
             setDMList(data)
             setIsLoading((obj) => {
               return { ...obj, dm: false }
@@ -140,7 +171,7 @@ const Page: NextPageWithLayout = () => {
 
     const _ubannedFromChannel = (data: any) => {
       data.channel["isMemeber"] = true
-      data.channel["owner"] = data.role
+      data.channel["role"] = data.role
 
       setChannelList((prevChannelList) => {
         return prevChannelList.concat(data.channel)
@@ -155,19 +186,77 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
-    // const _kickedFromChannel = (data: any) => {
-    //   setChannelList((prevChannelList) => {
-    //     return prevChannelList.filter((item) => {
-    //       return item.id != data.channelID
-    //     })
-    //   })
-    // }
+    const _getMuted = (data: ChannelUser) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((item: Channel) => {
+          if (item.id == data.channelID) {
+            item = { ...item, muteDuration: data.duration }
+            if ((selected as Channel) && item.id == (selected as Channel).id) {
+              setSelected(item)
+            }
+          }
+          return item
+        })
+      })
+    }
 
+    const _connect = (userId: string) => {
+      setDMList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == userId) user.friend.onlineStatus = true
+          return user
+        })
+      })
+    }
+
+    const _disconnect = (userId: string) => {
+      setDMList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == userId) user.friend.onlineStatus = false
+          return user
+        })
+      })
+    }
+
+    const _directMessage = (data: DirectMessage) => {
+      if (DMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
+      setDMList((prevState) => prevState.concat(data))
+    }
+
+    const privateMsg = (data: Message) => {
+      setDMList((prevDmList) => {
+        return prevDmList.map((DM) => {
+          if (DM.id == data.directmessageID) {
+            DM["message"] = data
+            console.log(DM)
+          }
+          return DM
+        })
+      })
+    }
+
+    const channelMsg = (data: Message) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((channel) => {
+          if (channel.id == data.channelID) {
+            channel["message"] = [data]
+          }
+          return channel
+        })
+      })
+    }
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
     socket?.on("youGetBanned", _outOfChannel)
     socket?.on("youGetKicked", _outOfChannel)
+    socket?.on("youGetMuted", _getMuted)
+    socket?.on("disconnected", _disconnect)
+    socket?.on("connected", _connect)
+    socket?.on("directMessage", _directMessage)
+    socket?.on("channelMessage", channelMsg)
+
+    socket?.on("privateMessage", privateMsg)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -175,6 +264,13 @@ const Page: NextPageWithLayout = () => {
       socket?.off("youGetUnbanned", _ubannedFromChannel)
       socket?.off("youGetBanned", _outOfChannel)
       socket?.off("youGetKicked", _outOfChannel)
+      socket?.off("youGetMuted", _getMuted)
+      socket?.off("disconnected", _disconnect)
+      socket?.off("connected", _connect)
+      socket?.off("directMessage", _directMessage)
+      socket?.off("channelMessage", channelMsg)
+
+      socket?.off("privateMessage", privateMsg)
     }
   }, [selected])
 
@@ -284,9 +380,14 @@ const Page: NextPageWithLayout = () => {
   }
 
   const [channelConfDialog, setChannelConfDialog] = useState(true)
-
+  //   if (isLoading.dm || isLoading.room)
+  //     return (
+  //       <div className="h-screen w-screen   bg-gradient-to-r from-10% to-80% from-backdrop to-mirage flex flex-col justify-center">
+  //         <span className="loaderLobby mx-auto"></span>
+  //       </div>
+  //     )
   return (
-    <div className="w-full  h-full flex gap-2">
+    <div className="w-full animate__animated animate__fadeIn h-full flex gap-2">
       <HeadTitle>Pong Fury | Chat</HeadTitle>
 
       <div className="h-full w-96">
@@ -302,25 +403,30 @@ const Page: NextPageWithLayout = () => {
         />
       </div>
       <div className="flex-1 flex flex-col   h-full">
-        <Chat channelData={selected} />
+        <InnerChat
+          blockedUsers={blockedUsers}
+          isChannel={isChannel()}
+          onInfoClick={() => setShowInfo((prev) => !prev)}
+          channelData={selected}
+        />
       </div>
-      <div className=" h-full w-96">
-        {isChannel() && (
-          <>
-            <ChannelInfo
-              onEdit={() => setChannelConfDialog(false)}
-              selectedChannel={selected as Channel}
-              event={roomLeaved}
+      {isChannel() && showInfo && (
+        <div className=" h-full w-96">
+          <ChannelInfo
+            onEdit={() => setChannelConfDialog(false)}
+            selectedChannel={selected as Channel}
+            onLeave={roomLeaved}
+          />
+          <Dialogue closed={channelConfDialog}>
+            <ChannelSetting
+              close={() => setChannelConfDialog(true)}
+              channel={selected as Channel}
             />
-            <Dialogue closed={channelConfDialog}>
-              <ChannelSetting
-                close={() => setChannelConfDialog(true)}
-                channel={selected as Channel}
-              />
-            </Dialogue>
-          </>
-        )}
-        {!isChannel() && (
+          </Dialogue>
+        </div>
+      )}
+      {!isChannel() && showInfo && (
+        <div className=" h-full w-96">
           <FriendInfo
             dm={selected as DirectMessage}
             takeAction={{
@@ -330,8 +436,8 @@ const Page: NextPageWithLayout = () => {
               unmute: unmute,
             }}
           />
-        )}
-      </div>
+        </div>
+      )}
 
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}
@@ -339,7 +445,7 @@ const Page: NextPageWithLayout = () => {
       >
         <JoinChannelDialBox
           channelInfo={channelTryingToJoin as Channel}
-          event={roomJoined}
+          onJoin={roomJoined}
         />
       </Dialogue>
 

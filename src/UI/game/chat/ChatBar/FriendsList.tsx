@@ -1,3 +1,4 @@
+import datePipe, { datePipe24 } from "@/pipes/date.pipes"
 import FriendBar from "./FriendBar"
 import DirectMessage from "@/models/DirectMessage.model"
 
@@ -25,7 +26,7 @@ export default function FriendsList({ selectedId, handleClick, DMList }: Prop) {
             username={data.friend?.userName ?? "Unknown"}
             isOnline={data.friend?.onlineStatus ?? false}
             lastMessage={data.message?.content ?? "say hi!"}
-            time={`${date.getHours()}:${date.getMinutes()}`}
+            time={datePipe24(date)}
           />
         )
       })}

@@ -40,6 +40,7 @@ export default function GameLobby({ className, lobby }: Props) {
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange")
+      socket?.off("gameEnd")
     }
   }, [])
 

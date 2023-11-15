@@ -17,7 +17,7 @@ export default function ChannelInvite({
   onAccept,
   channelId,
 }: Props) {
-  const [channel, setChannel] = useState<Channel | undefined>(undefined)
+  const [channel, setChannel] = useState<Channel | undefined | null>(undefined)
   const router = useRouter()
 
   const handleJoin = () => {
@@ -37,19 +37,29 @@ export default function ChannelInvite({
       .then(({ data }) => {
         setChannel(data)
       })
-      .catch((err) => {})
+      .catch((err) => {
+        setChannel(null)
+      })
   }, [])
-  if (!channel)
+  if (channel == undefined)
     return (
       <div
-        className={`bg-mirage text-xs w-[450px] border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
+        className={`bg-mirage text-xs w-72 border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
+      >
+        <span className="my-auto ">Channel has been deleted</span>
+      </div>
+    )
+  if (channel == null)
+    return (
+      <div
+        className={`bg-mirage text-xs w-72 border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
       >
         <span className="loaderLobby  my-auto "></span>
       </div>
     )
   return (
     <div
-      className={`bg-mirage text-xs w-[450px]  border flex gap-2  flex-col rounded-md  border-gray-600 p-3  ${className}`}
+      className={`bg-mirage text-xs w-72  border flex gap-2  flex-col rounded-md  border-gray-600 p-3  ${className}`}
     >
       <div className="text-gray-600">Channel Invite </div>
       <div className="flex justify-between">

@@ -47,6 +47,11 @@ const Page: NextPageWithLayout = () => {
   }, [refresh])
 
   useEffect(() => {
+    if (router.query?.type == "DM")
+      setSelected(DMList.find((x) => x.id == router.query?.id))
+  }, [router])
+
+  useEffect(() => {
     let timeout: any
     setIsLoading({ dm: true, room: true })
     if (searchFor == "") {
@@ -141,7 +146,7 @@ const Page: NextPageWithLayout = () => {
 
     const _ubannedFromChannel = (data: any) => {
       data.channel["isMemeber"] = true
-      data.channel["owner"] = data.role
+      data.channel["role"] = data.role
 
       setChannelList((prevChannelList) => {
         return prevChannelList.concat(data.channel)
@@ -161,6 +166,9 @@ const Page: NextPageWithLayout = () => {
         return prevChannelList.map((item: Channel) => {
           if (item.id == data.channelID) {
             item = { ...item, muteDuration: data.duration }
+            if ((selected as Channel) && item.id == (selected as Channel).id) {
+              setSelected(item)
+            }
           }
           return item
         })
@@ -332,7 +340,7 @@ const Page: NextPageWithLayout = () => {
           <ChannelInfo
             onEdit={() => setChannelConfDialog(false)}
             selectedChannel={selected as Channel}
-            event={roomLeaved}
+            onLeave={roomLeaved}
           />
           <Dialogue closed={channelConfDialog}>
             <ChannelSetting

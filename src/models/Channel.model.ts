@@ -22,7 +22,7 @@ interface Channel {
 	channels: ChannelUser[]
 	message: Message[]
 
-	owner?: "OWNER" | "ADMINISTRATOR" | "MEMBER"
+	role?: "OWNER" | "ADMINISTRATOR" | "MEMBER"
 	isMemeber?: boolean
 	muteDuration?: number
 }

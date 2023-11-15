@@ -1,4 +1,3 @@
-"use client"
 import React, { useContext, useEffect, useRef, useState } from "react"
 import Avatar from "@/components/BaseComponents/Avatar"
 import MemberCard from "./MemberCard"
@@ -16,23 +15,26 @@ import { NotifcationContext } from "@/UI/NotificationProvider"
 import Dialogue from "@/components/Dialogue/Dialogue"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
+import MemberSection from "./MemberSection"
 
 type Props = {
   onEdit: () => void
   selectedChannel: Channel
-  event: (id: string) => void
+  onLeave: (id: string) => void
 }
 
-export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
+export default function ChannelInfo({
+  selectedChannel,
+  onLeave,
+  onEdit,
+}: Props) {
   const socket = useContext(WebSocketContext)
   const notify = useContext(NotifcationContext)
 
   const menuRef = useRef<HTMLDivElement>(null)
   const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef)
 
-  const [memberList, setMemberList] = useState<ChannelUser[]>([])
-  const [adminList, setAdminList] = useState<ChannelUser[]>([])
-  const [owner, setOwner] = useState<ChannelUser | undefined>(undefined)
+  const [channelMembers, setChannelMembers] = useState<ChannelUser[]>([])
 
   const [dialogueState, setDialogueState] = useState(true)
   const [dialogueMuteState, setDialogueMuteState] = useState(true)
@@ -42,85 +44,76 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
 
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
-      .then(({ data }: { data: any }) => {
-        setMemberList(
-          data.filter((item: any) => {
-            return item.role == "MEMBER"
-          })
-        )
+      .then(({ data }: { data: ChannelUser[] }) => {
+        console.log(data)
 
-        setAdminList(
-          data.filter((item: any) => {
-            return item.role == "ADMINISTRATOR"
-          })
-        )
-
-        setOwner(
-          data.find((item: any) => {
-            return item.role == "OWNER"
-          })
-        )
+        setChannelMembers(data)
       })
       .catch((err) => {})
   }, [selectedChannel])
 
   useEffect(() => {
-    const _join = (data: any) => {
-      if (data.channelID == selectedChannel.id) {
-        setMemberList((prevMemberList) => {
-          return prevMemberList.concat(data)
-        })
-      }
+    const _join = (data: ChannelUser) => {
+      if (data.channelID != selectedChannel.id) return
+      setChannelMembers((prevMemberList) => {
+        return prevMemberList.concat(data)
+      })
     }
     const _left = (data: any) => {
-      if (data.data.channelID == selectedChannel.id) {
-        setMemberList((prevMemberList) => {
-          return prevMemberList.filter((item) => item.userID != data.sender.id)
-        })
-      }
+      if (data.data.channelID != selectedChannel.id) return
+      setChannelMembers((prevMemberList) => {
+        return prevMemberList.filter((item) => item.userID != data.sender.id)
+      })
     }
     const _unbanned = (data: any) => {
-      if (data.channelID == selectedChannel.id) {
-        if (data.role == "MEMBER")
-          setMemberList((prevMemberList) => {
-            return prevMemberList.concat(data)
-          })
-        else if (data.role == "ADMINISTRATOR")
-          setAdminList((prevAdminList) => {
-            return prevAdminList.concat(data)
-          })
-      }
+      if (data.channelID != selectedChannel.id) return
+      setChannelMembers((prevMemberList) => {
+        return prevMemberList.concat(data)
+      })
     }
     const _banned = (data: any) => {
-      if (data.channelID == selectedChannel.id) {
-        if (data.role == "MEMBER")
-          setMemberList((prevMemberList) => {
-            return prevMemberList.filter((item) => item.userID != data.userID)
-          })
-        else if (data.role == "ADMINISTRATOR")
-          setAdminList((prevAdminList) => {
-            return prevAdminList.filter((item) => item.userID != data.userID)
-          })
-      }
+      if (data.channelID != selectedChannel.id) return
+      setChannelMembers((prevMemberList) => {
+        return prevMemberList.filter((item) => item.userID != data.userID)
+      })
     }
 
     const _muted = (data: any) => {
-      if (data.channelID == selectedChannel.id) {
-        if (data.role == "MEMBER")
-          setMemberList((prevMemberList) => {
-            return prevMemberList.map((item) => {
-              if (item.userID == data.userID) item.status = data.status
-              return item
-            })
-          })
-        else if (data.role == "ADMINISTRATOR")
-          setAdminList((prevAdminList) => {
-            return prevAdminList.map((item) => {
-              if (item.userID == data.userID) item.status = data.status
-              return item
-            })
-          })
-      }
+      if (data.channelID != selectedChannel.id) return
+      setChannelMembers((prevMemberList) => {
+        return prevMemberList.map((item) => {
+          if (item.userID == data.userID) item.status = data.status
+          return item
+        })
+      })
+    }
+
+    const _connect = (userId: string) => {
+      setChannelMembers((users) => {
+        return users.map((user) => {
+          if (user.user?.id == userId) user.user.onlineStatus = true
+          return user
+        })
+      })
+    }
+
+    const _disconnect = (userId: string) => {
+      setChannelMembers((users) => {
+        return users.map((user) => {
+          if (user.user?.id == userId) user.user.onlineStatus = false
+          return user
+        })
+      })
+    }
+
+    const _presence = (data: any) => {
+      setChannelMembers((users) => {
+        return users.map((user) => {
+          if (user.user?.id == data.sender.id && user.user?.state)
+            user.user.state = data.data
+          return user
+        })
+      })
     }
 
     socket?.on("newMemberJoind", _join)
@@ -129,7 +122,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
     socket?.on("aMemberBanned", _banned)
     socket?.on("aMemberKicked", _banned)
     socket?.on("aMemberMuted", _muted)
-
+    socket?.on("connected", _connect)
+    socket?.on("disconnected", _disconnect)
+    socket?.on("presence", _presence)
     return () => {
       socket?.off("newMemberJoind", _join)
       socket?.off("aMemberLeft", _left)
@@ -137,6 +132,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       socket?.off("aMemberBanned", _banned)
       socket?.off("aMemberKicked", _banned)
       socket?.off("aMemberMuted", _muted)
+      socket?.off("connected", _connect)
+      socket?.off("disconnected", _disconnect)
+      socket?.off("presence", _presence)
     }
   }, [selectedChannel])
 
@@ -145,7 +143,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
       .then((res) => {
         socket?.emit("channelLeft", {
           token: cookieService.getJwtCookie(),
-          data: owner,
+          data: getMembers("OWNER")[0],
         })
 
         notify({
@@ -153,7 +151,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
           title: "Leave Channel",
           type: "success",
         })
-        event(selectedChannel.id)
+        onLeave(selectedChannel.id)
         setDialogueState(true)
       })
       .catch((err) => {
@@ -165,6 +163,9 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
     e: MouseEvent<HTMLDivElement>,
     data: ChannelUser | undefined
   ) => {
+    if (selectedChannel?.role == "MEMBER") return
+
+    if (selectedChannel.role == data?.role || data?.role == "OWNER") return
     setSelectedData(data)
     setClicked(true)
     setPosition(getMenuPos(e, menuRef))
@@ -232,76 +233,27 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
     setDialogueMuteState(true)
   }
 
+  const getMembers = (role: "OWNER" | "ADMINISTRATOR" | "MEMBER") => {
+    return channelMembers.filter((user) => {
+      return user.role == role && user.user?.onlineStatus == true
+    })
+  }
+
+  const getOfflines = () => {
+    return channelMembers.filter((user) => {
+      return user.user?.onlineStatus == false
+    })
+  }
+
   return (
     <div className="gradient-border-2 shadow-lg py-4 rounded-xl  h-full flex flex-col">
-      {selectedChannel && selectedChannel.owner != "OWNER" ? (
-        <LeaveRoom
-          className="w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
-          onClick={() => setDialogueState(false)}
-        />
-      ) : (
-        <EditRoom
-          className="w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
-          onClick={onEdit}
-        />
-      )}
-      <div className="flex flex-col gap-5 py-10">
-        <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
-        <span className="self-center">{selectedChannel.name}</span>
-      </div>
-      <div className="flex flex-1 flex-col gap-5 px-3 overflow-y-auto max-h-full">
-        <span className="text-gray-400 text-sm">Owner - 👑</span>
-        <MemberCard
-          playerAvatar={owner?.user?.avatarUrl ?? ""}
-          playerName={owner?.user?.userName ?? "Unknown"}
-          playerState={"test"}
-          data={owner}
-        />
-        {adminList.length ? (
-          <span className="text-gray-400 text-sm">
-            Admins - {adminList.length}
-          </span>
-        ) : (
-          <></>
-        )}
-        {adminList.map((item) => {
-          return (
-            <MemberCard
-              key={item.userID}
-              onContextMenu={handleContextMenu}
-              playerAvatar={item.user?.avatarUrl ?? ""}
-              playerName={item.user?.userName ?? "Unknown"}
-              playerState={"test"}
-              data={item}
-            />
-          )
-        })}
-        {memberList.length ? (
-          <span className="text-gray-400 text-sm">
-            Member - {memberList.length}
-          </span>
-        ) : (
-          <></>
-        )}
-        {memberList.map((item) => {
-          return (
-            <MemberCard
-              key={item.userID}
-              onContextMenu={handleContextMenu}
-              playerAvatar={item.user?.avatarUrl ?? ""}
-              playerName={item.user?.userName ?? "Unknown"}
-              playerState={"test"}
-              data={item}
-            />
-          )
-        })}
-      </div>
       <ContextMenu MenuRef={menuRef} clicked={clicked} pos={position}>
         {/* <MenuBtn onClick={() => console.log('menuRef', menuRef)} title="Profile" /> */}
         <MenuBtn title="Kick" onClick={handleKick} />
         <MenuBtn title="Mute" onClick={() => setDialogueMuteState(false)} />
         <MenuBtn title="Ban" onClick={handleBan} />
       </ContextMenu>
+
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}
         closed={dialogueState}
@@ -333,7 +285,7 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
           </button>
           <button
             className="font-light w-full py-2 text-white text-center hover:text-slate-700 hover:bg-gradient-to-r from-transparent via-primary-500 to-transparent"
-            onClick={() => handleMute(16 * 5)}
+            onClick={() => handleMute(5 * 60)}
           >
             5 min
           </button>
@@ -351,6 +303,47 @@ export default function ChannelInfo({ selectedChannel, event, onEdit }: Props) {
           </button>
         </div>
       </Dialogue>
+
+      {selectedChannel && selectedChannel.role != "OWNER" ? (
+        <LeaveRoom
+          className="cursor-pointer w-6 h-6 self-end mr-4 hover:scale-110 transition-all"
+          onClick={() => setDialogueState(false)}
+        />
+      ) : (
+        <EditRoom
+          className="cursor-pointer w-8 h-8 self-end mr-4 hover:scale-110 transition-all"
+          onClick={onEdit}
+        />
+      )}
+      <div className="flex flex-col gap-5 py-10">
+        <Avatar src={selectedChannel.imageUrl} className="w-40 h-40 mx-auto" />
+        <span className="self-center">{selectedChannel.name}</span>
+      </div>
+      <div className="flex flex-1 flex-col gap-5 px-3 overflow-y-auto max-h-full">
+        <MemberSection
+          members={getMembers("OWNER")}
+          handleContextMenu={handleContextMenu}
+          title="Owner"
+        />
+        <MemberSection
+          members={getMembers("ADMINISTRATOR")}
+          handleContextMenu={handleContextMenu}
+          title="Admins"
+        />
+
+        <MemberSection
+          members={getMembers("MEMBER")}
+          handleContextMenu={handleContextMenu}
+          title="Members"
+        />
+
+        <MemberSection
+          offline={true}
+          members={getOfflines()}
+          handleContextMenu={handleContextMenu}
+          title="Offline"
+        />
+      </div>
     </div>
   )
 }

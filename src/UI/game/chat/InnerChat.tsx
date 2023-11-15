@@ -261,7 +261,7 @@ export default function Chat({ channelData, onInfoClick, isChannel }: Props) {
         <div className="h-16 w-full  drop-shadow-lg bg-secondary rounded-xl p-5 text-red-500">
           <div className="flex gap-4">
             <MatchHistory className="my-auto text-red-500" />
-            <div className="my-auto">
+            <div className="my-auto ">
               You have been muted for {timePipe(muteCounter)}
             </div>
           </div>

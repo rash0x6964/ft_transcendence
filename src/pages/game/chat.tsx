@@ -16,6 +16,7 @@ import JoinChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/JoinChannel
 import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import Message from "@/models/Message.model"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -217,6 +218,33 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
+    const _directMessage = (data: DirectMessage) => {
+      if (DMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
+      setDMList((prevState) => prevState.concat(data))
+    }
+
+    const privateMsg = (data: Message) => {
+      setDMList((prevDmList) => {
+        return prevDmList.map((DM) => {
+          if (DM.id == data.directmessageID) {
+            DM["message"] = data
+            console.log(DM)
+          }
+          return DM
+        })
+      })
+    }
+
+    const channelMsg = (data: Message) => {
+      setChannelList((prevChannelList) => {
+        return prevChannelList.map((channel) => {
+          if (channel.id == data.channelID) {
+            channel["message"] = [data]
+          }
+          return channel
+        })
+      })
+    }
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
@@ -225,6 +253,10 @@ const Page: NextPageWithLayout = () => {
     socket?.on("youGetMuted", _getMuted)
     socket?.on("disconnected", _disconnect)
     socket?.on("connected", _connect)
+    socket?.on("directMessage", _directMessage)
+    socket?.on("channelMessage", channelMsg)
+
+    socket?.on("privateMessage", privateMsg)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -235,6 +267,10 @@ const Page: NextPageWithLayout = () => {
       socket?.off("youGetMuted", _getMuted)
       socket?.off("disconnected", _disconnect)
       socket?.off("connected", _connect)
+      socket?.off("directMessage", _directMessage)
+      socket?.off("channelMessage", channelMsg)
+
+      socket?.off("privateMessage", privateMsg)
     }
   }, [selected])
 

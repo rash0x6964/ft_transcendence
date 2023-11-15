@@ -223,7 +223,6 @@ export default function ChannelInfo({
 
     ChannelUserService.muteUserAtChannel(data)
       .then((res) => {
-        console.log("muted...")
         socket?.emit("getMuted", {
           token: cookieService.getJwtCookie(),
           data: res.data,

@@ -50,6 +50,7 @@ export default function RightBar({ className }: Props) {
     if (!selectedData?.friend) return
     DMService.create(selectedData?.friend.id)
       .then(({ data }: { data: DirectMessage }) => {
+        socket?.emit("directMessage", { data })
         router.push(
           {
             pathname: "/game/chat",

@@ -4,7 +4,7 @@ const getCookieValue = (name: string) =>
 	document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || ""
 
 const setJwtCookie = (token: string) => {
-	document.cookie = `${jwtCookieName}=${token}`
+	document.cookie = `${jwtCookieName}=${token};path=/`
 }
 
 const deleteInfoCookie = () => {

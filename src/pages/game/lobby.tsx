@@ -10,7 +10,6 @@ import Lobby from "@/models/Lobby.model"
 import GameLobby from "@/UI/game/lobby/GameLobby"
 import PlayersLobby from "@/UI/game/lobby/PlayersLobby"
 import DefaultLobby from "@/UI/game/lobby/DefaultLobby"
-import EndGame from "@/UI/game/lobby/EndGame"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -34,7 +33,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   if (lobby && lobby.lobbySate == "ingame") return <GameLobby lobby={lobby} />
-  if (lobby && lobby.lobbySate == "finished") return <EndGame lobby={lobby} />
+//   if (lobby && lobby.lobbySate == "finished") return <EndGame lobby={lobby} />
 
   if (lobby && lobby.lobbySate != "ingame")
     return (

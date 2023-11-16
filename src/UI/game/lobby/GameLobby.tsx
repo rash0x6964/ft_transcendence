@@ -3,6 +3,7 @@ import PlayersScore from "./PlayersScore"
 import Game from "./Game"
 import { useContext, useEffect, useRef, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import { useRouter } from "next/router"
 
 type Props = {
   className?: string
@@ -14,6 +15,7 @@ export default function GameLobby({ className, lobby }: Props) {
   const [height, setHeight] = useState<number>(0)
   const [score, setScore] = useState<number[]>([0, 0])
   const socket = useContext(WebSocketContext)
+  const router = useRouter()
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -30,15 +32,21 @@ export default function GameLobby({ className, lobby }: Props) {
       setScore(data)
     })
 
+	socket?.on("gameEnd", (data) => {
+		window.localStorage.setItem("lobbyData", JSON.stringify(data))
+		router.push("/game/endGame")
+	})
+
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange")
+      socket?.off("gameEnd")
     }
   }, [])
 
   return (
     <div className={`w-full h-full flex flex-col ${className} `}>
-      <div ref={divRef} className="w-full bg-secondary  h-[80%]">
+      <div ref={divRef} className="w-full bg-secondary  h-[80%] border border-primary border-2">
         <Game width={width} height={height} />
       </div>
       <div className="flex-1  flex flex-col justify-center">

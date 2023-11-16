@@ -5,9 +5,7 @@ import Paddle from "@/types/Paddle"
 import {
   useRef,
   useEffect,
-  useState,
   useContext,
-  KeyboardEventHandler,
 } from "react"
 
 const secondary: string = "#0F1921"
@@ -22,10 +20,6 @@ type Props = {
 export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-
-  const [leftPaddle, setLeftPaddle] = useState<Paddle>(new Paddle(1, 40))
-  const [rightPaddle, setRightPaddle] = useState<Paddle>(new Paddle(97, 40))
-  const [ball, setBall] = useState<Ball>(new Ball(50, 50))
 
   const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
     let canvas: HTMLCanvasElement = canvasRef.current!
@@ -81,20 +75,17 @@ export default function Game({ width, height }: Props) {
       )
     }
     socket?.on("gameData", handler)
+	document.addEventListener("keydown", keyDownHandler);
+	document.addEventListener("keyup", keyUpHandler);
     return () => {
       socket?.off("gameData")
+	  document.removeEventListener("keydown", keyDownHandler);
+	  document.removeEventListener("keyup", keyUpHandler);
     }
   }, [])
 
-  //   useEffect(() => {
-  //     draw(ball)
-  //   }, [width, height])
-
   return (
     <canvas
-      onKeyDown={keyDownHandler}
-      onKeyUp={keyUpHandler}
-      tabIndex={0}
       style={{ imageRendering: "pixelated" }}
       className="w-full h-full focus:outline-none "
       ref={canvasRef}

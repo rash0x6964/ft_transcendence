@@ -31,6 +31,7 @@ const Page: NextPageWithLayout = () => {
   >(undefined)
 
   const [searchFor, setSearchFor] = useState("")
+  const [invite, setInvite] = useState(false)
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
     room: false,
@@ -68,6 +69,7 @@ const Page: NextPageWithLayout = () => {
     if (router.query?.type == "invite" && router.query?.id) {
       ChannelService.getChannelById(router.query?.id as string)
         .then(({ data }) => {
+          console.log("invite", data)
           setChannelTryingToJoin(data)
           setDialogueState(false)
         })
@@ -142,7 +144,7 @@ const Page: NextPageWithLayout = () => {
     return () => {
       clearTimeout(timeout)
     }
-  }, [searchFor])
+  }, [searchFor, invite])
 
   useEffect(() => {
     const _updateSelectedChannel = (data: any) => {
@@ -246,19 +248,13 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
-    const _blocked_DM = (data: DirectMessage) => {
+    const _blocked_unblocked_DM = (data: DirectMessage) => {
       setDMList((prevDmList) => {
         return prevDmList.map((dm) => {
-          if (dm.id == data.id) dm.blockStatus = data.blockStatus
-          return dm
-        })
-      })
-    }
-
-    const _unblocked_DM = (data: DirectMessage) => {
-      setDMList((prevDmList) => {
-        return prevDmList.map((dm) => {
-          if (dm.id == data.id) dm.blockStatus = data.blockStatus
+          if (dm.id == data.id) {
+            dm.blockStatus = data.blockStatus
+            setSelected(dm)
+          }
           return dm
         })
       })
@@ -277,8 +273,8 @@ const Page: NextPageWithLayout = () => {
 
     socket?.on("privateMessage", privateMsg)
 
-    socket?.on("youGotBlocked_DM", _blocked_DM)
-    socket?.on("youGotUnblocked_DM", _unblocked_DM)
+    socket?.on("youGotBlocked_DM", _blocked_unblocked_DM)
+    socket?.on("youGotUnblocked_DM", _blocked_unblocked_DM)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -294,8 +290,8 @@ const Page: NextPageWithLayout = () => {
 
       socket?.off("privateMessage", privateMsg)
 
-      socket?.off("youGotBlocked_DM", _blocked_DM)
-      socket?.off("youGotUnblocked_DM", _unblocked_DM)
+      socket?.off("youGotBlocked_DM", _blocked_unblocked_DM)
+      socket?.off("youGotUnblocked_DM", _blocked_unblocked_DM)
     }
   }, [selected])
 
@@ -320,6 +316,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomJoined = (data: Channel) => {
+    setInvite((prevInv) => !prevInv)
     // setSearchFor("")
     setSelected(data)
     setDialogueState(true)

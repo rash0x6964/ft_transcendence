@@ -23,29 +23,33 @@ export default function FriendCard({ dm, takeAction }: Props) {
     receiverID: dm?.receiverID,
   }
 
-  const addFriend = () => {}
+  const addFriend = () => {
 
-  const unfriend = () => {}
+  }
+
+  const unfriend = () => {
+    
+  }
 
   const block = () => {
     DMService.blockUser(obj)
       .then((res) => {
-        console.log("res:", res.data)
+        // console.log("res:", res.data)
         takeAction.block()
       })
       .catch((err) => {
-        console.log("err:", err.data)
+        // console.log("err:", err.data)
       })
   }
 
   const unblock = () => {
     DMService.unBlockUser(obj)
       .then((res) => {
-        console.log("res:", res.data)
+        // console.log("res:", res.data)
         takeAction.unblock()
       })
       .catch((err) => {
-        console.log("err:", err.data)
+        // console.log("err:", err.data)
       })
   }
 
@@ -56,7 +60,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
       })
       .catch((err) => {})
   }
-  
+
   const unmute = () => {
     DMService.unMuteUser(obj)
       .then((res) => {

@@ -22,7 +22,7 @@ export default function EditChannelDialBox() {
           </div>
         </div>
       </div>
-      <Input
+      {/* <Input
         placeholder="Channel Name"
         icon={<TVIcn width={20} height={20} />}
         className="mb-3 w-80 h-11 bg-big-stone mx-auto"
@@ -36,9 +36,9 @@ export default function EditChannelDialBox() {
         placeholder="New Password"
         icon={<Lock />}
         className="mb-7 w-80 h-11 bg-big-stone mx-auto"
-      />
+      /> */}
       <RadioGroup
-        defaultVal="Public"
+        value="Public"
         radios={options}
         className="flex justify-center gap-10"
       />

@@ -1,24 +1,24 @@
-import Input from "@/components/BaseComponents/Input";
-import MainButton from "@/components/BaseComponents/MainButton";
-import RadioGroup from "@/components/RadioGroup/RadioGroup";
-import Camera from "@/components/svgs/Camera";
-import Lock from "@/components/svgs/Lock";
-import Plus from "@/components/svgs/Plus";
-import TVIcn from "@/components/svgs/TVIcn";
-import { useContext, useState } from "react";
-import ChannelSevice from "@/services/Channel.sevice";
-import { Channel, CreateChannel } from "@/models/Channel.model";
-import UploadService from "@/services/Upload.service";
-import Image from "next/image";
-import { WebSocketContext } from "@/UI/WebSocketContextWrapper";
+import Input from "@/components/BaseComponents/Input"
+import MainButton from "@/components/BaseComponents/MainButton"
+import RadioGroup from "@/components/RadioGroup/RadioGroup"
+import Camera from "@/components/svgs/Camera"
+import Lock from "@/components/svgs/Lock"
+import Plus from "@/components/svgs/Plus"
+import TVIcn from "@/components/svgs/TVIcn"
+import { useContext, useState } from "react"
+import ChannelSevice from "@/services/Channel.sevice"
+import { Channel, CreateChannel } from "@/models/Channel.model"
+import UploadService from "@/services/Upload.service"
+import Image from "next/image"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
-import axios from "axios";
-import { NotifcationContext } from "@/UI/NotificationProvider";
+import axios from "axios"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 
 type Props = {
-  handler: () => void;
-  createChannelEvent: (data: Channel) => void;
-};
+  handler: () => void
+  createChannelEvent: (data: Channel) => void
+}
 
 export default function CreateChannelDialBox({
   handler,
@@ -27,16 +27,16 @@ export default function CreateChannelDialBox({
   const socket = useContext(WebSocketContext)
   const [visibility, setVisibility] = useState<
     "PRIVATE" | "PUBLIC" | "PROTECTED" | any
-  >("PUBLIC");
-  const options = ["Public", "Private"];
+  >("PUBLIC")
+  const options = ["Public", "Private"]
 
-  const [avatar, setAvatar] = useState("");
-  const [channelName, setChannelName] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorLog, setErrorLog] = useState([]);
-  const [processing, setProcessing] = useState(false);
+  const [avatar, setAvatar] = useState("")
+  const [channelName, setChannelName] = useState("")
+  const [password, setPassword] = useState("")
+  const [errorLog, setErrorLog] = useState([])
+  const [processing, setProcessing] = useState(false)
 
-  const [lock, setLock] = useState(true);
+  const [lock, setLock] = useState(true)
   const notify = useContext(NotifcationContext)
 
   const onCreate = () => {
@@ -48,34 +48,34 @@ export default function CreateChannelDialBox({
       name: channelName,
       visibility:
         visibility == "PUBLIC" && password.length ? "PROTECTED" : visibility,
-    };
+    }
 
-    if (body.visibility == "PROTECTED") body["password"] = password;
+    if (body.visibility == "PROTECTED") body["password"] = password
 
-    setErrorLog([]);
-    setProcessing(true);
+    setErrorLog([])
+    setProcessing(true)
     ChannelSevice.createChannel(body)
       .then((res) => {
-        createChannelEvent(res.data);
-        handler();
-        socket?.emit('channelCreated', {
+        createChannelEvent(res.data)
+        handler()
+        socket?.emit("channelCreated", {
           token: cookieService.getJwtCookie(),
           data: res.data.id,
         })
       })
       .catch((err) => {
-        setErrorLog(err.response.data.message);
-        setProcessing(false);
-      });
-  };
+        setErrorLog(err.response.data.message)
+        setProcessing(false)
+      })
+  }
 
   const onFileChange = (e: any) => {
-    if (!e.target.files[0]) return;
-    const formdata = new FormData();
-    formdata.append("files", e.target.files[0], e.target.files[0].name);
+    if (!e.target.files[0]) return
+    const formdata = new FormData()
+    formdata.append("files", e.target.files[0], e.target.files[0].name)
     UploadService.uploadFiles("avatars", formdata)
       .then((res) => {
-        setAvatar(res.data[0].url);
+        setAvatar(res.data[0].url)
       })
       .catch((err) => {
         if (axios.isAxiosError(err)) {
@@ -85,12 +85,12 @@ export default function CreateChannelDialBox({
             type: "error",
           })
         }
-      });
-  };
+      })
+  }
 
   const lockEvent = (e: any) => {
-    setLock(() => !lock);
-  };
+    setLock(() => !lock)
+  }
 
   return (
     <div className="gradient-border-2  p-4 rounded-xl ">
@@ -147,14 +147,21 @@ export default function CreateChannelDialBox({
         <></>
       )}
       <RadioGroup
-        defaultVal={visibility.toLowerCase().charAt(0).toUpperCase() + visibility.toLowerCase().slice(1)}
+        value={
+          visibility.toLowerCase().charAt(0).toUpperCase() +
+          visibility.toLowerCase().slice(1)
+        }
         radios={options}
         onChange={(value) => setVisibility(value.toUpperCase())}
         className="flex justify-center gap-10"
       />
-      {errorLog.length?<p className="font-light text-red-400 text-center mt-7 text-sm animate__animated animate__headShake">
-        {errorLog}
-      </p>: <></>}
+      {errorLog.length ? (
+        <p className="font-light text-red-400 text-center mt-7 text-sm animate__animated animate__headShake">
+          {errorLog}
+        </p>
+      ) : (
+        <></>
+      )}
       <div className="flex justify-center mt-7">
         <MainButton className="mb-2 transition-all" onClick={onCreate}>
           {!processing ? (
@@ -170,5 +177,5 @@ export default function CreateChannelDialBox({
         </MainButton>
       </div>
     </div>
-  );
+  )
 }

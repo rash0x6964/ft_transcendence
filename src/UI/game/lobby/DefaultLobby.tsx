@@ -50,7 +50,7 @@ export default function DefaultLobby({
       token: CookiesService.getJwtCookie(),
       data: {
         rating: profile.profile.rating,
-        gameMode: "normal",
+        gameMode: gameModValue,
         ranked: ranked == "Ranked",
       },
     })

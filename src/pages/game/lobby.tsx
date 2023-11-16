@@ -23,11 +23,11 @@ const Page: NextPageWithLayout = () => {
   let gameMods = [
     {
       name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
+      src: "https://ninjoo.com/cdn/shop/products/Halfmoon3_800x800.png?v=1629977279",
     },
     {
       name: "Speed Demons",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
+      src: "https://thumbs.dreamstime.com/b/vector-abstract-futuristic-high-speed-illustration-digital-technology-colorful-background-concept-129976555.jpg",
     },
   ]
 

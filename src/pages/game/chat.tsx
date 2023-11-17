@@ -17,11 +17,16 @@ import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Message from "@/models/Message.model"
+import FriendRequestService from "@/services/FriendRequest.service"
+import FriendService from "@/services/Friend.service"
+import { Flamenco } from "next/font/google"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
+  const [tempChannelList, setTempChannelList] = useState<Channel[]>([])
+  const [tempDMList, setTempDMList] = useState<DirectMessage[]>([])
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
@@ -260,6 +265,19 @@ const Page: NextPageWithLayout = () => {
       })
     }
 
+    const _unfriend = (data: DirectMessage) => {
+      setDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (dm.id === data.id) {
+            dm.isFriend = false
+            dm.pending = false
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("youGetUnbanned", _ubannedFromChannel)
@@ -275,6 +293,8 @@ const Page: NextPageWithLayout = () => {
 
     socket?.on("youGotBlocked_DM", _blocked_unblocked_DM)
     socket?.on("youGotUnblocked_DM", _blocked_unblocked_DM)
+
+    socket?.on("unfriend", _unfriend)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -292,6 +312,8 @@ const Page: NextPageWithLayout = () => {
 
       socket?.off("youGotBlocked_DM", _blocked_unblocked_DM)
       socket?.off("youGotUnblocked_DM", _blocked_unblocked_DM)
+
+      socket?.off("unfriend", _unfriend)
     }
   }, [selected])
 
@@ -403,6 +425,57 @@ const Page: NextPageWithLayout = () => {
     })
   }
 
+  const addFriend = () => {
+    FriendRequestService.sendRequest(
+      (selected as DirectMessage).friend?.id ?? ""
+    )
+      .then((res) => {
+        // setSelected((obj) => {
+        //   return { ...(obj as DirectMessage), pending: true, isFriend: false }
+        // })
+
+        setDMList((prevDmList) => {
+          return prevDmList.map((dm) => {
+            if (dm.id === (selected as DirectMessage).id) {
+              dm.isFriend = false
+              dm.pending = true
+              setSelected(dm)
+            }
+            return dm
+          })
+        })
+        socket?.emit("friendReqAction", {
+          data: selected as DirectMessage,
+        })
+      })
+      .catch((err) => {})
+  }
+
+  const unfriend = () => {
+    FriendService.removeFriend({
+      senderID: (selected as DirectMessage).senderID,
+      receiverID: (selected as DirectMessage).receiverID,
+    })
+      .then((res) => {
+        socket?.emit("unfriend", { data: selected as DirectMessage })
+        socket?.emit("friendAction", { data: selected as DirectMessage })
+      })
+      .catch((err) => {})
+  }
+
+  const cancleReq = () => {
+    FriendRequestService.deleteRequest({
+      senderID: (selected as DirectMessage).senderID,
+      receiverID: (selected as DirectMessage).receiverID,
+    })
+      .then((res) => {
+        setSelected((obj) => {
+          return { ...(obj as DirectMessage), pending: false, isFriend: false }
+        })
+      })
+      .catch((err) => {})
+  }
+
   const [channelConfDialog, setChannelConfDialog] = useState(true)
   //   if (isLoading.dm || isLoading.room)
   //     return (
@@ -458,6 +531,9 @@ const Page: NextPageWithLayout = () => {
               unblock: unBlock,
               mute: onMute,
               unmute: unmute,
+              addFriend: addFriend,
+              removFriend: unfriend,
+              cancleReq: cancleReq,
             }}
           />
         </div>

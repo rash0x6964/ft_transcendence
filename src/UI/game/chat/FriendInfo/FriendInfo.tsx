@@ -10,6 +10,9 @@ type Props = {
     unblock: () => void
     mute: () => void
     unmute: () => void
+    addFriend: () => void
+    removFriend: () => void
+    cancleReq: () => void
   }
 }
 

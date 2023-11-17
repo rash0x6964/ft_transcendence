@@ -4,6 +4,10 @@ import RP from "@/components/svgs/RP"
 import User from "@/models/User.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import DMService from "@/services/DirectMessageService"
+import FriendRequestService from "@/services/FriendRequest.service"
+import { useContext } from "react"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import FriendService from "@/services/Friend.service"
 
 type Props = {
   dm: DirectMessage
@@ -12,23 +16,19 @@ type Props = {
     unblock: () => void
     mute: () => void
     unmute: () => void
+    addFriend: () => void
+    removFriend: () => void
+    cancleReq: () => void
   }
 }
 
 export default function FriendCard({ dm, takeAction }: Props) {
+  const socket = useContext(WebSocketContext)
   const friend: User | undefined = dm?.friend
 
   const obj: { senderID: string; receiverID: string } = {
     senderID: dm?.senderID,
     receiverID: dm?.receiverID,
-  }
-
-  const addFriend = () => {
-
-  }
-
-  const unfriend = () => {
-    
   }
 
   const block = () => {
@@ -69,6 +69,14 @@ export default function FriendCard({ dm, takeAction }: Props) {
       .catch((err) => {})
   }
 
+  const uiFriendShip = () => {
+    if (dm?.isFriend)
+      return <FriendAction action="Unfriend" onclick={takeAction.removFriend} />
+    else if (dm?.pending)
+      return <FriendAction action="Pending" onclick={takeAction.cancleReq} />
+    else return <FriendAction action="Add friend" onclick={takeAction.addFriend} />
+  }
+
   return (
     <div className=" gradient-border-2 w-96 max-h-[465px] drop-shadow-lg flex flex-col items-center justify-around p-10">
       <Avatar
@@ -87,11 +95,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
       </div>
 
       <div className="flex w-full space justify-around ">
-        {true ? (
-          <FriendAction action="Unfriend" onclick={unfriend} />
-        ) : (
-          <FriendAction action="Add friend" onclick={addFriend} />
-        )}
+        {uiFriendShip()}
         {dm?.blockStatus == "NONE" ||
         (dm?.blockStatus == "SENDER" && dm.senderID == dm?.friend?.id) ||
         (dm?.blockStatus == "RECEIVER" && dm.receiverID == dm?.friend?.id) ? (

@@ -23,7 +23,7 @@ interface Channel {
   message: Message[]
 
   role?: "OWNER" | "ADMINISTRATOR" | "MEMBER"
-  isMemberber?: boolean
+  isMember?: boolean
   muteDuration?: number
 }
 

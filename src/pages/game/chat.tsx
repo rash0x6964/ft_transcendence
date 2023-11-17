@@ -192,7 +192,7 @@ const Page: NextPageWithLayout = () => {
     }
 
     const _ubannedFromChannel = (data: any) => {
-      data.channel["isMemberber"] = true
+      data.channel["isMember"] = true
       data.channel["role"] = data.role
 
       setTempChannelList((prevChannelList) => {

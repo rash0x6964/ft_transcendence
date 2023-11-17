@@ -1,44 +1,26 @@
 import React from "react"
 import { useState } from "react"
 import GameModButton from "./GameModButton"
+import GameMod from "@/types/GameMod"
 
 type Props = {
-  onChange?: ({ name, src }: { name: string; src: string }) => any
+  gameMods: GameMod[]
+  value: string
+  onChange?: (gameModName: string) => void
   className?: string
   disabled?: boolean
 }
 export default function GameModBar({
+  gameMods,
+  value,
   onChange,
   className,
   disabled = false,
 }: Props) {
-  const handleChange = (i: number) => {
-    setSelectedIndex(i)
-    onChange && onChange(gameMods[i])
+  const handleChange = (gameModName: string) => {
+    onChange && onChange(gameModName)
   }
-  const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  let gameMods = [
-    {
-      name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
-    },
-    {
-      name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
-    },
-    {
-      name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
-    },
-    {
-      name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
-    },
-    {
-      name: "Normal",
-      src: "https://steamavatar.io/img/14777429717elSu.jpg",
-    },
-  ]
+
   return (
     <div
       className={`flex flex-col   rounded-xl px-3 pt-3 border shadow border-[#4D4D4D] ${
@@ -51,12 +33,12 @@ export default function GameModBar({
             <GameModButton
               disabled={disabled}
               onClick={() => {
-                !disabled && handleChange(i)
+                !disabled && handleChange(gameMod.name)
               }}
               key={"gameMod-" + i}
               gameMod={gameMod.name}
               img={gameMod.src}
-              selected={selectedIndex == i}
+              selected={gameMod.name == value}
             />
           )
         })}

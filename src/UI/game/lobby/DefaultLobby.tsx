@@ -12,12 +12,16 @@ import ProfileData from "@/models/ProfileData.model"
 import { LobbyContext } from "@/UI/LobbyProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
+import GameMod from "@/types/GameMod"
 type Props = {
   className?: string
   handleRadioChange: (data: string) => void
   radios: string[]
   profile: ProfileData
   ranked: string
+  handleGameModChange: (data: string) => void
+  gameModes: GameMod[]
+  gameModValue: string
 }
 export default function DefaultLobby({
   className,
@@ -25,6 +29,9 @@ export default function DefaultLobby({
   radios,
   profile,
   ranked,
+  handleGameModChange,
+  gameModes,
+  gameModValue,
 }: Props) {
   const [dialogueClose, setDialogueClose] = useState(true)
   const { queueState, timerState }: { queueState: any; timerState: any } =
@@ -43,7 +50,7 @@ export default function DefaultLobby({
       token: CookiesService.getJwtCookie(),
       data: {
         rating: profile.profile.rating,
-        gameMode: "normal",
+        gameMode: gameModValue,
         ranked: ranked == "Ranked",
       },
     })
@@ -89,11 +96,14 @@ export default function DefaultLobby({
             className="flex gap-4 mx-auto "
             onChange={handleRadioChange}
             radios={radios}
-            defaultVal={ranked}
+            value={ranked}
             glow={true}
           />
 
           <GameModBar
+            gameMods={gameModes}
+            value={gameModValue}
+            onChange={handleGameModChange}
             disabled={inQueue}
             className={`w-fit mx-auto  bg-secondary `}
           />

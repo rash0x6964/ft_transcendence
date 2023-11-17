@@ -49,7 +49,10 @@ export default function RoomSec({ selectedChannel }: Props) {
     if (selectedChannel.visibility == "PROTECTED" && currPassword == "") {
       setErrorLog(["you left one fild empty current password"])
       return
-    } else if (selectedChannel.visibility == "PROTECTED" && currPassword != "") {
+    } else if (
+      selectedChannel.visibility == "PROTECTED" &&
+      currPassword != ""
+    ) {
       body["oldPass"] = currPassword
     }
 
@@ -79,7 +82,7 @@ export default function RoomSec({ selectedChannel }: Props) {
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 px-5 pb-5 flex flex-col gap-5">
       <p className="text-base my-5">Channel Sec</p>
-      {(selectedChannel.visibility == "PROTECTED") && (
+      {selectedChannel.visibility == "PROTECTED" && (
         <Input
           placeholder="Current password"
           icon={
@@ -94,7 +97,9 @@ export default function RoomSec({ selectedChannel }: Props) {
           onChange={(e) => setCurrPassword(e.target.value)}
         />
       )}
-      {(visibility == "PUBLIC" || (selectedChannel.visibility == "PROTECTED" && visibility != "PRIVATE")) && (
+      {(visibility == "PUBLIC" ||
+        (selectedChannel.visibility == "PROTECTED" &&
+          visibility != "PRIVATE")) && (
         <Input
           placeholder="New passowrd"
           icon={
@@ -110,7 +115,7 @@ export default function RoomSec({ selectedChannel }: Props) {
         />
       )}
       <RadioGroup
-        defaultVal={
+        value={
           visibility.toLowerCase().charAt(0).toUpperCase() +
           visibility.toLowerCase().slice(1)
         }

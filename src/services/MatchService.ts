@@ -8,32 +8,42 @@ class MatchService {
   private endpoint = "/match"
 
   getAllMatches(): Promise<Match[]> {
-    return HttpClient.get(`${this.endpoint}`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}`).then((result) => result.data)
   }
 
   getAllMatchesById(id: string): Promise<Match[]> {
-    return HttpClient.get(`${this.endpoint}/${id}`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}/${id}`).then(
+      (result) => result.data
+    )
+  }
+
+  getVsMatchesByIdByOffset(id: string, offset: number): Promise<Match[]> {
+    return HttpClient.get(`${this.endpoint}/vs/${id}?offset=${offset}`).then(
+      (result) => result.data
+    )
   }
 
   getAllMatchesByIdByOffset(id: string, offset: number): Promise<Match[]> {
     return HttpClient.get(
       `${this.endpoint}/offset/${id}?offset=${offset}`
-    ).then(result => result.data)
+    ).then((result) => result.data)
   }
 
   getLatestMatches(take: number): Promise<Match[]> {
     return HttpClient.get(`${this.endpoint}/latest/${take}`).then(
-      result => result.data
+      (result) => result.data
     )
   }
 
   getStats() {
-    return HttpClient.get(`${this.endpoint}/stats`).then(result => result.data)
+    return HttpClient.get(`${this.endpoint}/stats`).then(
+      (result) => result.data
+    )
   }
 
   getStatsById(id: string) {
     return HttpClient.get(`${this.endpoint}/stats/${id}`).then(
-      result => result.data
+      (result) => result.data
     )
   }
 

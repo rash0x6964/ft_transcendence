@@ -19,7 +19,6 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Message from "@/models/Message.model"
 import FriendRequestService from "@/services/FriendRequest.service"
 import FriendService from "@/services/Friend.service"
-import { Flamenco } from "next/font/google"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -91,6 +90,7 @@ const Page: NextPageWithLayout = () => {
   }, [router])
 
   useEffect(() => {
+    setIsLoading({ dm: true, room: true })
     DMService.getDMList()
       .then(({ data }: { data: DirectMessage[] }) => {
         initBlockedUser(data)
@@ -131,8 +131,8 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     let timeout: any
-    setIsLoading({ dm: true, room: true })
     if (searchFor != "") {
+      setIsLoading({ dm: true, room: true })
       timeout = setTimeout(() => {
         setDMList(
           DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
@@ -154,7 +154,7 @@ const Page: NextPageWithLayout = () => {
           })
       }, 1000)
     } else {
-      setIsLoading({ dm: false, room: false })
+      //   setIsLoading({ dm: false, room: false })
       setDMList(tempDMList)
       setChannelList(tempChannelList)
     }

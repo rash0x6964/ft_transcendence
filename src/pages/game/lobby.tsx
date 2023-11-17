@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { NextPageWithLayout } from "../_app"
 import { ReactElement } from "react"
 import Layout from "@/UI/Layout"
@@ -16,29 +16,59 @@ const Page: NextPageWithLayout = () => {
   const { profileData: profile, setProfileData } = useContext(ProfileContext)
   const { lobby }: { lobby: Lobby; queueState: any; timerState: any } =
     useContext(LobbyContext)
-
-  let radios: string[] = ["Ranked", "Unranked"]
   const [ranked, setRanked] = useState("Unranked")
+  const [gameMod, setGameMod] = useState("Normal")
+
+  const radios: string[] = ["Ranked", "Unranked"]
+  let gameMods = [
+    {
+      name: "Normal",
+      src: "https://ninjoo.com/cdn/shop/products/Halfmoon3_800x800.png?v=1629977279",
+    },
+    {
+      name: "Speed Demons",
+      src: "https://thumbs.dreamstime.com/b/vector-abstract-futuristic-high-speed-illustration-digital-technology-colorful-background-concept-129976555.jpg",
+    },
+  ]
 
   const handleRadioChange = (data: string) => {
     setRanked(data)
     if (!lobby) return
-    let tmpLobby = lobby
 
-    tmpLobby.ranked = data == "Ranked"
+    lobby.ranked = data == "Ranked"
     socket?.emit("lobbyChange", {
       token: CookiesService.getJwtCookie(),
-      data: tmpLobby,
+      data: lobby,
     })
   }
 
+  const handleGameModChange = (name: string) => {
+    setGameMod(name)
+
+    if (!lobby) return
+    lobby.mode = name
+    socket?.emit("lobbyChange", {
+      token: CookiesService.getJwtCookie(),
+      data: lobby,
+    })
+  }
+
+  useEffect(() => {
+    if (!lobby) return
+    setRanked(lobby.ranked ? "Ranked" : "Unranked")
+    setGameMod(lobby.mode)
+  }, [lobby])
+
   if (lobby && lobby.lobbySate == "ingame") return <GameLobby lobby={lobby} />
-//   if (lobby && lobby.lobbySate == "finished") return <EndGame lobby={lobby} />
 
   if (lobby && lobby.lobbySate != "ingame")
     return (
       <PlayersLobby
+        gameModValue={gameMod}
+        gameModes={gameMods}
+        ranked={ranked}
         lobby={lobby}
+        handleGameModChange={handleGameModChange}
         handleRadioChange={handleRadioChange}
         radios={radios}
       />
@@ -46,6 +76,9 @@ const Page: NextPageWithLayout = () => {
   else if (profile)
     return (
       <DefaultLobby
+        gameModValue={gameMod}
+        gameModes={gameMods}
+        handleGameModChange={handleGameModChange}
         handleRadioChange={handleRadioChange}
         profile={profile}
         radios={radios}

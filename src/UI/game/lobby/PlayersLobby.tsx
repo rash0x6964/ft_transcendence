@@ -12,17 +12,26 @@ import { useContext, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import { LobbyContext } from "@/UI/LobbyProvider"
+import GameMod from "@/types/GameMod"
 
 type Props = {
   className?: string
   lobby: Lobby
-  handleRadioChange: (data: string) => void
+  ranked: string
   radios: string[]
+  handleRadioChange: (data: string) => void
+  handleGameModChange: (data: string) => void
+  gameModes: GameMod[]
+  gameModValue: string
 }
 export default function PlayersLobby({
+  handleGameModChange,
+  gameModes,
+  gameModValue,
+  handleRadioChange,
+  ranked,
   className,
   lobby,
-  handleRadioChange,
   radios,
 }: Props) {
   const socket = useContext(WebSocketContext)
@@ -80,17 +89,20 @@ export default function PlayersLobby({
         </div>
       )}
 
-      {!lobby.queueLobby && lobby.lobbySate == "idle" && (
+      {lobby.lobbySate == "idle" && (
         <div className="flex flex-col flex-1 justify-around">
           <RadioGroup
             disabled={!lobby?.isOwner}
             className="flex gap-4 mx-auto "
             onChange={handleRadioChange}
             radios={radios}
-            defaultVal={"Unranked"}
+            value={ranked}
             glow={true}
           />
           <GameModBar
+            value={gameModValue}
+            onChange={handleGameModChange}
+            gameMods={gameModes}
             disabled={!lobby?.isOwner}
             className={`w-fit mx-auto  bg-secondary  `}
           />

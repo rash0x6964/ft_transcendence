@@ -36,6 +36,10 @@ class ChannelUserService {
       `${this.endPoint}/kick?channelID=${channelID}&userID=${userID}`
     )
   }
+
+  updateRole(data: any) {
+    return HttpClient.patch(`${this.endPoint}`, data)
+  }
 }
 
 export default new ChannelUserService()

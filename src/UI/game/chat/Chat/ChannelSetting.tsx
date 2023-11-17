@@ -7,17 +7,33 @@ import RoomSec from "./ChannelConf/RoomSec"
 import DelRoom from "./ChannelConf/DelRoom"
 import BannedList from "./ChannelConf/BannedList"
 import { Channel } from "@/models/Channel.model"
+import RoleManagement from "./ChannelConf/RoleManagement"
 
 type Props = {
   close: (e: any) => void
   channel: Channel
 }
 
-export default function ChannelSetting({
-  close,
-  channel,
-}: Props) {
-  const [selected, setSelectedBtn] = useState<"CHANNEL" | "BANLIST">("CHANNEL")
+export default function ChannelSetting({ close, channel }: Props) {
+  const [selected, setSelectedBtn] = useState<
+    "CHANNEL" | "BANLIST" | "ROLE MANAGEMENT"
+  >("CHANNEL")
+
+  const taps = (selected: string) => {
+    if (selected === "CHANNEL") {
+      return (
+        <>
+          <UpdateRoomInfo selectedChannel={channel} />
+          <RoomSec selectedChannel={channel} />
+          <DelRoom selectedChannel={channel} />
+        </>
+      )
+    } else if (selected === "BANLIST") {
+      return <BannedList channelId={channel.id} />
+    } else if (selected === "ROLE MANAGEMENT") {
+      return <RoleManagement channelId={channel.id}></RoleManagement>
+    }
+  }
 
   return (
     <main
@@ -57,24 +73,18 @@ export default function ChannelSetting({
             <BanLogo width={24} height={24} />
             <p className="pl-3">Ban list</p>
           </button>
+          <button
+            className={
+              "flex py-3 rounded-xl pl-3 hover:bg-selected" +
+              (selected == "ROLE MANAGEMENT" ? " bg-selected" : " bg-secondary")
+            }
+            onClick={() => setSelectedBtn("ROLE MANAGEMENT")}
+          >
+            <BanLogo width={24} height={24} />
+            <p className="pl-3">Role Management</p>
+          </button>
         </div>
-        <div className="w-[823px] flex flex-col gap-2">
-          {selected == "CHANNEL" ? (
-            <>
-              <UpdateRoomInfo
-                selectedChannel={channel}
-              />
-              <RoomSec
-                selectedChannel={channel}
-              />
-              <DelRoom
-                selectedChannel={channel}
-              />
-            </>
-          ) : (
-            <BannedList channelId={channel.id} />
-          )}
-        </div>
+        <div className="w-[823px] flex flex-col gap-2">{taps(selected)}</div>
       </div>
     </main>
   )

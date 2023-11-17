@@ -192,7 +192,7 @@ const Page: NextPageWithLayout = () => {
     }
 
     const _ubannedFromChannel = (data: any) => {
-      data.channel["isMemeber"] = true
+      data.channel["isMemberber"] = true
       data.channel["role"] = data.role
 
       setTempChannelList((prevChannelList) => {
@@ -309,10 +309,10 @@ const Page: NextPageWithLayout = () => {
 
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
-    socket?.on("youGetUnbanned", _ubannedFromChannel)
-    socket?.on("youGetBanned", _outOfChannel)
-    socket?.on("youGetKicked", _outOfChannel)
-    socket?.on("youGetMuted", _getMuted)
+    socket?.on("YouGotUnbanned", _ubannedFromChannel)
+    socket?.on("YouGotBanned", _outOfChannel)
+    socket?.on("YouGotKicked", _outOfChannel)
+    socket?.on("YouGotMuted", _getMuted)
     socket?.on("disconnected", _disconnect)
     socket?.on("connected", _connect)
     socket?.on("directMessage", _directMessage)
@@ -328,10 +328,10 @@ const Page: NextPageWithLayout = () => {
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
-      socket?.off("youGetUnbanned", _ubannedFromChannel)
-      socket?.off("youGetBanned", _outOfChannel)
-      socket?.off("youGetKicked", _outOfChannel)
-      socket?.off("youGetMuted", _getMuted)
+      socket?.off("YouGotUnbanned", _ubannedFromChannel)
+      socket?.off("YouGotBanned", _outOfChannel)
+      socket?.off("YouGotKicked", _outOfChannel)
+      socket?.off("YouGotMuted", _getMuted)
       socket?.off("disconnected", _disconnect)
       socket?.off("connected", _connect)
       socket?.off("directMessage", _directMessage)
@@ -370,8 +370,7 @@ const Page: NextPageWithLayout = () => {
   const roomJoined = (data: Channel) => {
     setTempChannelList((prevChannelList) => prevChannelList.concat(data))
     setSelected(data)
-    if (searchFor === "")
-      set_Refresh((prev) => !prev)
+    if (searchFor === "") set_Refresh((prev) => !prev)
     setDialogueState(true)
   }
 
@@ -533,12 +532,16 @@ const Page: NextPageWithLayout = () => {
         />
       </div>
       <div className="flex-1 flex flex-col   h-full">
-        { selected ? <InnerChat
-          blockedUsers={blockedUsers}
-          isChannel={isChannel()}
-          onInfoClick={() => setShowInfo((prev) => !prev)}
-          channelData={selected}
-        /> : <></> }
+        {selected ? (
+          <InnerChat
+            blockedUsers={blockedUsers}
+            isChannel={isChannel()}
+            onInfoClick={() => setShowInfo((prev) => !prev)}
+            channelData={selected}
+          />
+        ) : (
+          <></>
+        )}
       </div>
       {isChannel() && showInfo && (
         <div className=" h-full w-96">
@@ -557,18 +560,22 @@ const Page: NextPageWithLayout = () => {
       )}
       {!isChannel() && showInfo && (
         <div className=" h-full w-96">
-          {selected ? <FriendInfo
-            dm={selected as DirectMessage}
-            takeAction={{
-              block: onBlock,
-              unblock: unBlock,
-              mute: onMute,
-              unmute: unmute,
-              addFriend: addFriend,
-              removFriend: unfriend,
-              cancleReq: cancleReq,
-            }}
-          /> : <></> }
+          {selected ? (
+            <FriendInfo
+              dm={selected as DirectMessage}
+              takeAction={{
+                block: onBlock,
+                unblock: unBlock,
+                mute: onMute,
+                unmute: unmute,
+                addFriend: addFriend,
+                removFriend: unfriend,
+                cancleReq: cancleReq,
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       )}
 

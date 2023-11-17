@@ -41,7 +41,7 @@ export default function ChannelInvite({
         setChannel(null)
       })
   }, [])
-  if (channel == undefined)
+  if (channel === null)
     return (
       <div
         className={`bg-mirage text-xs w-72 border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}
@@ -49,7 +49,7 @@ export default function ChannelInvite({
         <span className="my-auto ">Channel has been deleted</span>
       </div>
     )
-  if (channel == null)
+  if (channel === undefined)
     return (
       <div
         className={`bg-mirage text-xs w-72 border h-28 flex gap-2   rounded-md justify-center  border-gray-600 p-3  ${className}`}

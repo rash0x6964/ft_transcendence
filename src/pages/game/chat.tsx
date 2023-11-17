@@ -30,13 +30,14 @@ const Page: NextPageWithLayout = () => {
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
+  const [_refresh, set_Refresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
 
   const [searchFor, setSearchFor] = useState("")
-  const [invite, setInvite] = useState(false)
+  // const [invite, setInvite] = useState(false)
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
     room: false,
@@ -64,9 +65,16 @@ const Page: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
+    setDMList(tempDMList)
+    setChannelList(tempChannelList)
     if (channelList.length) setSelected(channelList[0])
     else if (DMList.length) setSelected(DMList[0])
   }, [refresh])
+
+  useEffect(() => {
+    setDMList(tempDMList)
+    setChannelList(tempChannelList)
+  }, [_refresh])
 
   useEffect(() => {
     if (router.query?.type == "DM" && router.query?.id)
@@ -83,47 +91,48 @@ const Page: NextPageWithLayout = () => {
   }, [router])
 
   useEffect(() => {
+    DMService.getDMList()
+      .then(({ data }: { data: DirectMessage[] }) => {
+        initBlockedUser(data)
+        setTempDMList(data)
+        setDMList(data)
+        setIsLoading((obj) => {
+          return { ...obj, dm: false }
+        })
+        if (router.query?.type == "DM")
+          setSelected(data.find((x) => x.id == router.query?.id))
+        else if (data.length > 0) setSelected(data[0])
+      })
+      .catch((err) => {
+        setIsLoading((obj) => {
+          return { ...obj, dm: false }
+        })
+        //error
+      })
+
+    ChannelService.getChannelList()
+      .then(({ data }: { data: Channel[] }) => {
+        setTempChannelList(data)
+        setChannelList(data)
+        setIsLoading((obj) => {
+          return { ...obj, room: false }
+        })
+        if (router.query?.type == "channel")
+          setSelected(data.find((x) => x.id == router.query?.id))
+        else if (data.length > 0 && selected != undefined) setSelected(data[0])
+      })
+      .catch((err) => {
+        setIsLoading((obj) => {
+          return { ...obj, room: false }
+        })
+        //error
+      })
+  }, [])
+
+  useEffect(() => {
     let timeout: any
     setIsLoading({ dm: true, room: true })
-    if (searchFor == "") {
-      timeout = setTimeout(() => {
-        DMService.getDMList()
-          .then(({ data }: { data: DirectMessage[] }) => {
-            initBlockedUser(data)
-            setDMList(data)
-            setIsLoading((obj) => {
-              return { ...obj, dm: false }
-            })
-            if (router.query?.type == "DM")
-              setSelected(data.find((x) => x.id == router.query?.id))
-            else if (data.length > 0) setSelected(data[0])
-          })
-          .catch((err) => {
-            setIsLoading((obj) => {
-              return { ...obj, dm: false }
-            })
-            //error
-          })
-
-        ChannelService.getChannelList()
-          .then(({ data }: { data: Channel[] }) => {
-            setChannelList(data)
-            setIsLoading((obj) => {
-              return { ...obj, room: false }
-            })
-            if (router.query?.type == "channel")
-              setSelected(data.find((x) => x.id == router.query?.id))
-            else if (data.length > 0 && selected != undefined)
-              setSelected(data[0])
-          })
-          .catch((err) => {
-            setIsLoading((obj) => {
-              return { ...obj, room: false }
-            })
-            //error
-          })
-      }, 300)
-    } else {
+    if (searchFor != "") {
       timeout = setTimeout(() => {
         setDMList(
           DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
@@ -144,16 +153,20 @@ const Page: NextPageWithLayout = () => {
             })
           })
       }, 1000)
+    } else {
+      setIsLoading({ dm: false, room: false })
+      setDMList(tempDMList)
+      setChannelList(tempChannelList)
     }
 
     return () => {
       clearTimeout(timeout)
     }
-  }, [searchFor, invite])
+  }, [searchFor])
 
   useEffect(() => {
     const _updateSelectedChannel = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((item) => {
           if (item.id == data.id) {
             item = { ...item, ...data }
@@ -164,14 +177,16 @@ const Page: NextPageWithLayout = () => {
           return item
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _deleteChannelEvent = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.id
         })
       })
+      set_Refresh((prev) => !prev)
       setRefresh((prevState) => !prevState)
       setChannelConfDialog(true)
     }
@@ -180,21 +195,26 @@ const Page: NextPageWithLayout = () => {
       data.channel["isMemeber"] = true
       data.channel["role"] = data.role
 
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.concat(data.channel)
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _outOfChannel = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.channelID
         })
       })
+      setSearchFor((text) => {
+        if (text.length <= 0) set_Refresh((prev) => !prev)
+        return text
+      })
     }
 
     const _getMuted = (data: ChannelUser) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((item: Channel) => {
           if (item.id == data.channelID) {
             item = { ...item, muteDuration: data.duration }
@@ -205,33 +225,38 @@ const Page: NextPageWithLayout = () => {
           return item
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _connect = (userId: string) => {
-      setDMList((users) => {
+      setTempDMList((users) => {
         return users.map((user) => {
           if (user.friend?.id == userId) user.friend.onlineStatus = true
           return user
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _disconnect = (userId: string) => {
-      setDMList((users) => {
+      setTempDMList((users) => {
         return users.map((user) => {
           if (user.friend?.id == userId) user.friend.onlineStatus = false
           return user
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _directMessage = (data: DirectMessage) => {
-      if (DMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
-      setDMList((prevState) => prevState.concat(data))
+      if (tempDMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
+      setTempDMList((prevState) => prevState.concat(data))
+      set_Refresh((prev) => !prev)
+      setSelected(data)
     }
 
     const privateMsg = (data: Message) => {
-      setDMList((prevDmList) => {
+      setTempDMList((prevDmList) => {
         return prevDmList.map((DM) => {
           if (DM.id == data.directmessageID) {
             DM["message"] = data
@@ -240,10 +265,11 @@ const Page: NextPageWithLayout = () => {
           return DM
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const channelMsg = (data: Message) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((channel) => {
           if (channel.id == data.channelID) {
             channel["message"] = [data]
@@ -251,10 +277,11 @@ const Page: NextPageWithLayout = () => {
           return channel
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _blocked_unblocked_DM = (data: DirectMessage) => {
-      setDMList((prevDmList) => {
+      setTempDMList((prevDmList) => {
         return prevDmList.map((dm) => {
           if (dm.id == data.id) {
             dm.blockStatus = data.blockStatus
@@ -263,10 +290,11 @@ const Page: NextPageWithLayout = () => {
           return dm
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _unfriend = (data: DirectMessage) => {
-      setDMList((prevDmList) => {
+      setTempDMList((prevDmList) => {
         return prevDmList.map((dm) => {
           if (dm.id === data.id) {
             dm.isFriend = false
@@ -276,6 +304,7 @@ const Page: NextPageWithLayout = () => {
           return dm
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     socket?.on("channelUpdated", _updateSelectedChannel)
@@ -318,11 +347,11 @@ const Page: NextPageWithLayout = () => {
   }, [selected])
 
   const clickOnChannel = (data: Channel) => {
-    const obj = channelList.find((item) => item.id == data.id)
-    if (obj?.isMemeber == true) {
+    const obj = tempChannelList.find((item) => item.id == data.id)
+    if (obj) {
       setSelected(obj)
     } else {
-      setChannelTryingToJoin(obj)
+      setChannelTryingToJoin(data)
       setDialogueState(false)
     }
   }
@@ -333,21 +362,24 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomCreated = (data: Channel) => {
-    setChannelList((prevChannelList) => prevChannelList.concat(data))
+    setTempChannelList((prevChannelList) => prevChannelList.concat(data))
+    set_Refresh((prev) => !prev)
     setSelected(data)
   }
 
   const roomJoined = (data: Channel) => {
-    setInvite((prevInv) => !prevInv)
-    // setSearchFor("")
+    setTempChannelList((prevChannelList) => prevChannelList.concat(data))
     setSelected(data)
+    if (searchFor === "")
+      set_Refresh((prev) => !prev)
     setDialogueState(true)
   }
 
   const roomLeaved = (channel_id: string) => {
-    setChannelList((prevChannelList) =>
+    setTempChannelList((prevChannelList) =>
       prevChannelList.filter((item) => item.id != channel_id)
     )
+    set_Refresh((prev) => !prev)
     setRefresh((prevState) => !prevState)
   }
 
@@ -434,7 +466,7 @@ const Page: NextPageWithLayout = () => {
         //   return { ...(obj as DirectMessage), pending: true, isFriend: false }
         // })
 
-        setDMList((prevDmList) => {
+        setTempDMList((prevDmList) => {
           return prevDmList.map((dm) => {
             if (dm.id === (selected as DirectMessage).id) {
               dm.isFriend = false
@@ -444,6 +476,7 @@ const Page: NextPageWithLayout = () => {
             return dm
           })
         })
+        set_Refresh((prev) => !prev)
         socket?.emit("friendReqAction", {
           data: selected as DirectMessage,
         })

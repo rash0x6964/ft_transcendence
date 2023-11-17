@@ -87,7 +87,7 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
 
           return (
             <div className="h-14 w-fill bg-secondary   rounded-lg flex pl-7 pr-16 text-sm ">
-              <div className="grid grid-cols-7  flex-1">
+              <div className="grid grid-cols-7 gap-3 flex-1">
                 {/* Member */}
                 <div className="self-center col-span-3 flex gap-3">
                   <Avatar
@@ -123,7 +123,7 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
                   {/* <button className="p-3"> */}
                   {item.role === "MEMBER" ? (
                     <button
-                      className="p-3 rounded-md bg-slate-800 absolute"
+                      className="p-3 rounded-md bg-slate-800"
                       onClick={() => {
                         roleAction && roleAction(item.userID, "ADMINISTRATOR")
                       }}
@@ -132,7 +132,7 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
                     </button>
                   ) : (
                     <button
-                      className="p-3 rounded-md bg-slate-800 absolute"
+                      className="p-3 rounded-md bg-slate-800"
                       onClick={() => {
                         roleAction && roleAction(item.userID, "MEMBER")
                       }}

@@ -533,12 +533,12 @@ const Page: NextPageWithLayout = () => {
         />
       </div>
       <div className="flex-1 flex flex-col   h-full">
-        <InnerChat
+        { selected ? <InnerChat
           blockedUsers={blockedUsers}
           isChannel={isChannel()}
           onInfoClick={() => setShowInfo((prev) => !prev)}
           channelData={selected}
-        />
+        /> : <></> }
       </div>
       {isChannel() && showInfo && (
         <div className=" h-full w-96">
@@ -557,7 +557,7 @@ const Page: NextPageWithLayout = () => {
       )}
       {!isChannel() && showInfo && (
         <div className=" h-full w-96">
-          <FriendInfo
+          {selected ? <FriendInfo
             dm={selected as DirectMessage}
             takeAction={{
               block: onBlock,
@@ -568,7 +568,7 @@ const Page: NextPageWithLayout = () => {
               removFriend: unfriend,
               cancleReq: cancleReq,
             }}
-          />
+          /> : <></> }
         </div>
       )}
 

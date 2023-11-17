@@ -5,6 +5,7 @@ import { ChannelUser } from "@/models/Channel.model"
 import ChannelUserService from "@/services/ChannelUser.service"
 import React, { useContext, useEffect, useState } from "react"
 import cookieService from "@/services/CookiesService"
+import Check from "@/components/svgs/Check"
 
 export default function RoleManagement({ channelId }: { channelId: string }) {
   const socket = useContext(WebSocketContext)
@@ -68,11 +69,11 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
         <p>Members list</p>
         <br />
         {channelMembers.length > 1 ? (
-          <div className=" grid grid-cols-6 w-fill pl-7 pr-16 text-sm text-slate-600">
-            <span className="col-span-3 pr-60">Member</span>
-            <span className=" col-span-1">Join Date</span>
-            <span className="col-span-1">Member Since</span>
-            <span className="col-span-1">role</span>
+          <div className=" grid grid-cols-12 w-fill pl-7  text-sm text-slate-600">
+            <span className="col-span-4 pr-60">Member</span>
+            <span className="col-span-2 ">Join Date</span>
+            <span className="col-span-2">Member Since</span>
+            <span className="col-span-2">Role</span>
           </div>
         ) : (
           <p className="text-center opacity-25">No one banned</p>
@@ -86,62 +87,60 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
           if (item.role === "OWNER") return
 
           return (
-            <div className="h-14 w-fill bg-secondary   rounded-lg flex pl-7 pr-16 text-sm ">
-              <div className="grid grid-cols-7 gap-3 flex-1">
-                {/* Member */}
-                <div className="self-center col-span-3 flex gap-3">
-                  <Avatar
-                    key={item.userID}
-                    className="w-8 h-8"
-                    src={item.user?.avatarUrl}
-                    alt={item.user?.userName}
-                  />
-                  <span className="self-center">{item.user?.userName}</span>
-                </div>
+            <div className="h-14 w-fill bg-secondary  grid grid-cols-12  rounded-lg  pl-7  gap-3 flex-1 text-sm ">
+              {/* Member */}
+              <div className="self-center flex gap-3 col-span-4">
+                <Avatar
+                  key={item.userID}
+                  className="w-8 h-8"
+                  src={item.user?.avatarUrl}
+                  alt={item.user?.userName}
+                />
+                <span className="my-auto">{item.user?.userName}</span>
+              </div>
 
-                {/* Join Date */}
-                <div className="self-center col-span-1 flex gap-3">
-                  <span className="self-center">
-                    {`${new Date(item.joinedAt).getFullYear()}/${new Date(
-                      item.joinedAt
-                    ).getMonth()}/${new Date(item.joinedAt).getDay()}`}
-                  </span>
-                </div>
+              {/* Join Date */}
+              <div className="  col-span-2 self-center">
+                <span className="my-auto">
+                  {`${new Date(item.joinedAt).getFullYear()}/${new Date(
+                    item.joinedAt
+                  ).getMonth()}/${new Date(item.joinedAt).getDay()}`}
+                </span>
+              </div>
 
-                {/* Member Since */}
-                <div className="self-center col-span-1 flex gap-3">
-                  <span>{to_year} Years ago</span>
-                </div>
+              {/* Member Since */}
+              <div className=" col-span-2 self-center">
+                <span className="">{to_year} Years ago</span>
+              </div>
 
-                {/* role */}
-                <div className="self-center col-span-1 flex gap-3">
-                  <span>{item.role.toLowerCase()}</span>
-                </div>
+              {/* role */}
+              <div className=" col-span-2 self-center">
+                <span className=" capitalize">{item.role.toLowerCase()}</span>
+              </div>
 
-                {/* Unblock */}
-                <div className="self-center col-span-1 flex gap-3">
-                  {/* <button className="p-3"> */}
-                  {item.role === "MEMBER" ? (
-                    <button
-                      className="p-3 rounded-md bg-slate-800"
-                      onClick={() => {
-                        roleAction && roleAction(item.userID, "ADMINISTRATOR")
-                      }}
-                    >
-                      set as admin
-                    </button>
-                  ) : (
-                    <button
-                      className="p-3 rounded-md bg-slate-800"
-                      onClick={() => {
-                        roleAction && roleAction(item.userID, "MEMBER")
-                      }}
-                    >
-                      <UnblockAtList key={item.userID} width={16} height={16} />
-                    </button>
-                  )}
-                  {/* </button> */}
-                </div>
+              {/* Unblock */}
+              <div className=" ">
+                {/* <button className="p-3"> */}
+                {item.role === "MEMBER" ? (
+                  <button
+                    className="p-3 rounded-md bg-slate-800"
+                    onClick={() => {
+                      roleAction && roleAction(item.userID, "ADMINISTRATOR")
+                    }}
+                  >
+                    <Check width={16} height={16} />
+                  </button>
+                ) : (
+                  <button
+                    className="p-3 rounded-md bg-slate-800"
+                    onClick={() => {
+                      roleAction && roleAction(item.userID, "MEMBER")
+                    }}
+                  >
+                    <UnblockAtList key={item.userID} width={16} height={16} />
+                  </button>
+                )}
+                {/* </button> */}
               </div>
             </div>
           )

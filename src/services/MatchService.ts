@@ -3,6 +3,7 @@ import { HttpClient } from "./HttpClient"
 import userService from "./UsersService"
 import MatchDisplayData from "@/types/MatchDisplayData"
 import ProfileData from "@/models/ProfileData.model"
+import { timePipe } from "@/pipes/date.pipes"
 
 class MatchService {
   private endpoint = "/match"
@@ -62,6 +63,7 @@ class MatchService {
           match.winnerID === current.id ? match.loserID : match.winnerID
         const enemy = await userService.getById(enemyId)
         const days = datediff(new Date(match.date).getTime(), Date.now())
+        const elapsedTime = timePipe(match.duration)
 
         return Promise.resolve({
           p_1: {
@@ -82,6 +84,7 @@ class MatchService {
           type: match.ranked ? "Ranked" : "Normal",
           days,
           id: match.id,
+          duration: elapsedTime,
         })
       }
     )

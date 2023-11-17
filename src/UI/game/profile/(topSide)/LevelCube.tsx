@@ -8,7 +8,7 @@ type Props = {
 
 export default function LevelCube({ percentage, level, className }: Props) {
   return (
-    <div title={`${percentage}%`} className={className}>
+    <div title={`${percentage.toFixed(2)}%`} className={className}>
       <div className="flex flex-col items-center gap-8  ">
         <div className="w-16 h-16 relative  mr-4">
           <div className="w-16 h-16 rotate-45 bg-secondary-400 absolute border-white border-[1px]"></div>

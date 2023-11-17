@@ -13,6 +13,7 @@ import { LobbyContext } from "@/UI/LobbyProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import GameMod from "@/types/GameMod"
+import Head from "next/head"
 type Props = {
   className?: string
   handleRadioChange: (data: string) => void
@@ -68,6 +69,9 @@ export default function DefaultLobby({
   }
   return (
     <>
+      <Head>
+        <title>Pong Fury | lobby</title>
+      </Head>
       <Dialogue
         onBackDropClick={() => setDialogueClose(true)}
         closed={dialogueClose}

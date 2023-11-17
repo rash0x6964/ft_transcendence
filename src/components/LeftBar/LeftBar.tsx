@@ -7,7 +7,13 @@ import Menu from "../svgs/Menu"
 import Chat from "../svgs/Chat"
 import LeaderBoard from "../svgs/LeaderBoard"
 import Button from "./Button"
-import Link from "next/link"
+import Bell from "../svgs/Bell"
+import { motion, AnimatePresence } from "framer-motion"
+import Avatar from "../BaseComponents/Avatar"
+import DialButton from "@/UI/game/chat/ChatBar/DialogueBoxes/DialButton"
+import Check from "../svgs/Check"
+import Cross2 from "../svgs/Cross2"
+import NotificationBox from "@/UI/game/chat/ChatBar/DialogueBoxes/NotificationBox"
 
 type Props = {
   className?: string
@@ -32,18 +38,29 @@ export default function LeftBar({ className }: Props) {
       href: "/game/leaderboard",
     },
   ]
+
+  const [showNotif, setShowNotif] = useState(false)
   return (
-    <div className={className}>
-      <div className="flex flex-col gap-6">
-        {links.map((link, i) => (
-          <Button key={`link-${i}`} href={link.href} icon={link.icon} />
-        ))}
+    <>
+      <AnimatePresence>{showNotif && <NotificationBox />}</AnimatePresence>
+
+      <div className={className}>
+        <div className="flex flex-col gap-6">
+          {links.map((link, i) => (
+            <Button key={`link-${i}`} href={link.href} icon={link.icon} />
+          ))}
+        </div>
+        <div className="flex flex-col gap-y-4">
+          <button
+            onClick={() => setShowNotif((prev) => !prev)}
+            className="mx-auto hover:opacity-60 transition-opacity"
+          >
+            <Notif />
+          </button>
+          <div className="mx-auto w-[40px] h-[1px] bg-slate-700 "></div>
+          <Sound className="mx-auto cursor-pointer" />
+        </div>
       </div>
-      <div className="flex flex-col gap-y-4">
-        <Notif className="mx-auto cursor-pointer" />
-        <div className="mx-auto w-[40px] h-[1px] bg-slate-700 "></div>
-        <Sound className="mx-auto cursor-pointer" />
-      </div>
-    </div>
+    </>
   )
 }

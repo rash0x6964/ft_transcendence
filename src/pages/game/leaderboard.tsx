@@ -11,12 +11,16 @@ import MainButton from "@/components/BaseComponents/MainButton"
 
 const Page: NextPageWithLayout = () => {
   const [leaderboard, setLeaderboard] = useState<ProfileLeaderboardData[]>([])
-  const [shouldLoadMore, setShouldLoadMore] = useState(true)
+  const [shouldLoadMore, setShouldLoadMore] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const _leaderboard = await profileService.getLeaderboard()
+
+        if (_leaderboard.length < 10) setShouldLoadMore(false)
+        else setShouldLoadMore(true)
+
         setLeaderboard(_leaderboard)
       } catch (error) {
         console.log("Couldn't fetch leaderboard")

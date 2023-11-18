@@ -12,7 +12,7 @@ type Props = {
 
 export default function MatchHistory({ profileData }: Props) {
   const [matches, setMatches] = useState<MatchDisplayData[]>([])
-  const [shouldLoadMore, setShouldLoadMore] = useState(true)
+  const [shouldLoadMore, setShouldLoadMore] = useState(false)
 
   useEffect(() => {
     if (!profileData) return
@@ -23,6 +23,9 @@ export default function MatchHistory({ profileData }: Props) {
           profileData.id,
           0
         )
+        if (matchModels.length < 5) setShouldLoadMore(false)
+        else setShouldLoadMore(true)
+
         setMatches(await matchService.getMatchProps(profileData, matchModels))
       } catch (error) {
         console.log("Couldn't fetch matches")
@@ -55,7 +58,7 @@ export default function MatchHistory({ profileData }: Props) {
     <div className="m-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
-        {matches.map((match) => (
+        {matches.map(match => (
           <MatchEntry key={match.id} match={match} />
         ))}
       </div>

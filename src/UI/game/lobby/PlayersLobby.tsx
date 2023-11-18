@@ -13,6 +13,7 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import { LobbyContext } from "@/UI/LobbyProvider"
 import GameMod from "@/types/GameMod"
+import { Head } from "next/document"
 
 type Props = {
   className?: string

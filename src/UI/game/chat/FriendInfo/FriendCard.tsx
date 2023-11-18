@@ -4,6 +4,10 @@ import RP from "@/components/svgs/RP"
 import User from "@/models/User.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import DMService from "@/services/DirectMessageService"
+import FriendRequestService from "@/services/FriendRequest.service"
+import { useContext } from "react"
+import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import FriendService from "@/services/Friend.service"
 
 type Props = {
   dm: DirectMessage
@@ -12,10 +16,14 @@ type Props = {
     unblock: () => void
     mute: () => void
     unmute: () => void
+    addFriend: () => void
+    removFriend: () => void
+    cancleReq: () => void
   }
 }
 
 export default function FriendCard({ dm, takeAction }: Props) {
+  const socket = useContext(WebSocketContext)
   const friend: User | undefined = dm?.friend
 
   const obj: { senderID: string; receiverID: string } = {
@@ -23,28 +31,28 @@ export default function FriendCard({ dm, takeAction }: Props) {
     receiverID: dm?.receiverID,
   }
 
-  const addFriend = () => {}
-  const unfriend = () => {}
   const block = () => {
     DMService.blockUser(obj)
       .then((res) => {
-        console.log("res:", res.data)
+        // console.log("res:", res.data)
         takeAction.block()
       })
       .catch((err) => {
-        console.log("err:", err.data)
+        // console.log("err:", err.data)
       })
   }
+
   const unblock = () => {
     DMService.unBlockUser(obj)
       .then((res) => {
-        console.log("res:", res.data)
+        // console.log("res:", res.data)
         takeAction.unblock()
       })
       .catch((err) => {
-        console.log("err:", err.data)
+        // console.log("err:", err.data)
       })
   }
+
   const mute = () => {
     DMService.muteUser(obj)
       .then((res) => {
@@ -52,12 +60,21 @@ export default function FriendCard({ dm, takeAction }: Props) {
       })
       .catch((err) => {})
   }
+
   const unmute = () => {
     DMService.unMuteUser(obj)
       .then((res) => {
         takeAction.unmute()
       })
       .catch((err) => {})
+  }
+
+  const uiFriendShip = () => {
+    if (dm?.isFriend)
+      return <FriendAction action="Unfriend" onclick={takeAction.removFriend} />
+    else if (dm?.pending)
+      return <FriendAction action="Pending" onclick={takeAction.cancleReq} />
+    else return <FriendAction action="Add friend" onclick={takeAction.addFriend} />
   }
 
   return (
@@ -78,11 +95,7 @@ export default function FriendCard({ dm, takeAction }: Props) {
       </div>
 
       <div className="flex w-full space justify-around ">
-        {true ? (
-          <FriendAction action="Unfriend" onclick={unfriend} />
-        ) : (
-          <FriendAction action="Add friend" onclick={addFriend} />
-        )}
+        {uiFriendShip()}
         {dm?.blockStatus == "NONE" ||
         (dm?.blockStatus == "SENDER" && dm.senderID == dm?.friend?.id) ||
         (dm?.blockStatus == "RECEIVER" && dm.receiverID == dm?.friend?.id) ? (

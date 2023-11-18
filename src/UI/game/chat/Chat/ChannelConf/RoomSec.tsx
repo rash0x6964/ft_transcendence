@@ -47,7 +47,7 @@ export default function RoomSec({ selectedChannel }: Props) {
     }
 
     if (selectedChannel.visibility == "PROTECTED" && currPassword == "") {
-      setErrorLog(["you left one fild empty current password"])
+      setErrorLog(["Current password field is empty"])
       return
     } else if (
       selectedChannel.visibility == "PROTECTED" &&

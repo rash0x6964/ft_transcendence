@@ -19,7 +19,7 @@ type Props = {
 
 export default function UpdateRoomInfo({ selectedChannel }: Props) {
   const socket = useContext(WebSocketContext)
-  const [avatar, setAvatar] = useState("")
+  const [avatar, setAvatar] = useState("default")
   const [channelName, setChannelName] = useState("")
   const [errorLog, setErrorLog] = useState([])
 

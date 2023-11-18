@@ -29,7 +29,7 @@ export default function DelRoom({
     setErrorLog([])
 
     if (channelName != selectedChannel.name) {
-      setErrorLog(["Channel Name if wrong"])
+      setErrorLog(["Channel name is wrong"])
       return
     }
 

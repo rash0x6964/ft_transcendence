@@ -4,9 +4,10 @@ import Mute from "@/components/svgs/Mute"
 import AddUser from "@/components/svgs/DM-AddUser"
 import Unmute from "@/components/svgs/Unmute"
 import Unblock from "@/components/svgs/Unblock"
+import PendingReq from "@/components/svgs/pendingReq"
 
 type Prop = {
-  action: "Unfriend" | "Block" | "Mute" | "Add friend" | "Unmute" | "Unblock",
+  action: "Unfriend" | "Block" | "Mute" | "Add friend" | "Unmute" | "Unblock" | "Pending",
   onclick?: (e: any) => void
 }
 
@@ -22,6 +23,7 @@ export default function FriendAction({ action, onclick }: Prop) {
         {action == "Unblock" && <Unblock width={33} />}
         {action == "Mute" && <Mute />}
         {action == "Unmute" && <Unmute width={30} />}
+        {action == "Pending" && <PendingReq width={30}/>}
       </div>
       <p className="text-xs text-gray-500 self-center">{action}</p>
     </div>

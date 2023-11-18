@@ -4,6 +4,7 @@ export default interface NotifData {
 	title: string
 	imgSrc?: string
 	buttonTitle?: string
+	createdAt?: number
 	buttonEvent?: () => void
 }
 

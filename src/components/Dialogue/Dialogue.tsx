@@ -13,8 +13,18 @@ export default function Dialogue({
   children,
 }: Props & PropsWithChildren) {
   const router = useRouter()
+
   useEffect(() => {
+    let handler = (event: any) => {
+      event.preventDefault()
+      if (event.key == "Escape") onBackDropClick && onBackDropClick()
+    }
+    window.addEventListener("keydown", handler)
+
     onBackDropClick && onBackDropClick()
+    return () => {
+      window.removeEventListener("keydown", handler)
+    }
   }, [router])
   return (
     <div

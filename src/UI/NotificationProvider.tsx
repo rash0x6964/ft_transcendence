@@ -10,8 +10,13 @@ import Notification from "@/components/BaseComponents/Notification"
 import NotifData from "@/types/NotifData"
 
 export const NotifcationContext = createContext<
-  (data: NotifData) => void | null
+  (data: NotifData, insert?: boolean) => void | null
 >(() => {})
+
+export const NotifciationsContext = createContext<[NotifData[], any]>([
+  [],
+  null,
+])
 
 export default function NotificationProvider({ children }: PropsWithChildren) {
   const defaultObj: NotifData = {
@@ -20,15 +25,21 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
   }
 
   const notifTime = 3000
+  const [notifications, setNotifications] = useState<NotifData[]>([])
   const [notification, setNotication] = useState<NotifData>(defaultObj)
   const [styleData, setStyleData] = useState("-bottom-64")
   const [queuedNotif, setQueueNotification] = useState(0)
-  const notify = (data: NotifData) => {
+  const notify = (data: NotifData, insert = false) => {
+    if (insert)
+      setNotifications((prevNotifs) =>
+        prevNotifs.concat({ createdAt: Date.now(), ...data })
+      )
     if (queuedNotif > 0) {
       setTimeout(() => {
         setNotication(data)
         setQueueNotification((prevState) => prevState - 1)
       }, notifTime * queuedNotif + 1000)
+
       setQueueNotification((prevState) => prevState + 1)
     } else setNotication(data)
   }
@@ -47,12 +58,14 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
 
   return (
     <NotifcationContext.Provider value={notify}>
-      <Notification
-        onClick={() => setStyleData("-bottom-64")}
-        notifData={notification}
-        className={styleData}
-      />
-      {children}
+      <NotifciationsContext.Provider value={[notifications, setNotifications]}>
+        <Notification
+          onClick={() => setStyleData("-bottom-64")}
+          notifData={notification}
+          className={styleData}
+        />
+        {children}
+      </NotifciationsContext.Provider>
     </NotifcationContext.Provider>
   )
 }

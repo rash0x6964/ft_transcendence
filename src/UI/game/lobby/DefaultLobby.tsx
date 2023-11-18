@@ -69,9 +69,6 @@ export default function DefaultLobby({
   }
   return (
     <>
-      <Head>
-        <title>Pong Fury | lobby</title>
-      </Head>
       <Dialogue
         onBackDropClick={() => setDialogueClose(true)}
         closed={dialogueClose}

@@ -56,9 +56,6 @@ export default function PlayersLobby({
     <div
       className={`animate__animated animate__fadeIn container mx-auto flex flex-col   h-full  ${className} `}
     >
-      <Head>
-        <title>Pong Fury | lobby</title>
-      </Head>
       <div className="h-[20%]"></div>
       <div className="flex justify-center gap-4  ">
         <PlayerCard

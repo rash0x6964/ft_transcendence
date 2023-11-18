@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext, useEffect, useRef } from "react"
 import { useState } from "react"
 import Sound from "../svgs/Sound"
 import Notif from "../svgs/Notif"
@@ -14,12 +14,16 @@ import DialButton from "@/UI/game/chat/ChatBar/DialogueBoxes/DialButton"
 import Check from "../svgs/Check"
 import Cross2 from "../svgs/Cross2"
 import NotificationBox from "@/UI/game/chat/ChatBar/DialogueBoxes/NotificationBox"
+import { NotifciationsContext } from "@/UI/NotificationProvider"
 
 type Props = {
   className?: string
 }
 
 export default function LeftBar({ className }: Props) {
+  const [notifciations] = useContext(NotifciationsContext)
+
+  const boxRef = useRef<HTMLDivElement>(null)
   let links = [
     {
       icon: <Menu />,
@@ -39,10 +43,29 @@ export default function LeftBar({ className }: Props) {
     },
   ]
 
+  useEffect(() => {
+    let handler = (e: any) => {
+      if (!boxRef.current) return
+
+      if (boxRef.current.contains(e.target)) return
+
+      setShowNotif(false)
+      console.log(e.target)
+    }
+
+    document.addEventListener("mouseup", handler)
+
+    return () => {
+      document.removeEventListener("mouseup", handler)
+    }
+  })
+
   const [showNotif, setShowNotif] = useState(false)
   return (
     <>
-      <AnimatePresence>{showNotif && <NotificationBox />}</AnimatePresence>
+      <AnimatePresence>
+        {showNotif && <NotificationBox boxRef={boxRef} />}
+      </AnimatePresence>
 
       <div className={className}>
         <div className="flex flex-col gap-6">
@@ -53,8 +76,11 @@ export default function LeftBar({ className }: Props) {
         <div className="flex flex-col gap-y-4">
           <button
             onClick={() => setShowNotif((prev) => !prev)}
-            className="mx-auto hover:opacity-60 transition-opacity"
+            className="mx-auto hover:opacity-60 transition-opacity relative"
           >
+            {notifciations.length > 0 && (
+              <div className="w-2 h-2 bg-red-500 rounded-full  absolute top-1 left-0"></div>
+            )}
             <Notif />
           </button>
           <div className="mx-auto w-[40px] h-[1px] bg-slate-700 "></div>

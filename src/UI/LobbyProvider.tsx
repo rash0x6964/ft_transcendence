@@ -44,18 +44,21 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     if (!socket) return
 
     const onlobbyInvite = (data: any) => {
-      notify({
-        buttonEvent: () => {
-          socket.emit("lobbyAccept", {
-            token: CookiesService.getJwtCookie(),
-            data: data,
-          })
+      notify(
+        {
+          buttonEvent: () => {
+            socket.emit("lobbyAccept", {
+              token: CookiesService.getJwtCookie(),
+              data: data,
+            })
+          },
+          buttonTitle: "Accept",
+          title: "lobby invite",
+          message: `${data.username} invited you to lobby`,
+          imgSrc: data.avatarUrl,
         },
-        buttonTitle: "Accept",
-        title: "lobby invite",
-        message: `${data.username} invited you to lobby`,
-        imgSrc: data.avatarUrl,
-      })
+        true
+      )
     }
 
     const onLeaveLobby = (data: ProfileData) => {
@@ -108,6 +111,13 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       setInQueue(false)
     }
 
+    const onAlreadyInLobby = () => {
+      notify({
+        message: "You already joined the lobby",
+        title: "Lobby notice",
+      })
+    }
+
     socket.on("lobbyData", onLobbyCreated)
     socket.on("lobbyInvite", onlobbyInvite)
     socket.on("leaveLobby", onLeaveLobby)
@@ -116,6 +126,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     socket.on("matchStarting", onMatchStarting)
     socket.on("enterQueue", onEnterQueue)
     socket.on("leaveQueue", onLeaveQueue)
+    socket.on("alreadyInLobby", onAlreadyInLobby)
     return () => {
       socket.off("lobbyData", onLobbyCreated)
       socket.off("lobbyInvite", onlobbyInvite)
@@ -125,6 +136,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       socket.off("matchStarting", onMatchStarting)
       socket.off("enterQueue", onEnterQueue)
       socket.off("leaveQueue", onLeaveQueue)
+      socket.off("alreadyInLobby", onAlreadyInLobby)
     }
   }, [])
   return (

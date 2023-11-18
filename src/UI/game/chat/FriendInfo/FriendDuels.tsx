@@ -4,13 +4,15 @@ import { useContext, useEffect, useState } from "react"
 import MatchDisplayData from "@/types/MatchDisplayData"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
 
-type Props = { id: string; className: string }
+type Props = { id: string | null; className: string }
 
 export default function FriendDuels({ id, className }: Props) {
   const [duels, setDuels] = useState<MatchDisplayData[]>([])
   const { profileData } = useContext(ProfileContext)
 
   useEffect(() => {
+    if (!id) return
+
     const fetchData = async () => {
       try {
         const matchs = await matchService.getVsMatchesByIdByOffset(id, 0)

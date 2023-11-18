@@ -20,7 +20,7 @@ export default function FriendInfo({ dm, takeAction }: Props) {
   return (
     <div className="flex flex-col h-full">
       <FriendCard dm={dm} takeAction={takeAction} />
-      <FriendDuels id={dm?.friend?.id ?? ""} className="flex flex-col overflow-y-scroll" />
+      <FriendDuels id={dm?.friend?.id ?? null} className="flex flex-col overflow-y-scroll" />
     </div>
   )
 }

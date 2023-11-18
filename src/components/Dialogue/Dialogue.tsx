@@ -16,8 +16,9 @@ export default function Dialogue({
 
   useEffect(() => {
     let handler = (event: any) => {
+      if (event.key != "Escape") return
       event.preventDefault()
-      if (event.key == "Escape") onBackDropClick && onBackDropClick()
+      onBackDropClick && onBackDropClick()
     }
     window.addEventListener("keydown", handler)
 

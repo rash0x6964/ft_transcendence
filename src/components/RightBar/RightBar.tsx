@@ -31,42 +31,10 @@ type Props = {
 
 export default function RightBar({ className }: Props) {
   const socket = useContext(WebSocketContext)
-  const router = useRouter()
   const [dialogueClosed, setDialogueClosed] = useState(true)
   const [dialogueClosedFriends, setDialogueClosedFriends] = useState(true)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const [clicked, setClicked, position, setPosition] = useContextMenu(menuRef)
-  const [selectedData, setSelectedData] = useState<FriendStatus | null>(null)
 
-  const [friendList, setFriendList] = useRightBarSocket(socket)
-
-  const handleSendMessage = () => {
-    if (!selectedData?.friend) return
-    DMService.create(selectedData?.friend.id)
-      .then(({ data }: { data: DirectMessage }) => {
-        socket?.emit("directMessage", { data })
-        router.push(
-          {
-            pathname: "/game/chat",
-            query: {
-              type: "DM",
-              id: data.id,
-            },
-          },
-          "/game/chat"
-        )
-      })
-      .catch((err) => {})
-  }
-
-  const handleContextMenu = (
-    e: MouseEvent<HTMLDivElement>,
-    data: FriendStatus
-  ) => {
-    setSelectedData(data)
-    setClicked(true)
-    setPosition(getMenuPos(e, menuRef))
-  }
+  const [friendList] = useRightBarSocket(socket)
 
   return (
     <>

@@ -62,10 +62,20 @@ export function useRightBarSocket(
       })
     }
 
+    const onPresence = (data: any) => {
+      setFriendList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == data.sender.id && user.friend?.state)
+            user.friend.state = data.data
+          return user
+        })
+      })
+    }
+
     const onFriendAction = () => {
       setRefresh((prevState) => !prevState)
     }
-
+    socket?.on("presence", onPresence)
     socket?.on("connected", onConnect)
     socket?.on("disconnected", onDisconnect)
     socket?.on("friendAction", onFriendAction)
@@ -73,6 +83,7 @@ export function useRightBarSocket(
       socket?.off("connected", onConnect)
       socket?.off("connected", onDisconnect)
       socket?.off("friendAction", onFriendAction)
+      socket?.off("presence", onPresence)
     }
   }, [])
 

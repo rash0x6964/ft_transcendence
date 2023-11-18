@@ -10,11 +10,15 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
 import FriendStatus from "@/models/FriendStatus.model"
 import { handleFriendRemove } from "./Helpers/RightBarHandlers"
+import { ProfileContext } from "@/UI/ActiveUserProvider"
+import { NotifcationContext } from "@/UI/NotificationProvider"
+import { motion } from "framer-motion"
 type Props = {
   friendStatus?: FriendStatus
   friendData?: User
   profileRef: React.Ref<HTMLDivElement>
   className: string
+  onClick: () => void
 }
 
 export default function MiniProfile({
@@ -22,10 +26,27 @@ export default function MiniProfile({
   className,
   profileRef,
   friendData,
+  onClick,
 }: Props) {
   const router = useRouter()
   const socket = useContext(WebSocketContext)
+  const notify = useContext(NotifcationContext)
+  const { profileData } = useContext(ProfileContext)
 
+  const handleChallenge = () => {
+    socket?.emit("lobbyInvite", {
+      data: {
+        receiver: friendData?.id,
+        senderInfo: profileData,
+      },
+    })
+
+    notify({
+      title: "Lobby invite",
+      message: "Lobby invite has been sent to " + friendData?.userName,
+      imgSrc: friendData?.avatarUrl,
+    })
+  }
   const handleSendMessage = () => {
     if (!friendData) return
     DirectMessageService.create(friendData.id)
@@ -46,19 +67,22 @@ export default function MiniProfile({
   }
 
   return (
-    <div
+    <motion.div
       ref={profileRef}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ scale: 0, opacity: 0 }}
       className={`w-96  gradient-border-2     right-16 rounded-md ${className}  `}
     >
       <img
-        className="h-28 w-full bg-red-500 rounded-t-md object-cover"
+        className="h-28 w-full bg-secondary rounded-t-md object-cover"
         src={friendData?.bannerUrl}
       />
       <div className="flex flex-col items-center px-10 pb-10 -mt-10">
         <Avatar
           href={`/game/profile/${friendData?.userName}`}
           src={friendData?.avatarUrl}
-          className="w-20 h-20 border-4 border-secondary drop-shadow-none  mb-2"
+          className="w-20 h-20 border-4 border-secondary drop-shadow-none  mb-2 hover:opacity-90"
         />
 
         <p className="text-xl text-gray-300 font-medium mb-1 ">
@@ -78,17 +102,32 @@ export default function MiniProfile({
           {friendData?.onlineStatus ? friendData?.state : "Offline"}
         </p>
 
-        <div className="flex gap-8 justify-center w-full">
+        <div className="flex gap-10 justify-center w-full">
           <MiniProfileButtons
-            onClick={() => handleFriendRemove(friendStatus, socket)}
+            onClick={() => {
+              handleFriendRemove(friendStatus, socket)
+              onClick()
+            }}
             action="Unfriend"
           />
           {friendData?.onlineStatus && (
-            <MiniProfileButtons action="Challenge" />
+            <MiniProfileButtons
+              onClick={() => {
+                handleChallenge()
+                onClick()
+              }}
+              action="Challenge"
+            />
           )}
-          <MiniProfileButtons onClick={handleSendMessage} action="Message" />
+          <MiniProfileButtons
+            onClick={() => {
+              handleSendMessage()
+              onClick()
+            }}
+            action="Message"
+          />
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

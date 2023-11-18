@@ -29,7 +29,7 @@ const Page: NextPageWithLayout = () => {
   const [tempDMList, setTempDMList] = useState<DirectMessage[]>([])
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
-  const [refresh, setRefresh] = useState(true)
+  const [refreshSelection, setRefreshSelection] = useState(true)
   const [_refresh, set_Refresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
   const [mounted, setMounted] = useState(false)
@@ -62,11 +62,26 @@ const Page: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
-    setDMList(tempDMList)
-    setChannelList(tempChannelList)
-    if (channelList.length) setSelected(channelList[0])
-    else if (DMList.length) setSelected(DMList[0])
-  }, [refresh])
+    if (searchFor === "") {
+      setChannelList((prev) => {
+        if (prev.length) setSelected(prev[0])
+        return prev
+      })
+      setDMList((prev) => {
+        if (prev.length) setSelected(prev[0])
+        return prev
+      })
+    } else if (searchFor !== "") {
+      setTempChannelList((prev) => {
+        if (prev.length) setSelected(prev[0])
+        return prev
+      })
+      setTempDMList((prev) => {
+        if (prev.length) setSelected(prev[0])
+        return prev
+      })
+    }
+  }, [refreshSelection])
 
   useEffect(() => {
     setDMList(tempDMList)
@@ -188,7 +203,7 @@ const Page: NextPageWithLayout = () => {
         })
       })
       set_Refresh((prev) => !prev)
-      setRefresh((prevState) => !prevState)
+      setRefreshSelection((prevState) => !prevState)
       setChannelConfDialog(true)
     }
 
@@ -212,6 +227,7 @@ const Page: NextPageWithLayout = () => {
         if (text.length <= 0) set_Refresh((prev) => !prev)
         return text
       })
+      setRefreshSelection((prev) => !prev)
     }
 
     const _getMuted = (data: ChannelUser) => {
@@ -379,6 +395,7 @@ const Page: NextPageWithLayout = () => {
       prevChannelList.filter((item) => item.id != channel_id)
     )
     if (searchFor === "") set_Refresh((prev) => !prev)
+    setRefreshSelection((prev) => !prev)
   }
 
   const handleChange = (val: string) => {

@@ -18,12 +18,11 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
   const [src, setSrc] = useState<string>("")
   const notify: (data: NotifData) => void = useContext(NotifcationContext)
 
-  const enable2FA = async () => {
+  const get2FACode = async () => {
     try {
-      const image = await TFAService.activate2FA()
+      const image = await TFAService.get2FACode()
       setSrc(image)
       setClosed(false)
-      setHas2FA(true)
     } catch (err) {
       if (axios.isAxiosError(err)) {
         notify({
@@ -33,6 +32,22 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
         })
       }
     }
+  }
+
+  const activate2FA = async () => {
+	try {
+		await TFAService.activate2FA()
+		setClosed(true)
+		setHas2FA(true)
+	  } catch (err) {
+		if (axios.isAxiosError(err)) {
+		  notify({
+			message: "Something went wrong",
+			title: " Error",
+			type: "notice",
+		  })
+		}
+	  }
   }
 
   const disable2FA = async () => {
@@ -52,10 +67,18 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
 
   return (
     <>
-      <Dialogue onBackDropClick={() => setClosed(true)} closed={closed}>
+      <Dialogue  closed={closed}>
         <div className="gradient-border-2 p-4  min-w-[29rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
           <SectionTitle className="pl-0 text-sm" text="Scan QR code" />
           <img className="border-2 border-indigo-600" src={src} />
+		  <div className="flex justify-around mt-2">
+		   <MainButton className="w-32 py-3" onClick={activate2FA}>Confirm</MainButton >
+		   <button className="bg-red-500 w-32 py-3 text-sm font-semibold text-secondary rounded-md text-center"
+		   	onClick={() => setClosed(true)}
+		   >
+		    Cancel
+          </button>
+		  </div>
         </div>
       </Dialogue>
 
@@ -68,7 +91,7 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
           />
           <MainButton
             className="w-32 py-3"
-            onClick={has2FA ? disable2FA : enable2FA}
+            onClick={has2FA ? disable2FA : get2FACode}
           >
             {has2FA ? "Deactivate" : "Activate"}
           </MainButton>
@@ -76,7 +99,4 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
       </div>
     </>
   )
-}
-function notify(arg0: { message: any; title: string; type: string }) {
-  throw new Error("Function not implemented.")
 }

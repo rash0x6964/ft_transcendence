@@ -22,8 +22,12 @@ export default function Game({ width, height }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
-    let canvas: HTMLCanvasElement = canvasRef.current!
-    const context: CanvasRenderingContext2D = canvas.getContext("2d")!
+    let canvas: HTMLCanvasElement | null = canvasRef.current
+	if (!canvas )
+		return
+    const context: CanvasRenderingContext2D | null = canvas.getContext("2d")
+	if (!context)
+		return
     context.clearRect(0, 0, width, height)
     context.beginPath()
     context.fillStyle = secondary

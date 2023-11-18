@@ -13,8 +13,8 @@ const lexend = Lexend({ subsets: ["latin"] })
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <AuthProvider>
-      <ActiveUserProvider>
-        <WebSocketContextProvider>
+      <WebSocketContextProvider>
+        <ActiveUserProvider>
           <LobbyProvider>
             <main className={lexend.className}>
               <div className="w-screen fixed h-screen  bg-gradient-to-r from-10% to-80% from-backdrop to-mirage -z-10 "></div>
@@ -33,8 +33,8 @@ export default function Layout({ children }: PropsWithChildren) {
               </div>
             </main>
           </LobbyProvider>
-        </WebSocketContextProvider>
-      </ActiveUserProvider>
+        </ActiveUserProvider>
+      </WebSocketContextProvider>
     </AuthProvider>
   )
 }

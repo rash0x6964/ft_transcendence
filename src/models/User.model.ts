@@ -1,3 +1,5 @@
+import ProfileData from "./ProfileData.model"
+
 interface Profile {
 	id: string
 	rating: number

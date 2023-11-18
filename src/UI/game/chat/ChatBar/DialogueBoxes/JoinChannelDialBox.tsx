@@ -3,7 +3,7 @@ import Avatar from "@/components/BaseComponents/Avatar"
 import Input from "@/components/BaseComponents/Input"
 import MainButton from "@/components/BaseComponents/MainButton"
 import Lock from "@/components/svgs/Lock"
-import { Channel, JoinChannel } from "@/models/Channel.model"
+import { Channel, ChannelUser, JoinChannel } from "@/models/Channel.model"
 import ChannelSevice from "@/services/Channel.sevice"
 import { useContext, useEffect, useState } from "react"
 import cookieService from "@/services/CookiesService"
@@ -40,11 +40,12 @@ export default function JoinChannelDialBox({ channelInfo, onJoin }: Props) {
     setProcessing(true)
     setErrorLog([])
     ChannelSevice.joinChannel(body)
-      .then((res) => {
+      .then(({ data }: { data: ChannelUser }) => {
+        channelInfo["role"] == "MEMBER"
         onJoin(channelInfo)
         socket?.emit("channelJoined", {
           token: cookieService.getJwtCookie(),
-          data: res.data,
+          data: data,
         })
       })
       .catch((err) => {

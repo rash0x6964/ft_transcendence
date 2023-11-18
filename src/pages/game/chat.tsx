@@ -22,6 +22,7 @@ import FriendService from "@/services/Friend.service"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
+  const router = useRouter()
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
   const [tempChannelList, setTempChannelList] = useState<Channel[]>([])
@@ -31,12 +32,11 @@ const Page: NextPageWithLayout = () => {
   const [refresh, setRefresh] = useState(true)
   const [_refresh, set_Refresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
-
   const [searchFor, setSearchFor] = useState("")
-  // const [invite, setInvite] = useState(false)
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
     room: false,
@@ -56,8 +56,6 @@ const Page: NextPageWithLayout = () => {
         })
     )
   }
-
-  const router = useRouter()
 
   const isChannel = () => {
     return (selected as Channel)?.visibility != undefined
@@ -81,7 +79,6 @@ const Page: NextPageWithLayout = () => {
     if (router.query?.type == "invite" && router.query?.id) {
       ChannelService.getChannelById(router.query?.id as string)
         .then(({ data }) => {
-          console.log("invite", data)
           setChannelTryingToJoin(data)
           setDialogueState(false)
         })
@@ -131,6 +128,10 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     let timeout: any
+    if (!mounted) {
+      setMounted(true)
+      return
+    }
     if (searchFor != "") {
       setIsLoading({ dm: true, room: true })
       timeout = setTimeout(() => {
@@ -154,7 +155,7 @@ const Page: NextPageWithLayout = () => {
           })
       }, 1000)
     } else {
-      //   setIsLoading({ dm: false, room: false })
+      setIsLoading({ dm: false, room: false })
       setDMList(tempDMList)
       setChannelList(tempChannelList)
     }
@@ -260,7 +261,6 @@ const Page: NextPageWithLayout = () => {
         return prevDmList.map((DM) => {
           if (DM.id == data.directmessageID) {
             DM["message"] = data
-            console.log(DM)
           }
           return DM
         })
@@ -378,8 +378,7 @@ const Page: NextPageWithLayout = () => {
     setTempChannelList((prevChannelList) =>
       prevChannelList.filter((item) => item.id != channel_id)
     )
-    set_Refresh((prev) => !prev)
-    setRefresh((prevState) => !prevState)
+    if (searchFor === "") set_Refresh((prev) => !prev)
   }
 
   const handleChange = (val: string) => {
@@ -461,10 +460,6 @@ const Page: NextPageWithLayout = () => {
       (selected as DirectMessage).friend?.id ?? ""
     )
       .then((res) => {
-        // setSelected((obj) => {
-        //   return { ...(obj as DirectMessage), pending: true, isFriend: false }
-        // })
-
         setTempDMList((prevDmList) => {
           return prevDmList.map((dm) => {
             if (dm.id === (selected as DirectMessage).id) {

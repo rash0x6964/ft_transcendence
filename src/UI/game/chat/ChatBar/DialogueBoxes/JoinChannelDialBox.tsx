@@ -41,7 +41,7 @@ export default function JoinChannelDialBox({ channelInfo, onJoin }: Props) {
     setErrorLog([])
     ChannelSevice.joinChannel(body)
       .then(({ data }: { data: ChannelUser }) => {
-        channelInfo["role"] == "MEMBER"
+        channelInfo["role"] = "MEMBER"
         onJoin(channelInfo)
         socket?.emit("channelJoined", {
           token: cookieService.getJwtCookie(),

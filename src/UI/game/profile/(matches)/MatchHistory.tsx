@@ -59,9 +59,11 @@ export default function MatchHistory({ profileData }: Props) {
           <MatchEntry key={match.id} match={match} />
         ))}
       </div>
-      <MainButton className="py-4" onClick={onLoadMore}>
-        Load More
-      </MainButton>
+      {shouldLoadMore && (
+        <MainButton className="py-4" onClick={onLoadMore}>
+          Load More
+        </MainButton>
+      )}
     </div>
   )
 }

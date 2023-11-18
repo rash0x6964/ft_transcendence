@@ -17,19 +17,25 @@ import ChannelSevice from "@/services/Channel.sevice"
 import ChannelSetting from "@/UI/game/chat/Chat/ChannelSetting"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Message from "@/models/Message.model"
+import FriendRequestService from "@/services/FriendRequest.service"
+import FriendService from "@/services/Friend.service"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
+  const router = useRouter()
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
+  const [tempChannelList, setTempChannelList] = useState<Channel[]>([])
+  const [tempDMList, setTempDMList] = useState<DirectMessage[]>([])
   const [selected, setSelected] = useState<DirectMessage | Channel>()
   const [dialogueState, setDialogueState] = useState(true)
   const [refresh, setRefresh] = useState(true)
+  const [_refresh, set_Refresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
-
   const [searchFor, setSearchFor] = useState("")
   const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
     dm: false,
@@ -51,16 +57,21 @@ const Page: NextPageWithLayout = () => {
     )
   }
 
-  const router = useRouter()
-
   const isChannel = () => {
     return (selected as Channel)?.visibility != undefined
   }
 
   useEffect(() => {
+    setDMList(tempDMList)
+    setChannelList(tempChannelList)
     if (channelList.length) setSelected(channelList[0])
     else if (DMList.length) setSelected(DMList[0])
   }, [refresh])
+
+  useEffect(() => {
+    setDMList(tempDMList)
+    setChannelList(tempChannelList)
+  }, [_refresh])
 
   useEffect(() => {
     if (router.query?.type == "DM" && router.query?.id)
@@ -76,47 +87,53 @@ const Page: NextPageWithLayout = () => {
   }, [router])
 
   useEffect(() => {
-    let timeout: any
     setIsLoading({ dm: true, room: true })
-    if (searchFor == "") {
-      timeout = setTimeout(() => {
-        DMService.getDMList()
-          .then(({ data }: { data: DirectMessage[] }) => {
-            initBlockedUser(data)
-            setDMList(data)
-            setIsLoading((obj) => {
-              return { ...obj, dm: false }
-            })
-            if (router.query?.type == "DM")
-              setSelected(data.find((x) => x.id == router.query?.id))
-            else if (data.length > 0) setSelected(data[0])
-          })
-          .catch((err) => {
-            setIsLoading((obj) => {
-              return { ...obj, dm: false }
-            })
-            //error
-          })
+    DMService.getDMList()
+      .then(({ data }: { data: DirectMessage[] }) => {
+        initBlockedUser(data)
+        setTempDMList(data)
+        setDMList(data)
+        setIsLoading((obj) => {
+          return { ...obj, dm: false }
+        })
+        if (router.query?.type == "DM")
+          setSelected(data.find((x) => x.id == router.query?.id))
+        else if (data.length > 0) setSelected(data[0])
+      })
+      .catch((err) => {
+        setIsLoading((obj) => {
+          return { ...obj, dm: false }
+        })
+        //error
+      })
 
-        ChannelService.getChannelList()
-          .then(({ data }: { data: Channel[] }) => {
-            setChannelList(data)
-            setIsLoading((obj) => {
-              return { ...obj, room: false }
-            })
-            if (router.query?.type == "channel")
-              setSelected(data.find((x) => x.id == router.query?.id))
-            else if (data.length > 0 && selected != undefined)
-              setSelected(data[0])
-          })
-          .catch((err) => {
-            setIsLoading((obj) => {
-              return { ...obj, room: false }
-            })
-            //error
-          })
-      }, 300)
-    } else {
+    ChannelService.getChannelList()
+      .then(({ data }: { data: Channel[] }) => {
+        setTempChannelList(data)
+        setChannelList(data)
+        setIsLoading((obj) => {
+          return { ...obj, room: false }
+        })
+        if (router.query?.type == "channel")
+          setSelected(data.find((x) => x.id == router.query?.id))
+        else if (data.length > 0 && selected != undefined) setSelected(data[0])
+      })
+      .catch((err) => {
+        setIsLoading((obj) => {
+          return { ...obj, room: false }
+        })
+        //error
+      })
+  }, [])
+
+  useEffect(() => {
+    let timeout: any
+    if (!mounted) {
+      setMounted(true)
+      return
+    }
+    if (searchFor != "") {
+      setIsLoading({ dm: true, room: true })
       timeout = setTimeout(() => {
         setDMList(
           DMList?.filter((item) => item.friend?.userName.startsWith(searchFor))
@@ -137,6 +154,10 @@ const Page: NextPageWithLayout = () => {
             })
           })
       }, 1000)
+    } else {
+      setIsLoading({ dm: false, room: false })
+      setDMList(tempDMList)
+      setChannelList(tempChannelList)
     }
 
     return () => {
@@ -146,7 +167,7 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     const _updateSelectedChannel = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((item) => {
           if (item.id == data.id) {
             item = { ...item, ...data }
@@ -157,37 +178,44 @@ const Page: NextPageWithLayout = () => {
           return item
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _deleteChannelEvent = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.id
         })
       })
+      set_Refresh((prev) => !prev)
       setRefresh((prevState) => !prevState)
       setChannelConfDialog(true)
     }
 
     const _ubannedFromChannel = (data: any) => {
-      data.channel["isMemeber"] = true
+      data.channel["isMember"] = true
       data.channel["role"] = data.role
 
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.concat(data.channel)
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _outOfChannel = (data: any) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.channelID
         })
       })
+      setSearchFor((text) => {
+        if (text.length <= 0) set_Refresh((prev) => !prev)
+        return text
+      })
     }
 
     const _getMuted = (data: ChannelUser) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((item: Channel) => {
           if (item.id == data.channelID) {
             item = { ...item, muteDuration: data.duration }
@@ -198,45 +226,50 @@ const Page: NextPageWithLayout = () => {
           return item
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _connect = (userId: string) => {
-      setDMList((users) => {
+      setTempDMList((users) => {
         return users.map((user) => {
           if (user.friend?.id == userId) user.friend.onlineStatus = true
           return user
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _disconnect = (userId: string) => {
-      setDMList((users) => {
+      setTempDMList((users) => {
         return users.map((user) => {
           if (user.friend?.id == userId) user.friend.onlineStatus = false
           return user
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const _directMessage = (data: DirectMessage) => {
-      if (DMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
-      setDMList((prevState) => prevState.concat(data))
+      if (tempDMList.map((x) => x.friend?.id).includes(data.friend?.id)) return
+      setTempDMList((prevState) => prevState.concat(data))
+      set_Refresh((prev) => !prev)
+      setSelected(data)
     }
 
     const privateMsg = (data: Message) => {
-      setDMList((prevDmList) => {
+      setTempDMList((prevDmList) => {
         return prevDmList.map((DM) => {
           if (DM.id == data.directmessageID) {
             DM["message"] = data
-            console.log(DM)
           }
           return DM
         })
       })
+      set_Refresh((prev) => !prev)
     }
 
     const channelMsg = (data: Message) => {
-      setChannelList((prevChannelList) => {
+      setTempChannelList((prevChannelList) => {
         return prevChannelList.map((channel) => {
           if (channel.id == data.channelID) {
             channel["message"] = [data]
@@ -244,13 +277,42 @@ const Page: NextPageWithLayout = () => {
           return channel
         })
       })
+      set_Refresh((prev) => !prev)
     }
+
+    const _blocked_unblocked_DM = (data: DirectMessage) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (dm.id == data.id) {
+            dm.blockStatus = data.blockStatus
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
+    const _unfriend = (data: DirectMessage) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (dm.id === data.id) {
+            dm.isFriend = false
+            dm.pending = false
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
-    socket?.on("youGetUnbanned", _ubannedFromChannel)
-    socket?.on("youGetBanned", _outOfChannel)
-    socket?.on("youGetKicked", _outOfChannel)
-    socket?.on("youGetMuted", _getMuted)
+    socket?.on("YouGotUnbanned", _ubannedFromChannel)
+    socket?.on("YouGotBanned", _outOfChannel)
+    socket?.on("YouGotKicked", _outOfChannel)
+    socket?.on("YouGotMuted", _getMuted)
     socket?.on("disconnected", _disconnect)
     socket?.on("connected", _connect)
     socket?.on("directMessage", _directMessage)
@@ -258,28 +320,38 @@ const Page: NextPageWithLayout = () => {
 
     socket?.on("privateMessage", privateMsg)
 
+    socket?.on("youGotBlocked_DM", _blocked_unblocked_DM)
+    socket?.on("youGotUnblocked_DM", _blocked_unblocked_DM)
+
+    socket?.on("unfriend", _unfriend)
+
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
-      socket?.off("youGetUnbanned", _ubannedFromChannel)
-      socket?.off("youGetBanned", _outOfChannel)
-      socket?.off("youGetKicked", _outOfChannel)
-      socket?.off("youGetMuted", _getMuted)
+      socket?.off("YouGotUnbanned", _ubannedFromChannel)
+      socket?.off("YouGotBanned", _outOfChannel)
+      socket?.off("YouGotKicked", _outOfChannel)
+      socket?.off("YouGotMuted", _getMuted)
       socket?.off("disconnected", _disconnect)
       socket?.off("connected", _connect)
       socket?.off("directMessage", _directMessage)
       socket?.off("channelMessage", channelMsg)
 
       socket?.off("privateMessage", privateMsg)
+
+      socket?.off("youGotBlocked_DM", _blocked_unblocked_DM)
+      socket?.off("youGotUnblocked_DM", _blocked_unblocked_DM)
+
+      socket?.off("unfriend", _unfriend)
     }
   }, [selected])
 
   const clickOnChannel = (data: Channel) => {
-    const obj = channelList.find((item) => item.id == data.id)
-    if (obj?.isMemeber == true) {
+    const obj = tempChannelList.find((item) => item.id == data.id)
+    if (obj) {
       setSelected(obj)
     } else {
-      setChannelTryingToJoin(obj)
+      setChannelTryingToJoin(data)
       setDialogueState(false)
     }
   }
@@ -290,21 +362,23 @@ const Page: NextPageWithLayout = () => {
   }
 
   const roomCreated = (data: Channel) => {
-    setChannelList((prevChannelList) => prevChannelList.concat(data))
+    setTempChannelList((prevChannelList) => prevChannelList.concat(data))
+    set_Refresh((prev) => !prev)
     setSelected(data)
   }
 
   const roomJoined = (data: Channel) => {
-    // setSearchFor("")
+    setTempChannelList((prevChannelList) => prevChannelList.concat(data))
     setSelected(data)
+    if (searchFor === "") set_Refresh((prev) => !prev)
     setDialogueState(true)
   }
 
   const roomLeaved = (channel_id: string) => {
-    setChannelList((prevChannelList) =>
+    setTempChannelList((prevChannelList) =>
       prevChannelList.filter((item) => item.id != channel_id)
     )
-    setRefresh((prevState) => !prevState)
+    if (searchFor === "") set_Refresh((prev) => !prev)
   }
 
   const handleChange = (val: string) => {
@@ -326,6 +400,7 @@ const Page: NextPageWithLayout = () => {
     setSelected((obj) => {
       return { ...(obj as DirectMessage), blockStatus: dm.blockStatus }
     })
+    socket?.emit("DM_blockUser", { data: dm })
   }
 
   const unBlock = () => {
@@ -343,6 +418,7 @@ const Page: NextPageWithLayout = () => {
     setSelected((obj) => {
       return { ...(obj as DirectMessage), blockStatus: dm.blockStatus }
     })
+    socket?.emit("DM_unblockUser", { data: dm })
   }
 
   const onMute = () => {
@@ -377,6 +453,54 @@ const Page: NextPageWithLayout = () => {
     setSelected((obj) => {
       return { ...(obj as DirectMessage), blockStatus: dm.blockStatus }
     })
+  }
+
+  const addFriend = () => {
+    FriendRequestService.sendRequest(
+      (selected as DirectMessage).friend?.id ?? ""
+    )
+      .then((res) => {
+        setTempDMList((prevDmList) => {
+          return prevDmList.map((dm) => {
+            if (dm.id === (selected as DirectMessage).id) {
+              dm.isFriend = false
+              dm.pending = true
+              setSelected(dm)
+            }
+            return dm
+          })
+        })
+        set_Refresh((prev) => !prev)
+        socket?.emit("friendReqAction", {
+          data: selected as DirectMessage,
+        })
+      })
+      .catch((err) => {})
+  }
+
+  const unfriend = () => {
+    FriendService.removeFriend({
+      senderID: (selected as DirectMessage).senderID,
+      receiverID: (selected as DirectMessage).receiverID,
+    })
+      .then((res) => {
+        socket?.emit("unfriend", { data: selected as DirectMessage })
+        socket?.emit("friendAction", { data: selected as DirectMessage })
+      })
+      .catch((err) => {})
+  }
+
+  const cancleReq = () => {
+    FriendRequestService.deleteRequest({
+      senderID: (selected as DirectMessage).senderID,
+      receiverID: (selected as DirectMessage).receiverID,
+    })
+      .then((res) => {
+        setSelected((obj) => {
+          return { ...(obj as DirectMessage), pending: false, isFriend: false }
+        })
+      })
+      .catch((err) => {})
   }
 
   const [channelConfDialog, setChannelConfDialog] = useState(true)
@@ -434,6 +558,9 @@ const Page: NextPageWithLayout = () => {
               unblock: unBlock,
               mute: onMute,
               unmute: unmute,
+              addFriend: addFriend,
+              removFriend: unfriend,
+              cancleReq: cancleReq,
             }}
           />
         </div>

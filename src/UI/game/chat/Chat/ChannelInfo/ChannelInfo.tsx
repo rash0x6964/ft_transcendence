@@ -47,8 +47,6 @@ export default function ChannelInfo({
   useEffect(() => {
     ChannelUserService.getChannelMemberUser(selectedChannel.id)
       .then(({ data }: { data: ChannelUser[] }) => {
-        console.log(data)
-
         setChannelMembers(data)
       })
       .catch((err) => {})
@@ -118,6 +116,15 @@ export default function ChannelInfo({
       })
     }
 
+    const _role = (data: any) => {
+      setChannelMembers((users) => {
+        return users.map((user) => {
+          if (user.userID == data.userID) user.role = data.role
+          return user
+        })
+      })
+    }
+
     socket?.on("newMemberJoind", _join)
     socket?.on("aMemberLeft", _left)
     socket?.on("aMemberUnbanned", _unbanned)
@@ -127,6 +134,8 @@ export default function ChannelInfo({
     socket?.on("connected", _connect)
     socket?.on("disconnected", _disconnect)
     socket?.on("presence", _presence)
+    socket?.on("SomeOneRoleHasChanged", _role)
+
     return () => {
       socket?.off("newMemberJoind", _join)
       socket?.off("aMemberLeft", _left)
@@ -137,6 +146,7 @@ export default function ChannelInfo({
       socket?.off("connected", _connect)
       socket?.off("disconnected", _disconnect)
       socket?.off("presence", _presence)
+      socket?.off("SomeOneRoleHasChanged", _role)
     }
   }, [selectedChannel])
 
@@ -165,6 +175,8 @@ export default function ChannelInfo({
     e: MouseEvent<HTMLDivElement>,
     data: ChannelUser | undefined
   ) => {
+    console.log(selectedChannel)
+
     if (selectedChannel?.role == "MEMBER") return
 
     if (selectedChannel.role == data?.role || data?.role == "OWNER") return

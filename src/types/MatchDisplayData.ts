@@ -9,4 +9,5 @@ export default interface MatchDisplayData {
   type: "Normal" | "Ranked"
   win: boolean
   days: number
+  duration: string
 }

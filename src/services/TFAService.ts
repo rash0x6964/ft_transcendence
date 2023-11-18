@@ -5,6 +5,10 @@ const activate2FA = () => {
   return HttpClient.post("/otpAauth/activate").then((res) => res.data)
 }
 
+const get2FACode = () => {
+  return HttpClient.get("/otpAauth/qrcode").then((res) => res.data)
+}
+
 const deactivate2FA = () => {
   return HttpClient.post("/otpAauth/deactivate").then((res) => res.data)
 }
@@ -17,4 +21,5 @@ export default {
   activate2FA,
   deactivate2FA,
   verify2Fa,
+  get2FACode,
 }

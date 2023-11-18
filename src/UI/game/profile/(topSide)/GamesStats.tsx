@@ -20,7 +20,10 @@ export default function GamesStats({ profileData, stats }: Props) {
       <div className="flex h-fit gap-16">
         <Stat title="Total games" value={String(stats.total)} />
         <div className="bg-gray-700 h-16 my-auto w-[1px]"></div>
-        <Stat title="Winrate" value={String(stats.winrate || 0) + "%"} />
+        <Stat
+          title="Winrate"
+          value={String(stats.winrate?.toFixed(0) || 0) + "%"}
+        />
         <div className="bg-gray-700 h-16 my-auto w-[1px]"></div>
         <Stat title="Longest winstreak" value={String(stats.winstreak)} />
       </div>

@@ -7,4 +7,5 @@ export default interface Match {
   date: Date
   gameMode: string
   ranked: boolean
+  duration: number
 }

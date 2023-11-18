@@ -74,16 +74,18 @@ const Page: NextPageWithLayout = () => {
                   playerName={e.username}
                   rank={index + 1}
                   rp={e.profile.rating}
-                  winrate={e.winrate || "N/A"}
+                  winrate={e.winrate?.toFixed(2) || "N/A"}
                   nbGame={e.games}
                 />
               )
           })}
         </div>
       </div>
-      <MainButton className="py-4" onClick={onLoadMore}>
-        Load More
-      </MainButton>
+      {shouldLoadMore && (
+        <MainButton className="py-4" onClick={onLoadMore}>
+          Load More
+        </MainButton>
+      )}
     </div>
   )
 }

@@ -32,8 +32,11 @@ export default function GameLobby({ className, lobby }: Props) {
       setScore(data)
     })
 
-    socket?.on("gameEnd", data => {
-      window.localStorage.setItem("lobbyData", JSON.stringify(data))
+    socket?.on("gameEnd", (data, rewards) => {
+      window.localStorage.setItem(
+        "endGameData",
+        JSON.stringify({ lobby: data, ...rewards })
+      )
       router.push("/game/endGame")
     })
 

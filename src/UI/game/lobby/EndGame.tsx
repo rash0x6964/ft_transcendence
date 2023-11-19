@@ -1,12 +1,14 @@
-import Lobby from "@/models/Lobby.model"
 import PlayersScore from "./PlayersScore"
 import Avatar from "@/components/BaseComponents/Avatar"
+import EndGameData from "@/types/EndGameData"
 
 type Props = {
-  lobby: Lobby
+  data: EndGameData
 }
 
-export default function EndGame({ lobby }: Props) {
+export default function EndGame({ data }: Props) {
+  const lobby = data.lobby
+
   return (
     <div className="w-full h-full justify-between flex flex-col py-1">
       <div className="flex justify-between">
@@ -54,23 +56,30 @@ export default function EndGame({ lobby }: Props) {
               />
             </div>
             <div className="mx-auto text-2xl text-slate-500 font-light">
-              Acheivements
+              Achievements
             </div>
           </div>
           <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-2s">
-            <div className="mx-auto text-5xl text-primary">75+</div>
+            <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">
               Coins
             </div>
           </div>
           <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
-            <div className="mx-auto text-5xl text-primary">250+</div>
+            <div className="mx-auto text-5xl text-primary">+{data.xp}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">XP</div>
           </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-s">
-            <div className="mx-auto text-5xl text-primary">500+</div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">RP</div>
-          </div>
+          {data.lobby.ranked && (
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-s">
+              <div className="mx-auto text-5xl text-primary">
+                {data.rating > 0 ? "+" : ""}
+                {data.rating}
+              </div>
+              <div className="mx-auto text-2xl text-slate-500 font-light">
+                RP
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

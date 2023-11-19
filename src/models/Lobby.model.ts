@@ -19,6 +19,7 @@ interface GameData {
   ball: Ball
   score: number[]
   scoreUpdated: boolean
+  gameStartDate: number
   timer: number
 }
 

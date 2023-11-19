@@ -51,7 +51,7 @@ export default function GameLobby({ className, lobby }: Props) {
     socket?.on("gameEnd", handleGameEnd)
 
     const timerInterval = setInterval(() => {
-      setTimer((timer) => timer + 1)
+      setTimer((Date.now() - lobby.gameData.gameStartDate) / 1000)
     }, 1000)
 
     return () => {

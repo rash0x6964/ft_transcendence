@@ -83,7 +83,7 @@ const Page: NextPageWithLayout = () => {
           radios={radios}
         />
       )}
-      {!lobby && (
+      {!lobby && profile && (
         <DefaultLobby
           gameModValue={gameMod}
           gameModes={gameMods}

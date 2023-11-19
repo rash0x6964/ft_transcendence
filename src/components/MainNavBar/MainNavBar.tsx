@@ -51,7 +51,11 @@ export default function MainNavBar({ coins, className }: Props) {
     return (
       <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
         <Link href="/">
-          <Logo width={24} height={24} className="text-primary my-auto" />
+          <Logo
+            width={24}
+            height={24}
+            className="text-primary my-auto hover:text-primary/75"
+          />
         </Link>
         <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
           <PlayerName src={profileData.avatarUrl} name={profileData.username} />

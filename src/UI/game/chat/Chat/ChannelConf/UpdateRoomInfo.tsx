@@ -1,4 +1,3 @@
-"use client"
 import UploadService from "@/services/Upload.service"
 import React, { useContext, useEffect, useState } from "react"
 import Image from "next/image"
@@ -79,13 +78,13 @@ export default function UpdateRoomInfo({ selectedChannel }: Props) {
         data: channel.data,
       })
     } catch (err) {
-        if (axios.isAxiosError(err)) {
-          notify({
-            message: err.response?.data?.message,
-            title: "Validation Error",
-            type: "error",
-          })
-        }
+      if (axios.isAxiosError(err)) {
+        notify({
+          message: err.response?.data?.message,
+          title: "Validation Error",
+          type: "error",
+        })
+      }
     }
   }
 
@@ -100,7 +99,7 @@ export default function UpdateRoomInfo({ selectedChannel }: Props) {
           alt="avatar"
           className="w-[680px] h-36  object-cover  mx-auto rounded-full border-2"
         />
-        <div className="absolute w-7 h-7 bg-gray-200 rounded-full items-center flex border-gray-500 overflow-hidden right-2 bottom-2">
+        <div className="absolute w-7 h-7 bg-gray-200 rounded-full items-center flex border-gray-500 overflow-hidden right-2 bottom-2 hover:opacity-75">
           <Change className="cursor-pointer w-8 h-8" />
           <input
             type="file"

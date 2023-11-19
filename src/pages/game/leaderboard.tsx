@@ -66,7 +66,7 @@ const Page: NextPageWithLayout = () => {
 
       <div className="flex flex-col ">
         {leaderboard.length > 3 && (
-          <TableHead className="h-14 w-fill flex pl-8 pr-16 text-sm text-slate-600" />
+          <TableHead className="h-14 w-fill   ml-8 mr-16 text-sm text-slate-600" />
         )}
         <div className="flex flex-col gap-3">
           {leaderboard.map((e, index) => {

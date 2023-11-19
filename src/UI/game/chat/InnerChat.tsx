@@ -18,7 +18,6 @@ import Attachment from "@/models/Attachment.model"
 import DirectMessage from "@/models/DirectMessage.model"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
 import { NotifcationContext } from "@/UI/NotificationProvider"
-import { isMuted } from "@/components/RightBar/Helpers/RightBarHandlers"
 import { timePipe } from "@/pipes/date.pipes"
 import MatchHistory from "@/components/svgs/MatchHistory"
 

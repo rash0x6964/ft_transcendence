@@ -24,6 +24,7 @@ export default function LeftBar({ className }: Props) {
   const [notifciations] = useContext(NotifciationsContext)
 
   const boxRef = useRef<HTMLDivElement>(null)
+  const notifRef = useRef<HTMLButtonElement>(null)
   let links = [
     {
       icon: <Menu />,
@@ -46,11 +47,9 @@ export default function LeftBar({ className }: Props) {
   useEffect(() => {
     let handler = (e: any) => {
       if (!boxRef.current) return
-
+      if (notifRef.current && notifRef.current.contains(e.target)) return
       if (boxRef.current.contains(e.target)) return
-
       setShowNotif(false)
-      console.log(e.target)
     }
 
     document.addEventListener("mouseup", handler)
@@ -75,6 +74,7 @@ export default function LeftBar({ className }: Props) {
         </div>
         <div className="flex flex-col gap-y-4">
           <button
+            ref={notifRef}
             onClick={() => setShowNotif((prev) => !prev)}
             className="mx-auto hover:opacity-60 transition-opacity relative"
           >

@@ -34,43 +34,40 @@ export default function EndGame({ data }: Props) {
           player2={lobby.players[1]}
         />
         <div className="mx-auto mb-24  text-center">
-          {" "}
-          <span>Ranked</span>
-          <span className="text-primary mx-4">/</span> <span>Normal</span>{" "}
+          <span>{lobby.ranked ? "Ranked" : "Unranked"}</span>
+          <span className="text-primary mx-4">/</span> <span>{lobby.mode}</span>
         </div>
 
         <div className="mx-auto flex gap-36 w-fit ">
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-1s ">
-            <div className=" flex gap-4">
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10"
-              />
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10"
-              />
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10  col-span-2"
-              />
+          {data.achievements.length > 0 && (
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s ">
+              <div className=" flex gap-4">
+                {data.achievements.map((achievement) => (
+                  <Avatar
+                    key={achievement.id}
+                    src={achievement.imgUrl}
+                    alt={achievement.name}
+                    className="w-10 h-10"
+                  />
+                ))}
+              </div>
+              <div className="mx-auto text-2xl text-slate-500 font-light">
+                Achievements
+              </div>
             </div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">
-              Achievements
-            </div>
-          </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-2s">
+          )}
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-s">
             <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">
               Coins
             </div>
           </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-1s">
             <div className="mx-auto text-5xl text-primary">+{data.xp}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">XP</div>
           </div>
-          {data.lobby.ranked && (
-            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-s">
+          {lobby.ranked && (
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-2s">
               <div className="mx-auto text-5xl text-primary">
                 {data.rating > 0 ? "+" : ""}
                 {data.rating}

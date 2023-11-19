@@ -28,12 +28,12 @@ export default function GameLobby({ className, lobby }: Props) {
     }
     window.addEventListener("resize", handleResize)
 
-    socket?.on("scoreChange", data => {
+    socket?.on("scoreChange", (data) => {
       setScore(data)
     })
 
     socket?.on("gameEnd", (data, rewards) => {
-      window.localStorage.setItem(
+      window.sessionStorage.setItem(
         "endGameData",
         JSON.stringify({ lobby: data, ...rewards })
       )

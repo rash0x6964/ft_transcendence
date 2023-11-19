@@ -1,3 +1,4 @@
+import Achievement from "@/models/Achievement.model"
 import Lobby from "@/models/Lobby.model"
 
 export default interface EndGameData {
@@ -5,4 +6,5 @@ export default interface EndGameData {
   xp: number
   coins: number
   rating: number
+  achievements: Achievement[]
 }

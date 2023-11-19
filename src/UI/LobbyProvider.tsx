@@ -6,13 +6,11 @@ import {
   useState,
 } from "react"
 import { WebSocketContext } from "./WebSocketContextWrapper"
-import User from "@/models/User.model"
 import { NotifcationContext } from "./NotificationProvider"
 import CookiesService from "@/services/CookiesService"
 import Lobby from "@/models/Lobby.model"
 import { useRouter } from "next/router"
 import ProfileData from "@/models/ProfileData.model"
-import interval from "@/services/QueueService"
 import QueueData from "@/types/QueueData"
 
 export const LobbyContext = createContext<any | null>(null)

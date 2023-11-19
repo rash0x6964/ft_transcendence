@@ -34,11 +34,13 @@ export default function GameLobby({ className, lobby }: Props) {
       setScore(data)
     })
 
-    socket?.on("timerChange", (data) => {
-      setTimer(data)
-    })
-
-    const handleGameEnd = (lobby: any, rewards: any) => {
+    const handleGameEnd = ({
+      lobby,
+      rewards,
+    }: {
+      lobby: any
+      rewards: any
+    }) => {
       window.sessionStorage.setItem(
         "endGameData",
         JSON.stringify({ lobby, ...rewards })
@@ -48,10 +50,15 @@ export default function GameLobby({ className, lobby }: Props) {
 
     socket?.on("gameEnd", handleGameEnd)
 
+    const timerInterval = setInterval(() => {
+      setTimer((timer) => timer + 1)
+    }, 1000)
+
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange")
       socket?.off("gameEnd", handleGameEnd)
+      clearInterval(timerInterval)
     }
   }, [])
 

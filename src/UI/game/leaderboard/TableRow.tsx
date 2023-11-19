@@ -2,6 +2,7 @@ import React from "react"
 import Trophy from "@/components/svgs/Trophy"
 import RP from "@/components/svgs/RP"
 import Avatar from "@/components/BaseComponents/Avatar"
+import Badge from "@/components/svgs/Badge"
 
 type Props = {
   rank: number
@@ -28,7 +29,7 @@ export default function TableRow({
         <span className="self-center">{rank}</span>
       </div>
 
-      <div className="self-center flex gap-3 col-span-2  -ml-2">
+      <div className="self-center flex gap-3 col-span-3  -ml-2">
         <Avatar
           href={"/game/profile/" + playerName}
           className="w-8 h-8"
@@ -40,17 +41,17 @@ export default function TableRow({
 
       {/* Rating */}
       <div className="self-center flex gap-3 col-span-2 -ml-2">
-        <RP className="text-primary fill-primary" />
+        <Badge className="my-auto" />
         <span className="self-center">{rp} RP</span>
       </div>
 
       {/* Winrate */}
-      <div className="self-center flex gap-3 col-span-2 pl-1">
+      <div className="self-center flex gap-3 col-span-2 pl-2">
         <span>{winrate} %</span>
       </div>
 
       {/* Game */}
-      <div className="self-center flex gap-3 col-span-2 pl-1">
+      <div className="self-center flex gap-3 col-span-1 pl-2">
         <span>{nbGame}</span>
       </div>
 

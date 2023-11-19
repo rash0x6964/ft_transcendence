@@ -8,9 +8,10 @@ import EndGameData from "@/types/EndGameData"
 const Page: NextPageWithLayout = () => {
   let [endGameData, setEndGameData] = useState<EndGameData | null>(null)
   const router = useRouter()
+
   useEffect(() => {
     const data = window.sessionStorage.getItem("endGameData")
-    console.log(data)
+
     if (!data) router.push("/game/lobby")
     setEndGameData(JSON.parse(data!))
   }, [])

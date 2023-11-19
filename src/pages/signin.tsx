@@ -92,7 +92,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
       <HeadTitle>Pong Fury | Sign in</HeadTitle>
-      <Dialogue closed={closeDialogue}>
+      <Dialogue closed={false}>
         <AuthDialBox onClick={handle2FA} />
       </Dialogue>
       <div className="self-center">

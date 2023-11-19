@@ -1,5 +1,6 @@
 import PlayersScore from "./PlayersScore"
 import Avatar from "@/components/BaseComponents/Avatar"
+import { timePipe } from "@/pipes/date.pipes"
 import EndGameData from "@/types/EndGameData"
 
 type Props = {
@@ -27,7 +28,7 @@ export default function EndGame({ data }: Props) {
 
       <div className="w-full">
         <PlayersScore
-          time="2:50"
+          time={timePipe(lobby.gameData.timer)}
           score={lobby.gameData.score}
           className="mb-8 mx-auto"
           player1={lobby.players[0]}

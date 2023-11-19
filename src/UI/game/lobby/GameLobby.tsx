@@ -4,6 +4,7 @@ import Game from "./Game"
 import { useContext, useEffect, useRef, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
+import { timePipe } from "@/pipes/date.pipes"
 
 type Props = {
   className?: string
@@ -14,6 +15,7 @@ export default function GameLobby({ className, lobby }: Props) {
   const [width, setWidth] = useState<number>(0)
   const [height, setHeight] = useState<number>(0)
   const [score, setScore] = useState<number[]>([0, 0])
+  const [timer, setTimer] = useState<number>(0)
   const socket = useContext(WebSocketContext)
   const router = useRouter()
 
@@ -30,6 +32,10 @@ export default function GameLobby({ className, lobby }: Props) {
 
     socket?.on("scoreChange", (data) => {
       setScore(data)
+    })
+
+    socket?.on("timerChange", (data) => {
+      setTimer(data)
     })
 
     socket?.on("gameEnd", (lobby, rewards) => {
@@ -57,7 +63,7 @@ export default function GameLobby({ className, lobby }: Props) {
       </div>
       <div className="flex-1  flex flex-col justify-center">
         <PlayersScore
-          time="2:50"
+          time={timePipe(timer)}
           className="mx-auto"
           player1={lobby.players[0]}
           player2={lobby.players[1]}

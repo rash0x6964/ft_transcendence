@@ -38,18 +38,20 @@ export default function GameLobby({ className, lobby }: Props) {
       setTimer(data)
     })
 
-    socket?.on("gameEnd", (lobby, rewards) => {
+    const handleGameEnd = (lobby: any, rewards: any) => {
       window.sessionStorage.setItem(
         "endGameData",
         JSON.stringify({ lobby, ...rewards })
       )
       router.push("/game/endGame")
-    })
+    }
+
+    socket?.on("gameEnd", handleGameEnd)
 
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange")
-      socket?.off("gameEnd")
+      socket?.off("gameEnd", handleGameEnd)
     }
   }, [])
 

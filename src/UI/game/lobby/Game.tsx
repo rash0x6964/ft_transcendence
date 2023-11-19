@@ -2,11 +2,7 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import Ball from "@/types/Ball"
 import Paddle from "@/types/Paddle"
-import {
-  useRef,
-  useEffect,
-  useContext,
-} from "react"
+import { useRef, useEffect, useContext } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
@@ -23,11 +19,9 @@ export default function Game({ width, height }: Props) {
 
   const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
     let canvas: HTMLCanvasElement | null = canvasRef.current
-	if (!canvas )
-		return
+    if (!canvas) return
     const context: CanvasRenderingContext2D | null = canvas.getContext("2d")
-	if (!context)
-		return
+    if (!context) return
     context.clearRect(0, 0, width, height)
     context.beginPath()
     context.fillStyle = secondary
@@ -79,12 +73,12 @@ export default function Game({ width, height }: Props) {
       )
     }
     socket?.on("gameData", handler)
-	document.addEventListener("keydown", keyDownHandler);
-	document.addEventListener("keyup", keyUpHandler);
+    document.addEventListener("keydown", keyDownHandler)
+    document.addEventListener("keyup", keyUpHandler)
     return () => {
       socket?.off("gameData")
-	  document.removeEventListener("keydown", keyDownHandler);
-	  document.removeEventListener("keyup", keyUpHandler);
+      document.removeEventListener("keydown", keyDownHandler)
+      document.removeEventListener("keyup", keyUpHandler)
     }
   }, [])
 

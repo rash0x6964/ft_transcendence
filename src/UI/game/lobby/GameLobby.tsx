@@ -28,14 +28,14 @@ export default function GameLobby({ className, lobby }: Props) {
     }
     window.addEventListener("resize", handleResize)
 
-    socket?.on("scoreChange", (data) => {
+    socket?.on("scoreChange", data => {
       setScore(data)
     })
 
-	socket?.on("gameEnd", (data) => {
-		window.localStorage.setItem("lobbyData", JSON.stringify(data))
-		router.push("/game/endGame")
-	})
+    socket?.on("gameEnd", data => {
+      window.localStorage.setItem("lobbyData", JSON.stringify(data))
+      router.push("/game/endGame")
+    })
 
     return () => {
       window.removeEventListener("resize", handleResize)
@@ -46,7 +46,10 @@ export default function GameLobby({ className, lobby }: Props) {
 
   return (
     <div className={`w-full h-full flex flex-col ${className} `}>
-      <div ref={divRef} className="w-full bg-secondary  h-[80%] border border-primary border-2">
+      <div
+        ref={divRef}
+        className="w-full bg-secondary  h-[80%] border border-primary border-2"
+      >
         <Game width={width} height={height} />
       </div>
       <div className="flex-1  flex flex-col justify-center">

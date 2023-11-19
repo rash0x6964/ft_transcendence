@@ -76,7 +76,9 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
             <span className="col-span-2">Role</span>
           </div>
         ) : (
-          <p className="text-center opacity-25">No one banned</p>
+          <p className="text-center opacity-25">
+            There are no members in this channel
+          </p>
         )}
 
         {channelMembers.map((item, index) => {

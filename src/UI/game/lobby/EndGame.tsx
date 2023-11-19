@@ -3,6 +3,7 @@ import Avatar from "@/components/BaseComponents/Avatar"
 import MainButton from "@/components/BaseComponents/MainButton"
 import { timePipe } from "@/pipes/date.pipes"
 import EndGameData from "@/types/EndGameData"
+import Link from "next/link"
 
 type Props = {
   data: EndGameData
@@ -82,19 +83,19 @@ export default function EndGame({ data }: Props) {
         </div>
       </div>
 
+      <Link
+        className="items-center text-primary cursor-pointer hover:scale-105 transition-transform text-sm font-light mx-auto"
+        href={"/game/lobby"}
+      >
+        {`<- Back to lobby`}
+      </Link>
+
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">
           <div className=" w-[25%] h-2 bg-primary animate-pulse"></div>
           <div className=" w-[50%] h-2 bg-primary animate-pulse"></div>
           <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
         </div>
-
-        <MainButton
-          glow={true}
-          className="px-10 py-6 items-center text-lg font-semibold mx-auto self-end"
-        >
-          Back to Lobby
-        </MainButton>
 
         <div className="w-[40%] gap-2 flex flex-col">
           <div className="ml-auto  w-[25%] h-2 bg-primary animate-pulse"></div>

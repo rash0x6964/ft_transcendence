@@ -30,34 +30,18 @@ export default function GameLobby({ className, lobby }: Props) {
     }
     window.addEventListener("resize", handleResize)
 
-    socket?.on("scoreChange", (data) => {
+    const handleScoreChange = (data: any) => {
       setScore(data)
-    })
-
-    const handleGameEnd = ({
-      lobby,
-      rewards,
-    }: {
-      lobby: any
-      rewards: any
-    }) => {
-      window.sessionStorage.setItem(
-        "endGameData",
-        JSON.stringify({ lobby, ...rewards })
-      )
-      router.push("/game/endGame")
     }
 
-    socket?.on("gameEnd", handleGameEnd)
-
+    socket?.on("scoreChange", handleScoreChange)
     const timerInterval = setInterval(() => {
       setTimer((Date.now() - lobby.gameData.gameStartDate) / 1000)
     }, 1000)
 
     return () => {
       window.removeEventListener("resize", handleResize)
-      socket?.off("scoreChange")
-      socket?.off("gameEnd", handleGameEnd)
+      socket?.off("scoreChange", handleScoreChange)
       clearInterval(timerInterval)
     }
   }, [])
@@ -66,7 +50,7 @@ export default function GameLobby({ className, lobby }: Props) {
     <div className={`w-full h-full flex flex-col ${className} `}>
       <div
         ref={divRef}
-        className="w-full bg-secondary  h-[80%] border border-primary border-2"
+        className="w-full bg-secondary  h-[80%]  border-primary border-2"
       >
         <Game width={width} height={height} />
       </div>

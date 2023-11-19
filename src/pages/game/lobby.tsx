@@ -10,6 +10,8 @@ import Lobby from "@/models/Lobby.model"
 import GameLobby from "@/UI/game/lobby/GameLobby"
 import PlayersLobby from "@/UI/game/lobby/PlayersLobby"
 import DefaultLobby from "@/UI/game/lobby/DefaultLobby"
+import Calculating from "@/UI/game/lobby/Calculating"
+import Head from "next/head"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -63,35 +65,38 @@ const Page: NextPageWithLayout = () => {
     setGameMod(lobby.mode)
   }, [lobby])
 
-  if (lobby && lobby.lobbySate == "ingame") return <GameLobby lobby={lobby} />
-
-  if (lobby && lobby.lobbySate != "ingame")
-    return (
-      <PlayersLobby
-        gameModValue={gameMod}
-        gameModes={gameMods}
-        ranked={ranked}
-        lobby={lobby}
-        handleGameModChange={handleGameModChange}
-        handleRadioChange={handleRadioChange}
-        radios={radios}
-      />
-    )
-  else if (profile)
-    return (
-      <DefaultLobby
-        gameModValue={gameMod}
-        gameModes={gameMods}
-        handleGameModChange={handleGameModChange}
-        handleRadioChange={handleRadioChange}
-        profile={profile}
-        radios={radios}
-        ranked={ranked}
-      />
-    )
-  else return <></>
+  return (
+    <>
+      <Head>
+        <title>Pong Fury | Lobby </title>
+      </Head>
+      {lobby && lobby.lobbySate == "ingame" && <GameLobby lobby={lobby} />}
+      {lobby && lobby.lobbySate == "finishing" && <Calculating />}
+      {lobby && lobby.lobbySate != "ingame" && (
+        <PlayersLobby
+          gameModValue={gameMod}
+          gameModes={gameMods}
+          ranked={ranked}
+          lobby={lobby}
+          handleGameModChange={handleGameModChange}
+          handleRadioChange={handleRadioChange}
+          radios={radios}
+        />
+      )}
+      {!lobby && (
+        <DefaultLobby
+          gameModValue={gameMod}
+          gameModes={gameMods}
+          handleGameModChange={handleGameModChange}
+          handleRadioChange={handleRadioChange}
+          profile={profile}
+          radios={radios}
+          ranked={ranked}
+        />
+      )}
+    </>
+  )
 }
-
 Page.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>
 }

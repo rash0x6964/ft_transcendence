@@ -28,22 +28,22 @@ export default function EndGame({ data }: Props) {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full ">
         <PlayersScore
           time={timePipe(lobby.gameData.timer)}
           score={lobby.gameData.score}
-          className="mb-8 mx-auto"
+          className="mb-8 mx-auto animate__animated animate__fadeIn"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
         />
-        <div className="mx-auto mb-24  text-center">
+        <div className="mx-auto mb-24  text-center animate__animated animate__fadeIn">
           <span>{lobby.ranked ? "Ranked" : "Unranked"}</span>
           <span className="text-primary mx-4">/</span> <span>{lobby.mode}</span>
         </div>
 
         <div className="mx-auto flex gap-36 w-fit ">
           {data.achievements.length > 0 && (
-            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s ">
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s ">
               <div className=" flex gap-4">
                 {data.achievements.map((achievement) => (
                   <Avatar
@@ -59,18 +59,18 @@ export default function EndGame({ data }: Props) {
               </div>
             </div>
           )}
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-s">
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-1s">
             <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">
               Coins
             </div>
           </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-1s">
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-2s">
             <div className="mx-auto text-5xl text-primary">+{data.xp}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">XP</div>
           </div>
           {lobby.ranked && (
-            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-2s">
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
               <div className="mx-auto text-5xl text-primary">
                 {data.rating > 0 ? "+" : ""}
                 {data.rating}

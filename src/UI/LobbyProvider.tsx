@@ -116,6 +116,19 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       })
     }
 
+    const handleGameEnd = ({
+      lobby,
+      rewards,
+    }: {
+      lobby: any
+      rewards: any
+    }) => {
+      window.sessionStorage.setItem(
+        "endGameData",
+        JSON.stringify({ lobby, ...rewards })
+      )
+      router.push("/game/endGame")
+    }
     socket.on("lobbyData", onLobbyCreated)
     socket.on("lobbyInvite", onlobbyInvite)
     socket.on("leaveLobby", onLeaveLobby)
@@ -125,6 +138,8 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     socket.on("enterQueue", onEnterQueue)
     socket.on("leaveQueue", onLeaveQueue)
     socket.on("alreadyInLobby", onAlreadyInLobby)
+    socket?.on("gameEnd", handleGameEnd)
+
     return () => {
       socket.off("lobbyData", onLobbyCreated)
       socket.off("lobbyInvite", onlobbyInvite)
@@ -135,6 +150,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       socket.off("enterQueue", onEnterQueue)
       socket.off("leaveQueue", onLeaveQueue)
       socket.off("alreadyInLobby", onAlreadyInLobby)
+      socket?.off("gameEnd", handleGameEnd)
     }
   }, [])
   return (

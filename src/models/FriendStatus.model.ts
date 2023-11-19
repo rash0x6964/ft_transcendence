@@ -7,4 +7,5 @@ export default interface FriendStatus {
 	sender?: User
 	receiver?: User
 	friend?: User
+
 }

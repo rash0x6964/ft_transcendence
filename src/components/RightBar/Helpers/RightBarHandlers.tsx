@@ -6,53 +6,9 @@ import { useContext, useEffect, useState } from "react"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import DMService from "@/services/DirectMessageService"
 import DirectMessage from "@/models/DirectMessage.model"
-export const handleBlock = (selectedData: FriendStatus | null) => {
-  if (!selectedData) return
-
-  DMService.blockUser(selectedData)
-    .then((data) => {
-      alert("success")
-    })
-    .catch((err) => {
-      alert("error")
-    })
-}
-
-export const handleUnblock = (selectedData: FriendStatus | null) => {
-  if (!selectedData) return
-  DMService.unBlockUser(selectedData)
-    .then((data) => {
-      alert("success")
-    })
-    .catch((err) => {
-      alert("error")
-    })
-}
-
-export const handleMute = (selectedData: FriendStatus | null) => {
-  if (!selectedData) return
-  DMService.blockUser(selectedData)
-    .then((data) => {
-      alert("success")
-    })
-    .catch((err) => {
-      alert("error")
-    })
-}
-
-export const handleUnMute = (selectedData: FriendStatus | null) => {
-  if (!selectedData) return
-  DMService.unBlockUser(selectedData)
-    .then((data) => {
-      alert("success")
-    })
-    .catch((err) => {
-      alert("error")
-    })
-}
 
 export const handleFriendRemove = (
-  selectedData: FriendStatus | null,
+  selectedData: FriendStatus | undefined,
   socket: Socket | null
 ) => {
   if (!selectedData) return
@@ -64,24 +20,6 @@ export const handleFriendRemove = (
       })
     })
     .catch((err) => {})
-}
-
-export function isBlocked(data: DirectMessage | null): boolean {
-  if (data == null) return false
-  if (data.isSender)
-    return data.blockStatus == "SENDER" || data.blockStatus == "BOTH"
-  if (!data.isSender)
-    return data.blockStatus == "RECEIVER" || data.blockStatus == "BOTH"
-  return false
-}
-
-export function isMuted(data: DirectMessage | null): boolean {
-  if (data == null) return false
-  if (data.isSender)
-    return data.muteStatus == "SENDER" || data.muteStatus == "BOTH"
-  if (!data.isSender)
-    return data.muteStatus == "RECEIVER" || data.muteStatus == "BOTH"
-  return false
 }
 
 export function useRightBarSocket(
@@ -96,6 +34,8 @@ export function useRightBarSocket(
   useEffect(() => {
     FriendService.getFriendList()
       .then((data) => {
+        console.log(data)
+
         setFriendList(data.data)
       })
       .catch((err) => {})
@@ -122,10 +62,20 @@ export function useRightBarSocket(
       })
     }
 
+    const onPresence = (data: any) => {
+      setFriendList((users) => {
+        return users.map((user) => {
+          if (user.friend?.id == data.sender.id && user.friend?.state)
+            user.friend.state = data.data
+          return user
+        })
+      })
+    }
+
     const onFriendAction = () => {
       setRefresh((prevState) => !prevState)
     }
-
+    socket?.on("presence", onPresence)
     socket?.on("connected", onConnect)
     socket?.on("disconnected", onDisconnect)
     socket?.on("friendAction", onFriendAction)
@@ -133,6 +83,7 @@ export function useRightBarSocket(
       socket?.off("connected", onConnect)
       socket?.off("connected", onDisconnect)
       socket?.off("friendAction", onFriendAction)
+      socket?.off("presence", onPresence)
     }
   }, [])
 

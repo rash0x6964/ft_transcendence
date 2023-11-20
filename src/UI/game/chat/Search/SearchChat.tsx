@@ -13,6 +13,7 @@ import DirectMessageService from "@/services/DirectMessageService"
 import DirectMessage from "@/models/DirectMessage.model"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
+import ChatLogo from "@/components/svgs/chatLogo"
 
 type Props = {
   clickOnChannel: (data: Channel) => void
@@ -76,7 +77,10 @@ export default function SearchChat({ clickOnChannel }: Props) {
     }
   }, [search])
   return (
-    <div className="w-full h-full flex flex-col justify-center  animate__animated animate__fadeIn">
+    <div className="w-full h-full flex flex-col pt-[16vh]  animate__animated animate__fadeIn">
+      <div className="mx-auto">
+        <ChatLogo width={348} height={348} />
+      </div>
       <div className="w-2/5 mx-auto">
         <Input
           className="bg-secondary   drop-shadow-lg w-full py-6 px-3 mb-2"

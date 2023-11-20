@@ -32,7 +32,7 @@ const Page: NextPageWithLayout = () => {
       src: "https://thumbs.dreamstime.com/b/vector-abstract-futuristic-high-speed-illustration-digital-technology-colorful-background-concept-129976555.jpg",
     },
     {
-      name: "Elastico",
+      name: "Magician",
       src: "https://ninjoo.com/cdn/shop/products/Halfmoon3_800x800.png?v=1629977279",
     },
     {

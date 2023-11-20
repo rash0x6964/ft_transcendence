@@ -58,6 +58,11 @@ export default function Game({ width, height }: Props) {
         data: { isDown: true },
       })
     }
+    if (ev.code == "Space") {
+      socket?.emit("spacePressed", {
+        data: { isSpace: true },
+      })
+    }
   }
 
   const keyUpHandler = (ev: any) => {
@@ -71,6 +76,11 @@ export default function Game({ width, height }: Props) {
       socket?.emit("paddleDown", {
         token: CookiesService.getJwtCookie(),
         data: { isDown: false },
+      })
+    }
+    if (ev.code == "Space") {
+      socket?.emit("spacePressed", {
+        data: { isSpace: false },
       })
     }
   }

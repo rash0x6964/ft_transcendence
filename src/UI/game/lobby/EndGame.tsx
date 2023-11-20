@@ -1,12 +1,17 @@
-import Lobby from "@/models/Lobby.model"
 import PlayersScore from "./PlayersScore"
 import Avatar from "@/components/BaseComponents/Avatar"
+import MainButton from "@/components/BaseComponents/MainButton"
+import { timePipe } from "@/pipes/date.pipes"
+import EndGameData from "@/types/EndGameData"
+import Link from "next/link"
 
 type Props = {
-  lobby: Lobby
+  data: EndGameData
 }
 
-export default function EndGame({ lobby }: Props) {
+export default function EndGame({ data }: Props) {
+  const lobby = data.lobby
+
   return (
     <div className="w-full h-full justify-between flex flex-col py-1">
       <div className="flex justify-between">
@@ -23,56 +28,67 @@ export default function EndGame({ lobby }: Props) {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="w-full ">
         <PlayersScore
-          time="2:50"
+          time={timePipe(lobby.gameData.timer)}
           score={lobby.gameData.score}
-          className="mb-8 mx-auto"
+          className="mb-8 mx-auto animate__animated animate__fadeIn"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
         />
-        <div className="mx-auto mb-24  text-center">
-          {" "}
-          <span>Ranked</span>
-          <span className="text-primary mx-4">/</span> <span>Normal</span>{" "}
+        <div className="mx-auto mb-24  text-center animate__animated animate__fadeIn">
+          <span>{lobby.ranked ? "Ranked" : "Unranked"}</span>
+          <span className="text-primary mx-4">/</span> <span>{lobby.mode}</span>
         </div>
 
         <div className="mx-auto flex gap-36 w-fit ">
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-1s ">
-            <div className=" flex gap-4">
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10"
-              />
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10"
-              />
-              <Avatar
-                src="https://steamavatar.io/img/1477684926Qx9fW.png"
-                className="w-10 h-10  col-span-2"
-              />
+          {data.achievements.length > 0 && (
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s ">
+              <div className=" flex gap-4">
+                {data.achievements.map((achievement) => (
+                  <Avatar
+                    key={achievement.id}
+                    src={achievement.imgUrl}
+                    alt={achievement.name}
+                    className="w-10 h-10"
+                  />
+                ))}
+              </div>
+              <div className="mx-auto text-2xl text-slate-500 font-light">
+                Achievements
+              </div>
             </div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">
-              Acheivements
-            </div>
-          </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-2s">
-            <div className="mx-auto text-5xl text-primary">75+</div>
+          )}
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-1s">
+            <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">
               Coins
             </div>
           </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
-            <div className="mx-auto text-5xl text-primary">250+</div>
+          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-2s">
+            <div className="mx-auto text-5xl text-primary">+{data.xp}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">XP</div>
           </div>
-          <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-s">
-            <div className="mx-auto text-5xl text-primary">500+</div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">RP</div>
-          </div>
+          {lobby.ranked && (
+            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
+              <div className="mx-auto text-5xl text-primary">
+                {data.rating > 0 ? "+" : ""}
+                {data.rating}
+              </div>
+              <div className="mx-auto text-2xl text-slate-500 font-light">
+                RP
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      <Link
+        className="items-center text-primary cursor-pointer hover:scale-105 transition-transform text-sm font-light mx-auto"
+        href={"/game/lobby"}
+      >
+        {`<- Back to lobby`}
+      </Link>
 
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">

@@ -5,8 +5,6 @@ import React, { PropsWithChildren, useEffect } from "react"
 import { Lexend } from "next/font/google"
 import AuthProvider from "./AuthProvider"
 import WebSocketContextProvider from "./WebSocketContextWrapper"
-import Notification from "@/components/BaseComponents/Notification"
-import NotificationProvider from "./NotificationProvider"
 import ActiveUserProvider from "./ActiveUserProvider"
 import LobbyProvider from "./LobbyProvider"
 const lexend = Lexend({ subsets: ["latin"] })

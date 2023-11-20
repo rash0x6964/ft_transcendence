@@ -1,24 +1,40 @@
 import ProfileData from "@/models/ProfileData.model"
 import profileService from "@/services/ProfileService"
-import { PropsWithChildren, createContext, useEffect, useState } from "react"
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
+import { WebSocketContext } from "./WebSocketContextWrapper"
 
 export const ProfileContext = createContext<any>({})
 export default function ActiveUserProvider({ children }: PropsWithChildren) {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
+  const socket = useContext(WebSocketContext)
+
+  const fetchProfileData = async () => {
+    try {
+      const _profileData = await profileService.getCurrentProfileData()
+
+      setProfileData(_profileData)
+    } catch (error) {
+      console.log("Couldn't fetch profile data")
+    }
+  }
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const _profileData = await profileService.getCurrentProfileData()
+    if (!socket) return
 
-        setProfileData(_profileData)
-      } catch (error) {
-        console.log("Couldn't fetch profile data")
-      }
-    }
-
+    socket?.on("gameEnd", fetchProfileData)
     fetchProfileData()
+
+    return () => {
+      socket?.off("gameEnd", fetchProfileData)
+    }
   }, [])
+
   return (
     <ProfileContext.Provider value={{ profileData, setProfileData }}>
       {children}

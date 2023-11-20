@@ -26,11 +26,11 @@ export default function PlayerLevel({ percentage, level, className }: Props) {
         <div className="w-28 h-2 bg-secondary-400 my-auto rounded relative mask">
           <div
             style={{ width: `${percentage > 100 ? 100 : percentage}%` }}
-            className={`bg-primary h-full rounded absolute blur-sm`}
+            className={`bg-primary h-full rounded absolute blur-sm transition-all duration-1000 `}
           ></div>
           <div
             style={{ width: `${percentage > 100 ? 100 : percentage}%` }}
-            className={`bg-primary  h-full rounded `}
+            className={`bg-primary  h-full rounded transition-all duration-1000`}
           ></div>
         </div>
       </div>

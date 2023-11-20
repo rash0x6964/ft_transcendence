@@ -9,6 +9,7 @@ export default class GraviraOrb {
   r: number
 
   draw(context: CanvasRenderingContext2D, color: string) {
+    context.moveTo(this.x, this.y)
     context.fillStyle = color
     context.arc(
       (this.x * context.canvas.width) / 100,

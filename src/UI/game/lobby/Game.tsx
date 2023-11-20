@@ -38,7 +38,9 @@ export default function Game({ width, height }: Props) {
     leftPaddle.draw(context, primary)
     rightPaddle.draw(context, primary)
     ball.draw(context, white)
-    orbs.map((orb) => {
+    context.closePath()
+    context.beginPath()
+    orbs.forEach((orb) => {
       orb.draw(context, iris)
     })
   }
@@ -80,7 +82,7 @@ export default function Game({ width, height }: Props) {
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
         new Paddle(data.paddle2.x, data.paddle2.y),
-        data.orbs
+        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y))
       )
     }
     socket?.on("gameData", handler)

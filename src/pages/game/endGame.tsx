@@ -1,30 +1,26 @@
-import EndGame from '@/UI/game/lobby/EndGame'
-import  { ReactElement, useEffect, useState } from 'react'
-import Lobby from "@/models/Lobby.model"
-import { NextPageWithLayout } from '../_app';
-import Layout from '@/UI/Layout';
-import { useRouter } from 'next/router';
+import EndGame from "@/UI/game/lobby/EndGame"
+import { ReactElement, useEffect, useState } from "react"
+import { NextPageWithLayout } from "../_app"
+import Layout from "@/UI/Layout"
+import { useRouter } from "next/router"
+import EndGameData from "@/types/EndGameData"
 
 const Page: NextPageWithLayout = () => {
-	let [lobby,setLobby] = useState<Lobby | null>(null)
-	const router = useRouter()
-	useEffect( () => {
-		const lobbyData =  window.localStorage.getItem("lobbyData")
-		if (!lobbyData)
-			router.push("/game/lobby")
-		setLobby(JSON.parse(lobbyData!))
-	}, [])
+  let [endGameData, setEndGameData] = useState<EndGameData | null>(null)
+  const router = useRouter()
 
-  return (
-	<>
-		{lobby ? <EndGame lobby={lobby} /> : null}
-	</>
-  )
+  useEffect(() => {
+    const data = window.sessionStorage.getItem("endGameData")
+
+    if (!data) router.push("/game/lobby")
+    setEndGameData(JSON.parse(data!))
+  }, [])
+
+  return <>{endGameData ? <EndGame data={endGameData} /> : null}</>
 }
 
 Page.getLayout = function getLayout(page: ReactElement) {
-	return <Layout>{page}</Layout>
+  return <Layout>{page}</Layout>
 }
-  
+
 export default Page
-  

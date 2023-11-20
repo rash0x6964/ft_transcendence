@@ -13,7 +13,7 @@ import DirectMessageService from "@/services/DirectMessageService"
 import DirectMessage from "@/models/DirectMessage.model"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
-import ChatLogo from "@/components/svgs/chatLogo"
+import ChatLogo from "@/components/svgs/ChatLogo"
 
 type Props = {
   clickOnChannel: (data: Channel) => void

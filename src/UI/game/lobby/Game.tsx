@@ -79,7 +79,8 @@ export default function Game({ width, height }: Props) {
       draw(
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
-        new Paddle(data.paddle2.x, data.paddle2.y)
+        new Paddle(data.paddle2.x, data.paddle2.y),
+        data.orbs
       )
     }
     socket?.on("gameData", handler)

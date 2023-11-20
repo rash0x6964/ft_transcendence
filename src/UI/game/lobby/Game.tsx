@@ -1,12 +1,14 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import Ball from "@/types/Ball"
+import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
 import { useRef, useEffect, useContext } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
 const white: string = "#FFFFFF"
+const iris: string = "#5D3FD3"
 
 type Props = {
   width: number
@@ -17,7 +19,12 @@ export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
+  const draw = (
+    ball: Ball,
+    leftPaddle: Paddle,
+    rightPaddle: Paddle,
+    orbs: GraviraOrb[]
+  ) => {
     let canvas: HTMLCanvasElement | null = canvasRef.current
     if (!canvas) return
     const context: CanvasRenderingContext2D | null = canvas.getContext("2d")
@@ -31,6 +38,9 @@ export default function Game({ width, height }: Props) {
     leftPaddle.draw(context, primary)
     rightPaddle.draw(context, primary)
     ball.draw(context, white)
+    orbs.map((orb) => {
+      orb.draw(context, iris)
+    })
   }
 
   const keyDownHandler = (ev: any) => {

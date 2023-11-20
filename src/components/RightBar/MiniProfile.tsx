@@ -82,8 +82,21 @@ export default function MiniProfile({
         <Avatar
           href={`/game/profile/${friendData?.userName}`}
           src={friendData?.avatarUrl}
-          className="w-20 h-20 border-4 border-secondary drop-shadow-none  mb-2 hover:opacity-90"
+          className="w-20 h-20 border-4 border-secondary drop-shadow-none   hover:opacity-90"
         />
+        <div className="w-5 h-5 relative  mx-auto -mt-4 mb-2">
+          <div className="w-5 h-5 rotate-45 bg-secondary-400 absolute"></div>
+          <div className="text-[10px] absolute w-full  text-center">
+            {friendData?.profile.level}
+          </div>
+          <div className="w-full  absolute bottom-0 ">
+            <div className="w-0 h-0 border-l-4 border-l-transparent border-t-4 border-primary border-r-4 border-r-transparent right-[-2px] mx-auto "></div>
+          </div>
+
+          <div className="w-full  absolute bottom-0 blur-[2px] ">
+            <div className="w-0 h-0 border-l-4 border-l-transparent border-t-4 border-primary border-r-4 border-r-transparent right-[-2px] mx-auto "></div>
+          </div>
+        </div>
 
         <p className="text-xl text-gray-300 font-medium mb-1 ">
           {friendData?.userName}

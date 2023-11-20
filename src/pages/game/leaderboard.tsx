@@ -12,21 +12,22 @@ import MainButton from "@/components/BaseComponents/MainButton"
 const Page: NextPageWithLayout = () => {
   const [leaderboard, setLeaderboard] = useState<ProfileLeaderboardData[]>([])
   const [shouldLoadMore, setShouldLoadMore] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const _leaderboard = await profileService.getLeaderboard()
+  const fetchData = async () => {
+    try {
+      const _leaderboard = await profileService.getLeaderboard()
+      setLoading(false)
+      if (_leaderboard.length < 10) setShouldLoadMore(false)
+      else setShouldLoadMore(true)
 
-        if (_leaderboard.length < 10) setShouldLoadMore(false)
-        else setShouldLoadMore(true)
-
-        setLeaderboard(_leaderboard)
-      } catch (error) {
-        console.log("Couldn't fetch leaderboard")
-      }
+      setLeaderboard(_leaderboard)
+    } catch (error) {
+      setLoading(false)
+      console.log("Couldn't fetch leaderboard")
     }
-
+  }
+  useEffect(() => {
     fetchData()
   }, [])
 
@@ -44,8 +45,15 @@ const Page: NextPageWithLayout = () => {
     }
   }
 
+  if (loading)
+    return (
+      <div className="w-full h-full flex flex-col justify-center ">
+        <span className="loaderLobby mx-auto"></span>
+      </div>
+    )
+
   return (
-    <div className="mx-auto flex flex-col gap-5 container pt-24">
+    <div className="mx-auto flex flex-col gap-5 container pt-24 animate__animated animate__fadeIn">
       <HeadTitle>Pong Fury | Leadeboard</HeadTitle>
 
       <div className="flex gap-5 justify-around mb-8">

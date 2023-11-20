@@ -19,7 +19,7 @@ const delete2FACookie = () => {
 	document.cookie = `TWO_AUTH_FACT=`
 }
 const deleteUserCookie = () => {
-	document.cookie = `USER=`
+	document.cookie = `USER=;path=/`
 }
 
 const isLoggedIn = () => {

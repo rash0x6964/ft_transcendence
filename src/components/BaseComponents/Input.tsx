@@ -28,10 +28,11 @@ export default function Input({
         autoFocus={autoFocus}
         onChange={onChange}
         value={value}
-        className="  appearance-none my-auto h-fit outline-none text-slate-300 bg-transparent placeholder-slate-700"
+        className="  appearance-none my-auto h-fit outline-none text-slate-300 bg-transparent placeholder-slate-700 w-[90%]"
         placeholder={placeholder}
         type={type}
       />
+
       <div className=" my-auto">{icon || <Test />}</div>
     </div>
   )

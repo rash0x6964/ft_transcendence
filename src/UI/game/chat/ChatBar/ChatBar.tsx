@@ -1,4 +1,3 @@
-"use client"
 import { useEffect, useState } from "react"
 import ChannelSeparator from "./ChannelSeparator"
 import ChannelsList from "./ChannelsList"

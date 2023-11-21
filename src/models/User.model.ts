@@ -2,6 +2,7 @@ import ProfileData from "./ProfileData.model"
 
 interface Profile {
 	id: string
+	level: number
 	rating: number
 }
 

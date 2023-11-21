@@ -20,7 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
               <div className="  h-screen w-screen flex flex-col ">
                 <MainNavBar className=" w-screen" coins={8000} />
                 <div className="flex-1 flex justify-between mb-4">
-                  <LeftBar className=" h-full w-fit    bg-secondary mx-2 py-6 drop-shadow-lg  mb-4 rounded-lg flex flex-col  justify-between" />
+                  <LeftBar className=" h-full w-fit  z-0   bg-secondary mx-2 py-6 drop-shadow-lg  mb-4 rounded-lg flex flex-col  justify-between" />
                   <div className=" flex-1 relative">
                     <div className="absolute w-full h-full max-h-full overflow-y-auto">
                       {children}

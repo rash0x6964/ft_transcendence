@@ -19,6 +19,9 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Message from "@/models/Message.model"
 import FriendRequestService from "@/services/FriendRequest.service"
 import FriendService from "@/services/Friend.service"
+import Input from "@/components/BaseComponents/Input"
+import Search from "@/components/svgs/Search"
+import SearchChat from "@/UI/game/chat/Search/SearchChat"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -32,16 +35,20 @@ const Page: NextPageWithLayout = () => {
   const [refreshSelection, setRefreshSelection] = useState(true)
   const [_refresh, set_Refresh] = useState(true)
   const [showInfo, setShowInfo] = useState(true)
-  const [mounted, setMounted] = useState(false)
   const [channelTryingToJoin, setChannelTryingToJoin] = useState<
     Channel | undefined
   >(undefined)
   const [searchFor, setSearchFor] = useState("")
-  const [isLoading, setIsLoading] = useState<{ dm: boolean; room: boolean }>({
+  const [isLoading, setIsLoading] = useState({
     dm: false,
     room: false,
   })
 
+  const [isMounted, setIsMounted] = useState({
+    dm: false,
+    room: false,
+  })
+  const [channelConfDialog, setChannelConfDialog] = useState(true)
   const [blockedUsers, setBlockerUsers] = useState<string[]>([])
 
   const initBlockedUser = (dms: DirectMessage[]) => {
@@ -103,19 +110,29 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     setIsLoading({ dm: true, room: true })
+
     DMService.getDMList()
       .then(({ data }: { data: DirectMessage[] }) => {
         initBlockedUser(data)
         setTempDMList(data)
         setDMList(data)
+
+        setIsMounted((obj) => {
+          return { ...obj, dm: true }
+        })
+
         setIsLoading((obj) => {
           return { ...obj, dm: false }
         })
+
         if (router.query?.type == "DM")
           setSelected(data.find((x) => x.id == router.query?.id))
         else if (data.length > 0) setSelected(data[0])
       })
       .catch((err) => {
+        setIsMounted((obj) => {
+          return { ...obj, dm: true }
+        })
         setIsLoading((obj) => {
           return { ...obj, dm: false }
         })
@@ -126,14 +143,22 @@ const Page: NextPageWithLayout = () => {
       .then(({ data }: { data: Channel[] }) => {
         setTempChannelList(data)
         setChannelList(data)
+
+        setIsMounted((obj) => {
+          return { ...obj, room: true }
+        })
         setIsLoading((obj) => {
           return { ...obj, room: false }
         })
+
         if (router.query?.type == "channel")
           setSelected(data.find((x) => x.id == router.query?.id))
         else if (data.length > 0 && selected != undefined) setSelected(data[0])
       })
       .catch((err) => {
+        setIsMounted((obj) => {
+          return { ...obj, dm: true }
+        })
         setIsLoading((obj) => {
           return { ...obj, room: false }
         })
@@ -143,10 +168,7 @@ const Page: NextPageWithLayout = () => {
 
   useEffect(() => {
     let timeout: any
-    if (!mounted) {
-      setMounted(true)
-      return
-    }
+
     if (searchFor != "") {
       setIsLoading({ dm: true, room: true })
       timeout = setTimeout(() => {
@@ -520,69 +542,99 @@ const Page: NextPageWithLayout = () => {
       .catch((err) => {})
   }
 
-  const [channelConfDialog, setChannelConfDialog] = useState(true)
+  const mounted = () => {
+    return isMounted.dm && isMounted.room
+  }
+
+  const showSearch = () => {
+    return (
+      !(DMList.length > 0 || channelList.length > 0 || searchFor.length > 0) &&
+      mounted()
+    )
+  }
+
+  const showChat = () => {
+    return (
+      (DMList.length > 0 || channelList.length > 0 || searchFor.length > 0) &&
+      mounted()
+    )
+  }
+
   //   if (isLoading.dm || isLoading.room)
   //     return (
   //       <div className="h-screen w-screen   bg-gradient-to-r from-10% to-80% from-backdrop to-mirage flex flex-col justify-center">
   //         <span className="loaderLobby mx-auto"></span>
   //       </div>
   //     )
+
   return (
-    <div className="w-full animate__animated animate__fadeIn h-full flex gap-2">
-      <HeadTitle>Pong Fury | Chat</HeadTitle>
+    <>
+      <div className="w-full h-full ">
+        <HeadTitle>Pong Fury | Chat</HeadTitle>
+        {!mounted() && (
+          <div className="w-full h-full flex flex-col justify-center  animate__animated animate__fadeIn">
+            <span className="loaderLobby mx-auto"></span>
+          </div>
+        )}
+        {showSearch() && <SearchChat clickOnChannel={clickOnChannel} />}
+        {showChat() && (
+          <div className="w-full h-full flex gap-2  animate__animated animate__fadeIn">
+            <div className="h-full w-96">
+              <ChatBar
+                DMList={DMList}
+                channelList={channelList}
+                selectedId={selected?.id ?? ""}
+                clickOnDm={clickOnDm}
+                clickOnChannel={clickOnChannel}
+                handleOnChange={handleChange}
+                createChannelEvent={roomCreated}
+                isLoading={isLoading}
+              />
+            </div>
+            <div className="flex-1 flex flex-col   h-full">
+              <InnerChat
+                blockedUsers={blockedUsers}
+                isChannel={isChannel()}
+                onInfoClick={() => setShowInfo((prev) => !prev)}
+                channelData={selected}
+              />
+            </div>
+            {isChannel() && showInfo && (
+              <div className=" h-full w-96">
+                <ChannelInfo
+                  onEdit={() => setChannelConfDialog(false)}
+                  selectedChannel={selected as Channel}
+                  onLeave={roomLeaved}
+                />
+              </div>
+            )}
+            {!isChannel() && showInfo && (
+              <div className=" h-full w-96">
+                <FriendInfo
+                  dm={selected as DirectMessage}
+                  takeAction={{
+                    block: onBlock,
+                    unblock: unBlock,
+                    mute: onMute,
+                    unmute: unmute,
+                    addFriend: addFriend,
+                    removFriend: unfriend,
+                    cancleReq: cancleReq,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
-      <div className="h-full w-96">
-        <ChatBar
-          DMList={DMList}
-          channelList={channelList}
-          selectedId={selected?.id ?? ""}
-          clickOnDm={clickOnDm}
-          clickOnChannel={clickOnChannel}
-          handleOnChange={handleChange}
-          createChannelEvent={roomCreated}
-          isLoading={isLoading}
-        />
+        {/* channel settings */}
       </div>
-      <div className="flex-1 flex flex-col   h-full">
-        <InnerChat
-          blockedUsers={blockedUsers}
-          isChannel={isChannel()}
-          onInfoClick={() => setShowInfo((prev) => !prev)}
-          channelData={selected}
+      <Dialogue closed={channelConfDialog}>
+        <ChannelSetting
+          close={() => setChannelConfDialog(true)}
+          channel={selected as Channel}
         />
-      </div>
-      {isChannel() && showInfo && (
-        <div className=" h-full w-96">
-          <ChannelInfo
-            onEdit={() => setChannelConfDialog(false)}
-            selectedChannel={selected as Channel}
-            onLeave={roomLeaved}
-          />
-          <Dialogue closed={channelConfDialog}>
-            <ChannelSetting
-              close={() => setChannelConfDialog(true)}
-              channel={selected as Channel}
-            />
-          </Dialogue>
-        </div>
-      )}
-      {!isChannel() && showInfo && (
-        <div className=" h-full w-96">
-          <FriendInfo
-            dm={selected as DirectMessage}
-            takeAction={{
-              block: onBlock,
-              unblock: unBlock,
-              mute: onMute,
-              unmute: unmute,
-              addFriend: addFriend,
-              removFriend: unfriend,
-              cancleReq: cancleReq,
-            }}
-          />
-        </div>
-      )}
-
+      </Dialogue>
       <Dialogue
         onBackDropClick={() => setDialogueState(true)}
         closed={dialogueState}
@@ -592,9 +644,7 @@ const Page: NextPageWithLayout = () => {
           onJoin={roomJoined}
         />
       </Dialogue>
-
-      {/* channel settings */}
-    </div>
+    </>
   )
 }
 

@@ -1,17 +1,13 @@
-import React from 'react'
-import PropWithClass from '@/types/PropWithClass'
+import React from "react"
+import PropWithClass from "@/types/PropWithClass"
 export default function TableHead({ className }: PropWithClass) {
-	return (
-		<div className={ className}>
-
-			<span className="self-center pr-10">Rank</span>
-			<div className="flex   justify-around flex-1">
-				<div className="self-center pr-24">  Player       </div>
-				<span className="self-center  pr-8">Rating</span>
-				<span className="self-center">Winrate</span>
-				<span className="self-center">Game</span>
-			</div>
-
-		</div>
-	)
+  return (
+    <div className={` ${className} grid grid-cols-10`}>
+      <div className="self-center pr-10 col-span-2">Rank</div>
+      <div className="self-center col-span-3 "> Player </div>
+      <div className="self-center  col-span-2">Rating</div>
+      <div className="self-center col-span-2">Winrate</div>
+      <div className="self-center col-span-1">Game</div>
+    </div>
+  )
 }

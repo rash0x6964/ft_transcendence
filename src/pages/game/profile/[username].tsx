@@ -12,9 +12,11 @@ import ProfileData from "@/models/ProfileData.model"
 import NotFoundError from "@/components/svgs/NotFoundError"
 
 const Page: NextPageWithLayout = () => {
+  const router = useRouter()
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [error, setError] = useState(false)
-  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
   const _username = router.query.username as string
 
   useEffect(() => {
@@ -26,15 +28,22 @@ const Page: NextPageWithLayout = () => {
         const _profileData = await profileService.getProfileDataByUsername(
           _username
         )
-
+        setLoading(false)
         setProfileData(_profileData)
       } catch (error) {
+        setLoading(false)
         setError(true)
       }
     }
 
     fetchData()
   }, [router, _username])
+  if (loading)
+    return (
+      <div className="w-full h-full flex flex-col justify-center ">
+        <span className="loaderLobby mx-auto"></span>
+      </div>
+    )
 
   if (error)
     return (

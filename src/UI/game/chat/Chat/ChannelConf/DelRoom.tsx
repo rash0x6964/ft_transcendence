@@ -1,4 +1,3 @@
-"use client"
 import UploadService from "@/services/Upload.service"
 import React, { useContext, useState } from "react"
 import Image from "next/image"
@@ -16,9 +15,7 @@ type Props = {
   selectedChannel: Channel
 }
 
-export default function DelRoom({
-  selectedChannel,
-}: Props) {
+export default function DelRoom({ selectedChannel }: Props) {
   const socket = useContext(WebSocketContext)
   const [channelName, setChannelName] = useState("")
   const [errorLog, setErrorLog] = useState([""])

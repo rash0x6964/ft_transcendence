@@ -1,4 +1,3 @@
-"use client"
 import { useRouter } from "next/navigation"
 import React from "react"
 
@@ -6,11 +5,9 @@ export default function Cross() {
   const router = useRouter()
   const handleClick: () => void = () => {
     const path: string | null = localStorage.getItem("pathBeforeSetting")
-	localStorage.removeItem("pathBeforeSetting")
-	if (path)
-		router.push(path)
-	else
-		router.push("/")
+    localStorage.removeItem("pathBeforeSetting")
+    if (path) router.push(path)
+    else router.push("/")
   }
 
   return (

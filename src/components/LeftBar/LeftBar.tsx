@@ -83,8 +83,6 @@ export default function LeftBar({ className }: Props) {
             )}
             <Notif />
           </button>
-          <div className="mx-auto w-[40px] h-[1px] bg-slate-700 "></div>
-          <Sound className="mx-auto cursor-pointer" />
         </div>
       </div>
     </>

@@ -6,6 +6,9 @@ export default function LogoutButton() {
   const router = useRouter()
   const logout = () => {
     CookiesService.deleteUserCookie()
+    CookiesService.delete2FACookie()
+    CookiesService.deleteInfoCookie()
+    CookiesService.deleteProviderCookie()
     router.push("/signin")
   }
   return (

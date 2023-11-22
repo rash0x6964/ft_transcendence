@@ -12,8 +12,7 @@ export default function PlayerLevel({ percentage, level, className }: Props) {
         <div className="w-5 h-5 relative  mr-4">
           <div className="w-5 h-5 rotate-45 bg-secondary-400 absolute"></div>
           <div className="text-[10px] absolute w-full  text-center">
-            {" "}
-            {level}{" "}
+            {level}
           </div>
           <div className="w-full  absolute bottom-0 ">
             <div className="w-0 h-0 border-l-4 border-l-transparent border-t-4 border-primary border-r-4 border-r-transparent right-[-2px] mx-auto "></div>

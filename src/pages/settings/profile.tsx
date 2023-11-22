@@ -123,14 +123,14 @@ const Page: NextPageWithLayout = () => {
           width={680}
           height={128}
           src={user?.bannerUrl ?? env.defaultBanner}
-          alt="W3Schools.com"
+          alt=""
           className="w-[680px] h-32  object-cover  mx-auto rounded-xl border-2"
         />
-        <div className="relative -top-3 left-[735px] w-[22px] h-[22px]">
-          <Change className="cursor-pointer" />
+        <div className="relative -top-3 left-[735px] w-[22px] h-[22px] hover:opacity-75 transition-colors ">
+          <Change className="" />
           <input
             type="file"
-            className="max-w-full max-h-full -translate-y-full opacity-0"
+            className="max-w-full max-h-full -translate-y-full opacity-0 cursor-pointer"
             accept="image/png, image/jpeg"
             onChange={onFileChange}
             name="banners"
@@ -142,8 +142,8 @@ const Page: NextPageWithLayout = () => {
             alt="W3Schools.com"
             className="w-28 h-28 rounded-full relative border-2"
           />
-          <div className="relative -top-7 left-20 w-[22px] h-[22px] ">
-            <Change className="cursor-pointer" />
+          <div className="relative -top-7 left-20 w-[22px] h-[22px] hover:opacity-75 transition-colors ">
+            <Change className="" />
             <input
               type="file"
               className="max-w-full max-h-full -translate-y-full opacity-0 cursor-pointer"

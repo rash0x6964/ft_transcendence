@@ -1,44 +1,48 @@
-const jwtCookieName = "USER"
+import Cookies from "js-cookie"
 
-const getCookieValue = (name: string) =>
-	document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || ""
+const jwtCookieName = "USER"
+const infoCookieName = "INFO"
+const tfaCookieName = "TWO_AUTH_FACT"
+const providerCookieName = "PROVIDER"
 
 const setJwtCookie = (token: string) => {
-	document.cookie = `${jwtCookieName}=${token};path=/`
+  Cookies.set(jwtCookieName, token)
 }
 
 const deleteInfoCookie = () => {
-	document.cookie = `INFO=`
+  Cookies.remove(infoCookieName)
 }
 
 const deleteProviderCookie = () => {
-	document.cookie = `PROVIDER=`
+  Cookies.remove(providerCookieName)
 }
 
 const delete2FACookie = () => {
-	document.cookie = `TWO_AUTH_FACT=`
+  Cookies.remove(tfaCookieName)
 }
+
 const deleteUserCookie = () => {
-	document.cookie = `USER=`
+  Cookies.remove(jwtCookieName)
 }
 
 const isLoggedIn = () => {
-	return (getJwtCookie() != "" && getJwtCookie().length > 0)
+  return getJwtCookie() !== undefined
 }
-const getJwtCookie = () => getCookieValue(jwtCookieName)
-const getInfoCookie = () => getCookieValue("INFO")
-const getProvdierCookie = () => getCookieValue("PROVIDER")
-const get2FACookie = () => getCookieValue("TWO_AUTH_FACT") === "activated"
+
+const getJwtCookie = () => Cookies.get(jwtCookieName)
+const getInfoCookie = () => Cookies.get(infoCookieName)
+const getProvdierCookie = () => Cookies.get(providerCookieName)
+const get2FACookie = () => Cookies.get(tfaCookieName)
 
 export default {
-	isLoggedIn,
-	setJwtCookie,
-	deleteInfoCookie,
-	deleteProviderCookie,
-	getJwtCookie,
-	getInfoCookie,
-	getProvdierCookie,
-	get2FACookie,
-	delete2FACookie,
-	deleteUserCookie,
+  isLoggedIn,
+  setJwtCookie,
+  deleteInfoCookie,
+  deleteProviderCookie,
+  getJwtCookie,
+  getInfoCookie,
+  getProvdierCookie,
+  get2FACookie,
+  delete2FACookie,
+  deleteUserCookie,
 }

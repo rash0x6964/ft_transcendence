@@ -58,9 +58,9 @@ export default function Game({ width, height }: Props) {
         data: { isDown: true },
       })
     }
-    if (ev.code == "Space") {
-      socket?.emit("spacePressed", {
-        data: { isSpace: true },
+    if (ev.key == "1" || ev.key == "2" || ev.key == "3" || ev.key == "4") {
+      socket?.emit("numberPressed", {
+        data: { numberPressed: ev.key },
       })
     }
   }
@@ -78,9 +78,9 @@ export default function Game({ width, height }: Props) {
         data: { isDown: false },
       })
     }
-    if (ev.code == "Space") {
-      socket?.emit("spacePressed", {
-        data: { isSpace: false },
+    if (ev.key == "1" || ev.key == "2" || ev.key == "3" || ev.key == "4") {
+      socket?.emit("numberPressed", {
+        data: { numberPressed: null },
       })
     }
   }

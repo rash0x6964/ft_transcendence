@@ -5,7 +5,6 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
 import { timePipe } from "@/pipes/date.pipes"
-import PlayerResource from "./PlayerResource"
 
 type Props = {
   className?: string
@@ -17,8 +16,8 @@ export default function GameLobby({ className, lobby }: Props) {
   const [height, setHeight] = useState<number>(0)
   const [score, setScore] = useState<number[]>([0, 0])
   const [timer, setTimer] = useState<number>(0)
-  const [resource, setResource] = useState<number>(0)
-  const [mana, setMana] = useState<number>(0)
+  const [mana, setMana] = useState<number[]>([0, 0])
+  const manaRef = useRef([0, 0])
   const lastUpdatedResource = useRef(Date.now())
   const socket = useContext(WebSocketContext)
   const router = useRouter()
@@ -39,7 +38,7 @@ export default function GameLobby({ className, lobby }: Props) {
     }
 
     const handleResourcesChange = (data: any) => {
-      setResource(data)
+      manaRef.current = data.mana
       lastUpdatedResource.current = data.lastUpdatedResource
     }
 
@@ -51,11 +50,15 @@ export default function GameLobby({ className, lobby }: Props) {
     }, 1000)
 
     const resourceInterval = setInterval(() => {
-      const _mana = mana + (Date.now() - lastUpdatedResource.current) / 10 / 60
-      if (_mana < 3) {
+      const _mana = [0, 0]
+      _mana[0] =
+        manaRef.current[0] + (Date.now() - lastUpdatedResource.current) / 1000
+      _mana[1] =
+        manaRef.current[1] + (Date.now() - lastUpdatedResource.current) / 1000
+      if (_mana[0] > 3) _mana[0] = 3
+      if (_mana[1] > 3) _mana[1] = 3
+      if (_mana[0] < 3 || _mana[1] < 3) {
         setMana(_mana)
-      } else if (mana != 3) {
-        setMana(3)
       }
     })
 

@@ -17,6 +17,32 @@ export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
+  const drawHorizontally = (
+    context: CanvasRenderingContext2D,
+    ball: Ball,
+    leftPaddle: Paddle,
+    rightPaddle: Paddle
+  ) => {
+    context.fillStyle = primary
+    context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
+    leftPaddle.drawHor(context, primary)
+    rightPaddle.drawHor(context, primary)
+    ball.drawHor(context, white)
+  }
+
+  const drawVertically = (
+    context: CanvasRenderingContext2D,
+    ball: Ball,
+    leftPaddle: Paddle,
+    rightPaddle: Paddle
+  ) => {
+    context.fillStyle = primary
+    context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
+    leftPaddle.drawVer(context, primary)
+    rightPaddle.drawVer(context, primary)
+    ball.drawVer(context, white)
+  }
+
   const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
     let canvas: HTMLCanvasElement | null = canvasRef.current
     if (!canvas) return
@@ -26,11 +52,9 @@ export default function Game({ width, height }: Props) {
     context.beginPath()
     context.fillStyle = secondary
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
-    context.fillStyle = primary
-    context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.draw(context, primary)
-    rightPaddle.draw(context, primary)
-    ball.draw(context, white)
+    if (context.canvas.width > context.canvas.height)
+      drawHorizontally(context, ball, leftPaddle, rightPaddle)
+    else drawVertically(context, ball, leftPaddle, rightPaddle)
   }
 
   const keyDownHandler = (ev: any) => {

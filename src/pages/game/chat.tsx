@@ -22,10 +22,13 @@ import FriendService from "@/services/Friend.service"
 import Input from "@/components/BaseComponents/Input"
 import Search from "@/components/svgs/Search"
 import SearchChat from "@/UI/game/chat/Search/SearchChat"
+import CreateChannelDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/CreateChannelDialBox"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
   const router = useRouter()
+  const [createChannelDial, setCreateChannelDial] = useState(true)
+
   const [channelList, setChannelList] = useState<Channel[]>([])
   const [DMList, setDMList] = useState<DirectMessage[]>([])
   const [tempChannelList, setTempChannelList] = useState<Channel[]>([])
@@ -576,7 +579,12 @@ const Page: NextPageWithLayout = () => {
             <span className="loaderLobby mx-auto"></span>
           </div>
         )}
-        {showSearch() && <SearchChat clickOnChannel={clickOnChannel} />}
+        {showSearch() && (
+          <SearchChat
+            onCreateChannel={() => setCreateChannelDial(false)}
+            clickOnChannel={clickOnChannel}
+          />
+        )}
         {showChat() && (
           <div className="w-full h-full flex gap-2  animate__animated animate__fadeIn">
             <div className="h-full w-96">
@@ -587,7 +595,7 @@ const Page: NextPageWithLayout = () => {
                 clickOnDm={clickOnDm}
                 clickOnChannel={clickOnChannel}
                 handleOnChange={handleChange}
-                createChannelEvent={roomCreated}
+                onCreateChannel={() => setCreateChannelDial(false)}
                 isLoading={isLoading}
               />
             </div>
@@ -642,6 +650,16 @@ const Page: NextPageWithLayout = () => {
         <JoinChannelDialBox
           channelInfo={channelTryingToJoin as Channel}
           onJoin={roomJoined}
+        />
+      </Dialogue>
+
+      <Dialogue
+        onBackDropClick={() => setCreateChannelDial(true)}
+        closed={createChannelDial}
+      >
+        <CreateChannelDialBox
+          handler={() => setCreateChannelDial(true)}
+          createChannelEvent={roomCreated}
         />
       </Dialogue>
     </>

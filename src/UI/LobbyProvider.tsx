@@ -129,6 +129,13 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       )
       router.push("/game/endGame")
     }
+
+    const onCantLeave = () => {
+      notify({
+        message: "You can't leave an on going game",
+        title: "Lobby notice",
+      })
+    }
     socket.on("lobbyData", onLobbyCreated)
     socket.on("lobbyInvite", onlobbyInvite)
     socket.on("leaveLobby", onLeaveLobby)
@@ -138,6 +145,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     socket.on("enterQueue", onEnterQueue)
     socket.on("leaveQueue", onLeaveQueue)
     socket.on("alreadyInLobby", onAlreadyInLobby)
+    socket.on("cantLeave", onCantLeave)
     socket?.on("gameEnd", handleGameEnd)
 
     return () => {
@@ -150,6 +158,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       socket.off("enterQueue", onEnterQueue)
       socket.off("leaveQueue", onLeaveQueue)
       socket.off("alreadyInLobby", onAlreadyInLobby)
+      socket.off("cantLeave", onCantLeave)
       socket?.off("gameEnd", handleGameEnd)
     }
   }, [])

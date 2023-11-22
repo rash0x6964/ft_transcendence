@@ -40,7 +40,7 @@ export default function GameLobby({ className, lobby }: Props) {
 
     const handleResourcesChange = (data: any) => {
       setResource(data)
-      lastUpdatedResource.current = Date.now()
+      lastUpdatedResource.current = data.lastUpdatedResource
     }
 
     socket?.on("scoreChange", handleScoreChange)
@@ -54,6 +54,8 @@ export default function GameLobby({ className, lobby }: Props) {
       const _mana = mana + (Date.now() - lastUpdatedResource.current) / 10 / 60
       if (_mana < 3) {
         setMana(_mana)
+      } else if (mana != 3) {
+        setMana(3)
       }
     })
 

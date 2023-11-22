@@ -24,10 +24,12 @@ export default function PlayersScore({
       <div className="flex flex-col w-fit">
         <Avatar className="h-28 w-28 mb-3" src={player1.avatarUrl} />
         <div className="mx-auto  text-sm">{player1.userName}</div>
-        <div className="mx-auto  text-sm">{`Mana: ${mana[0].toFixed(
-          0
-        )} / 3`}</div>
-        <PlayerResource mana={mana[0]} />
+        {mana && (
+          <div className="mx-auto  text-sm">{`Mana: ${mana[0].toFixed(
+            0
+          )} / 3`}</div>
+        )}
+        {mana && <PlayerResource mana={mana[0]} />}
       </div>
       <div className="flex my-auto gap-4 mx-6">
         <h1 className="text-4xl">{score[0]}</h1>
@@ -40,10 +42,12 @@ export default function PlayersScore({
       <div className="flex flex-col w-fit">
         <Avatar className="h-28 w-28 mb-3" src={player2.avatarUrl} />
         <div className="mx-auto  text-sm">{player2.userName}</div>
-        <div className="mx-auto  text-sm">{`Mana: ${mana[1].toFixed(
-          0
-        )} / 3`}</div>
-        <PlayerResource mana={mana[1]} />
+        {mana && (
+          <div className="mx-auto  text-sm">{`Mana: ${mana[1].toFixed(
+            0
+          )} / 3`}</div>
+        )}
+        {mana && <PlayerResource mana={mana[1]} />}
       </div>
     </div>
   )

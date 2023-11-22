@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
 import { timePipe } from "@/pipes/date.pipes"
+import PlayerResource from "./PlayerResource"
 
 type Props = {
   className?: string
@@ -16,6 +17,9 @@ export default function GameLobby({ className, lobby }: Props) {
   const [height, setHeight] = useState<number>(0)
   const [score, setScore] = useState<number[]>([0, 0])
   const [timer, setTimer] = useState<number>(0)
+  const [resource, setResource] = useState<number>(0)
+  const [mana, setMana] = useState<number>(0)
+  const lastUpdatedResource = useRef(Date.now())
   const socket = useContext(WebSocketContext)
   const router = useRouter()
 
@@ -34,15 +38,31 @@ export default function GameLobby({ className, lobby }: Props) {
       setScore(data)
     }
 
+    const handleResourcesChange = (data: any) => {
+      setResource(data)
+      lastUpdatedResource.current = Date.now()
+    }
+
     socket?.on("scoreChange", handleScoreChange)
+    socket?.on("resourcesChange", handleResourcesChange)
+
     const timerInterval = setInterval(() => {
       setTimer((Date.now() - lobby.gameData.gameStartDate) / 1000)
     }, 1000)
 
+    const resourceInterval = setInterval(() => {
+      const _mana = mana + (Date.now() - lastUpdatedResource.current) / 10 / 60
+      if (_mana < 3) {
+        setMana(_mana)
+      }
+    })
+
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange", handleScoreChange)
+      socket?.off("resourcesChange", handleResourcesChange)
       clearInterval(timerInterval)
+      clearInterval(resourceInterval)
     }
   }, [])
 
@@ -54,15 +74,14 @@ export default function GameLobby({ className, lobby }: Props) {
       >
         <Game width={width} height={height} />
       </div>
-      <div className="flex-1  flex flex-col justify-center">
-        <PlayersScore
-          time={timePipe(timer)}
-          className="mx-auto"
-          player1={lobby.players[0]}
-          player2={lobby.players[1]}
-          score={score}
-        />
-      </div>
+      <PlayersScore
+        time={timePipe(timer)}
+        className="mx-auto"
+        player1={lobby.players[0]}
+        player2={lobby.players[1]}
+        score={score}
+        mana={mana}
+      />
     </div>
   )
 }

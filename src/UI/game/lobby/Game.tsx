@@ -3,12 +3,14 @@ import CookiesService from "@/services/CookiesService"
 import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
+import StunOrb from "@/types/StunOrb"
 import { useRef, useEffect, useContext } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
 const white: string = "#FFFFFF"
 const iris: string = "#5D3FD3"
+const yellow: string = "#FEBF10"
 
 type Props = {
   width: number
@@ -23,7 +25,8 @@ export default function Game({ width, height }: Props) {
     ball: Ball,
     leftPaddle: Paddle,
     rightPaddle: Paddle,
-    orbs: GraviraOrb[]
+    orbs: GraviraOrb[],
+    stunOrbs: StunOrb[]
   ) => {
     let canvas: HTMLCanvasElement | null = canvasRef.current
     if (!canvas) return
@@ -42,6 +45,11 @@ export default function Game({ width, height }: Props) {
     context.beginPath()
     orbs.forEach((orb) => {
       orb.draw(context, iris)
+    })
+    context.closePath()
+    context.beginPath()
+    stunOrbs.forEach((orb) => {
+      orb.draw(context, yellow)
     })
   }
 
@@ -92,7 +100,8 @@ export default function Game({ width, height }: Props) {
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
         new Paddle(data.paddle2.x, data.paddle2.y),
-        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y))
+        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y)),
+        data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
       )
     }
     socket?.on("gameData", handler)

@@ -10,13 +10,23 @@ export default class Paddle {
   w: number
   h: number
 
-  draw(context: CanvasRenderingContext2D, color: string) {
+  drawHor(context: CanvasRenderingContext2D, color: string) {
     context.fillStyle = color
     context.fillRect(
       (this.x * context.canvas.width) / 100,
       (this.y * context.canvas.height) / 100,
       (this.w * context.canvas.width) / 100,
       (this.h * context.canvas.height) / 100
-	)
+    )
+  }
+
+  drawVer(context: CanvasRenderingContext2D, color: string) {
+    context.fillStyle = color
+    context.fillRect(
+      (this.y * context.canvas.width) / 100,
+      (this.x * context.canvas.height) / 100,
+      (this.h * context.canvas.width) / 100,
+      (this.w * context.canvas.height) / 100
+    )
   }
 }

@@ -11,6 +11,7 @@ import matchService from "@/services/MatchService"
 import Match from "@/models/Match.model"
 import Link from "next/link"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
+import ProfileData from "@/models/ProfileData.model"
 type Props = {
   coins: number
   className: string

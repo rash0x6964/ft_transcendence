@@ -14,8 +14,9 @@ type Props = {
   channelList?: Channel[]
   clickOnDm: (id: string) => void
   clickOnChannel: (data: Channel) => void
-  createChannelEvent: (data: Channel) => void
   handleOnChange: (val: string) => void
+  onCreateChannel: () => void
+
   isLoading: { dm: boolean; room: boolean }
 }
 
@@ -25,7 +26,7 @@ export default function ChatBar({
   selectedId,
   clickOnDm,
   clickOnChannel,
-  createChannelEvent,
+  onCreateChannel,
   handleOnChange,
   isLoading,
 }: Props) {
@@ -34,7 +35,7 @@ export default function ChatBar({
       <TopBar
         DMList={DMList}
         onChange={handleOnChange}
-        createChannelEvent={createChannelEvent}
+        onCreateChannel={onCreateChannel}
       />
       {isLoading.dm && <Loader className="mx-auto scale-50" />}
       {!isLoading.dm && (

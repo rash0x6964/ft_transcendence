@@ -14,11 +14,13 @@ import DirectMessage from "@/models/DirectMessage.model"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { useRouter } from "next/router"
 import ChatLogo from "@/components/svgs/ChatLogo"
+import CreateChanelIcn from "@/components/svgs/CreateChanelIcn"
 
 type Props = {
   clickOnChannel: (data: Channel) => void
+  onCreateChannel: () => void
 }
-export default function SearchChat({ clickOnChannel }: Props) {
+export default function SearchChat({ clickOnChannel, onCreateChannel }: Props) {
   const [search, setSearch] = useState("")
   const [users, setUsers] = useState<User[]>([])
   const [channels, setChannels] = useState<Channel[]>([])
@@ -50,7 +52,6 @@ export default function SearchChat({ clickOnChannel }: Props) {
       .catch((err) => {})
   }
 
-  const handleChannelJoin = () => {}
   useEffect(() => {
     setUsers([])
     setChannels([])
@@ -82,13 +83,21 @@ export default function SearchChat({ clickOnChannel }: Props) {
         <ChatLogo width={348} height={348} />
       </div>
       <div className="w-2/5 mx-auto">
-        <Input
-          className="bg-secondary   drop-shadow-lg w-full py-6 px-3 mb-2"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search for a Players , Public Channels"
-          icon={<Search />}
-        />
+        <div className="flex gap-2">
+          <Input
+            className="bg-secondary   drop-shadow-lg w-full py-6 px-3 mb-2"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search for a Players , Public Channels , or create one :D"
+            icon={<Search />}
+          />
+          <button
+            className=" bg-secondary hover:opacity-50 duration-500 rounded-lg h-fit p-6 drop-shadow-lg"
+            onClick={onCreateChannel}
+          >
+            <CreateChanelIcn />
+          </button>
+        </div>
 
         {search != "" && (
           <div className="w-full bg-secondary max-h-[30vh] overflow-scroll rounded-xl drop-shadow-xl py-3 px-6 ">

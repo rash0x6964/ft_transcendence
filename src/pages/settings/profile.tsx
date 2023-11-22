@@ -111,7 +111,6 @@ const Page: NextPageWithLayout = () => {
   useEffect(() => {
     getUser()
   }, [])
-  if (!user) return <></>
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 drop-shadow-md">
       <HeadTitle>Setting | Profile</HeadTitle>

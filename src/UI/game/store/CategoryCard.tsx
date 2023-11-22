@@ -1,9 +1,26 @@
-import React from "react"
+import React, { useState } from "react"
 
-export default function CategoryCard({ name }: { name: string }) {
+export default function CategoryCard({
+  name,
+  selected,
+  onClick,
+}: {
+  name: string
+  selected: string
+  onClick: (name: string) => void
+}) {
   return (
-    <div className="gradient-border-2  py-3 px-6 rounded-xl flex text-center text-sm font-light text-gray-300">
+    <button
+      className={`py-3 px-6 rounded-xl text-center text-sm font-light shadow-sm ${
+        selected === name
+          ? " border border-primary text-primary"
+          : "text-secondary bg-primary"
+      }`}
+      onClick={() => {
+        onClick(name)
+      }}
+    >
       {name}
-    </div>
+    </button>
   )
 }

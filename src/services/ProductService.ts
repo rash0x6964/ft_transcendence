@@ -12,7 +12,7 @@ class ProductService {
     return HttpClient.get(`${this.channelEndPoint}/user`)
   }
 
-  assign(body: Product) {
+  assign(body: any) {
     return HttpClient.post(`${this.channelEndPoint}`, body)
   }
 }

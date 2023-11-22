@@ -1,9 +1,9 @@
 export default interface Product {
   id: string
   name: string
-  category: "PADDLES" | "MAPSKIN" | "BACKGROUNDS"
+  category: "PADDLE" | "MAPSKIN" | "BACKGROUND"
   price: number
 	selected: boolean
-	
+
 	owned?: boolean
 }

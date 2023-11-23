@@ -33,10 +33,6 @@ const Page: NextPageWithLayout = () => {
     },
     {
       name: "Magician",
-      src: "https://ninjoo.com/cdn/shop/products/Halfmoon3_800x800.png?v=1629977279",
-    },
-    {
-      name: "Gravira",
       src: "https://ms.yugipedia.com//thumb/6/69/GraviticOrb-MADU-EN-VG-artwork.png/300px-GraviticOrb-MADU-EN-VG-artwork.png",
     },
   ]

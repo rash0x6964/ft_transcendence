@@ -58,9 +58,7 @@ export default function GameLobby({ className, lobby }: Props) {
           manaRef.current[1] + (Date.now() - lastUpdatedResource.current) / 1000
         if (_mana[0] > 3) _mana[0] = 3
         if (_mana[1] > 3) _mana[1] = 3
-        if (_mana[0] < 3 || _mana[1] < 3) {
-          setMana(_mana)
-        }
+        setMana(_mana)
       })
     }
 
@@ -83,14 +81,16 @@ export default function GameLobby({ className, lobby }: Props) {
       >
         <Game width={width} height={height} />
       </div>
-      <PlayersScore
-        time={timePipe(timer)}
-        className="mx-auto"
-        player1={lobby.players[0]}
-        player2={lobby.players[1]}
-        score={score}
-        mana={mana}
-      />
+      <div className="flex-1 flex flex-col justify-center">
+        <PlayersScore
+          time={timePipe(timer)}
+          className="mx-auto"
+          player1={lobby.players[0]}
+          player2={lobby.players[1]}
+          score={score}
+          mana={mana}
+        />
+      </div>
     </div>
   )
 }

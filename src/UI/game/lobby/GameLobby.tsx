@@ -70,8 +70,8 @@ export default function GameLobby({ className, lobby }: Props) {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange", handleScoreChange)
       clearInterval(timerInterval)
-      if (lobby.mode === "Magician" && resourceInterval) {
-        clearInterval(resourceInterval)
+      if (lobby.mode === "Magician") {
+        resourceInterval && clearInterval(resourceInterval)
         socket?.off("resourcesChange", handleResourcesChange)
       }
     }

@@ -9,7 +9,7 @@ type Props = {
   time: string
   className?: string
   score: number[]
-  mana: number[]
+  mana: number[] | null
 }
 export default function PlayersScore({
   player1,

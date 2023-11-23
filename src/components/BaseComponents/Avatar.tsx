@@ -21,15 +21,17 @@ export default function Avatar({
   href = "",
   override = false,
 }: Props) {
+  const [error, setError] = useState(false)
   if (href == "")
     return (
       <Image
         onClick={onClick}
-        className={` ${!override && "rounded-full"} ${
+        className={` bg-gray-300 ${!override && "rounded-full"} ${
           onClick && " transition-opacity cursor-pointer hover:opacity-50"
         }  object-cover   drop-shadow-lg  ${className}`}
-        src={src || "https://steamavatar.io/img/1477742944DNm1y.jpg"}
+        src={error ? "/err.png" : src ?? "/err.png"}
         alt={alt}
+        onError={() => setError(true)}
         width={250}
         height={250}
       />
@@ -37,11 +39,12 @@ export default function Avatar({
   return (
     <Link href={href}>
       <Image
+        onError={() => setError(true)}
         onClick={onClick}
-        className={` ${
+        className={`bg-gray-300 ${
           !override && "rounded-full"
         } ${" transition-opacity cursor-pointer hover:opacity-50"}  object-cover   drop-shadow-lg  ${className}`}
-        src={src || "https://steamavatar.io/img/1477742944DNm1y.jpg"}
+        src={error ? "/err.png" : src ?? "/err.png"}
         alt={alt}
         width={250}
         height={250}

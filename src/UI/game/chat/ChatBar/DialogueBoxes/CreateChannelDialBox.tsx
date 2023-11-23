@@ -41,10 +41,7 @@ export default function CreateChannelDialBox({
 
   const onCreate = () => {
     let body: CreateChannel = {
-      imageUrl:
-        avatar != ""
-          ? avatar
-          : "https://i.pinimg.com/564x/7b/fa/54/7bfa549dcba2f80b494eb825f64527e1.jpg",
+      imageUrl: avatar,
       name: channelName,
       visibility:
         visibility == "PUBLIC" && password.length ? "PROTECTED" : visibility,

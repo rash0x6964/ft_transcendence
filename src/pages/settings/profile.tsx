@@ -97,6 +97,8 @@ const Page: NextPageWithLayout = () => {
   const getUser = async () => {
     try {
       const currentUser: User = await userService.getCurrent()
+      console.log(currentUser.avatarUrl)
+
       setUser(currentUser)
       setFullname(currentUser.fullName)
       setUsername(currentUser.userName)
@@ -107,11 +109,7 @@ const Page: NextPageWithLayout = () => {
   }
 
   useEffect(() => {
-    try {
-      getUser()
-    } catch (err) {
-      console.log(err)
-    }
+    getUser()
   }, [])
   return (
     <div className="bg-secondary rounded-xl gradient-border-2 drop-shadow-md">
@@ -138,8 +136,8 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div className=" absolute top-10 left-10">
           <Avatar
-            src={user?.avatarUrl ?? env.defaultAvatar}
-            alt="W3Schools.com"
+            src={user?.avatarUrl}
+            alt=""
             className="w-28 h-28 rounded-full relative border-2"
           />
           <div className="relative -top-7 left-20 w-[22px] h-[22px] hover:opacity-75 transition-colors ">

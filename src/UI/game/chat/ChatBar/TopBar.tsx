@@ -10,36 +10,14 @@ import { Channel } from "@/models/Channel.model"
 type Props = {
   DMList?: DirectMessage[]
   onChange?: (val: string) => void
-  createChannelEvent: (data: Channel) => void
+  onCreateChannel: () => void
 }
 
-export default function TopBar({
-  DMList,
-  onChange,
-  createChannelEvent,
-}: Props) {
+export default function TopBar({ DMList, onChange, onCreateChannel }: Props) {
   const [search, setSearch] = useState("")
-
-  const [dialogueState, setDialogueState] = useState(true)
-  const createChannel = () => {
-    setDialogueState(false)
-  }
-
-  const saveChannel = () => {
-    setDialogueState(true)
-  }
 
   return (
     <>
-      <Dialogue
-        onBackDropClick={() => setDialogueState(true)}
-        closed={dialogueState}
-      >
-        <CreateChannelDialBox
-          handler={saveChannel}
-          createChannelEvent={createChannelEvent}
-        />
-      </Dialogue>
       <div className="flex gap-2 mb-4">
         <Input
           placeholder="Search"
@@ -52,8 +30,8 @@ export default function TopBar({
           value={search}
         />
         <button
-          className="flex items-center justify-center bg-big-stone hover:opacity-50 duration-500 rounded-lg h-14 w-14"
-          onClick={createChannel}
+          className="flex items-center  justify-center bg-big-stone hover:opacity-50 duration-500 rounded-lg h-14 w-14"
+          onClick={onCreateChannel}
         >
           <CreateChanelIcn />
         </button>

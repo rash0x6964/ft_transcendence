@@ -3,7 +3,6 @@ import PlayersScore from "./PlayersScore"
 import Game from "./Game"
 import { useContext, useEffect, useRef, useState } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
-import { useRouter } from "next/router"
 import { timePipe } from "@/pipes/date.pipes"
 
 type Props = {
@@ -20,7 +19,6 @@ export default function GameLobby({ className, lobby }: Props) {
   const manaRef = useRef([0, 0])
   const lastUpdatedResource = useRef(Date.now())
   const socket = useContext(WebSocketContext)
-  const router = useRouter()
 
   useEffect(() => {
     const updateDimensions = () => {

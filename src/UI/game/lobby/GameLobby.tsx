@@ -15,6 +15,9 @@ export default function GameLobby({ className, lobby }: Props) {
   const [height, setHeight] = useState<number>(0)
   const [score, setScore] = useState<number[]>([0, 0])
   const [timer, setTimer] = useState<number>(0)
+  const [mana, setMana] = useState<number[] | null>(null)
+  const manaRef = useRef([0, 0])
+  const lastUpdatedResource = useRef(Date.now())
   const socket = useContext(WebSocketContext)
 
   useEffect(() => {
@@ -32,15 +35,41 @@ export default function GameLobby({ className, lobby }: Props) {
       setScore(data)
     }
 
+    const handleResourcesChange = (data: any) => {
+      manaRef.current = data.mana
+      lastUpdatedResource.current = data.lastUpdatedResource
+    }
+
     socket?.on("scoreChange", handleScoreChange)
+
     const timerInterval = setInterval(() => {
       setTimer((Date.now() - lobby.gameData.gameStartDate) / 1000)
     }, 1000)
+
+    let resourceInterval: NodeJS.Timeout | null = null
+    if (lobby.mode === "Magician") {
+      socket?.on("resourcesChange", handleResourcesChange)
+      setMana([0, 0])
+      resourceInterval = setInterval(() => {
+        const _mana = [0, 0]
+        _mana[0] =
+          manaRef.current[0] + (Date.now() - lastUpdatedResource.current) / 1000
+        _mana[1] =
+          manaRef.current[1] + (Date.now() - lastUpdatedResource.current) / 1000
+        if (_mana[0] > 3) _mana[0] = 3
+        if (_mana[1] > 3) _mana[1] = 3
+        setMana(_mana)
+      })
+    }
 
     return () => {
       window.removeEventListener("resize", handleResize)
       socket?.off("scoreChange", handleScoreChange)
       clearInterval(timerInterval)
+      if (lobby.mode === "Magician") {
+        resourceInterval && clearInterval(resourceInterval)
+        socket?.off("resourcesChange", handleResourcesChange)
+      }
     }
   }, [])
 
@@ -52,13 +81,14 @@ export default function GameLobby({ className, lobby }: Props) {
       >
         <Game width={width} height={height} />
       </div>
-      <div className="flex-1  flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center">
         <PlayersScore
           time={timePipe(timer)}
           className="mx-auto"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
           score={score}
+          mana={mana}
         />
       </div>
     </div>

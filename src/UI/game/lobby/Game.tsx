@@ -1,12 +1,16 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import Ball from "@/types/Ball"
+import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
+import StunOrb from "@/types/StunOrb"
 import { useRef, useEffect, useContext } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
 const white: string = "#FFFFFF"
+const iris: string = "#5D3FD3"
+const yellow: string = "#FEBF10"
 
 type Props = {
   width: number
@@ -21,29 +25,59 @@ export default function Game({ width, height }: Props) {
     context: CanvasRenderingContext2D,
     ball: Ball,
     leftPaddle: Paddle,
-    rightPaddle: Paddle
+    rightPaddle: Paddle,
+    orbs: GraviraOrb[],
+    stunOrbs: StunOrb[]
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
     leftPaddle.drawHor(context, primary)
     rightPaddle.drawHor(context, primary)
     ball.drawHor(context, white)
+    context.closePath()
+    context.beginPath()
+    orbs.forEach((orb) => {
+      orb.drawHor(context, iris)
+    })
+    context.closePath()
+    context.beginPath()
+    stunOrbs.forEach((orb) => {
+      orb.drawHor(context, yellow)
+    })
   }
 
   const drawVertically = (
     context: CanvasRenderingContext2D,
     ball: Ball,
     leftPaddle: Paddle,
-    rightPaddle: Paddle
+    rightPaddle: Paddle,
+    orbs: GraviraOrb[],
+    stunOrbs: StunOrb[]
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
     leftPaddle.drawVer(context, primary)
     rightPaddle.drawVer(context, primary)
     ball.drawVer(context, white)
+    context.closePath()
+    context.beginPath()
+    orbs.forEach((orb) => {
+      orb.drawVer(context, iris)
+    })
+    context.closePath()
+    context.beginPath()
+    stunOrbs.forEach((orb) => {
+      orb.drawVer(context, yellow)
+    })
   }
 
-  const draw = (ball: Ball, leftPaddle: Paddle, rightPaddle: Paddle) => {
+  const draw = (
+    ball: Ball,
+    leftPaddle: Paddle,
+    rightPaddle: Paddle,
+    orbs: GraviraOrb[],
+    stunOrbs: StunOrb[]
+  ) => {
     let canvas: HTMLCanvasElement | null = canvasRef.current
     if (!canvas) return
     const context: CanvasRenderingContext2D | null = canvas.getContext("2d")
@@ -53,8 +87,8 @@ export default function Game({ width, height }: Props) {
     context.fillStyle = secondary
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
     if (context.canvas.width > context.canvas.height)
-      drawHorizontally(context, ball, leftPaddle, rightPaddle)
-    else drawVertically(context, ball, leftPaddle, rightPaddle)
+      drawHorizontally(context, ball, leftPaddle, rightPaddle, orbs, stunOrbs)
+    else drawVertically(context, ball, leftPaddle, rightPaddle, orbs, stunOrbs)
   }
 
   const keyDownHandler = (ev: any) => {
@@ -68,6 +102,11 @@ export default function Game({ width, height }: Props) {
       socket?.emit("paddleDown", {
         token: CookiesService.getJwtCookie(),
         data: { isDown: true },
+      })
+    }
+    if (ev.key == "1" || ev.key == "2" || ev.key == "3" || ev.key == "4") {
+      socket?.emit("numberPressed", {
+        data: { numberPressed: ev.key },
       })
     }
   }
@@ -85,6 +124,11 @@ export default function Game({ width, height }: Props) {
         data: { isDown: false },
       })
     }
+    if (ev.key == "1" || ev.key == "2" || ev.key == "3" || ev.key == "4") {
+      socket?.emit("numberPressed", {
+        data: { numberPressed: null },
+      })
+    }
   }
 
   useEffect(() => {
@@ -93,7 +137,9 @@ export default function Game({ width, height }: Props) {
       draw(
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
-        new Paddle(data.paddle2.x, data.paddle2.y)
+        new Paddle(data.paddle2.x, data.paddle2.y),
+        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y)),
+        data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
       )
     }
     socket?.on("gameData", handler)

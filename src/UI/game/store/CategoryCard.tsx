@@ -2,19 +2,19 @@ import React, { useState } from "react"
 
 export default function CategoryCard({
   name,
-  selected,
+  selectedCategory,
   onClick,
 }: {
   name: string
-  selected: string
+  selectedCategory: string
   onClick: (name: string) => void
 }) {
   return (
     <button
-      className={`py-3 px-6 rounded-xl text-center text-sm font-light shadow-sm ${
-        selected === name
-          ? " border border-primary text-primary"
-          : "text-secondary bg-primary"
+      className={` py-3 px-6 rounded-xl text-center text-sm font-light shadow-sm ${
+        selectedCategory === name
+          ? " gradient-border-3"
+          : " gradient-border-2"
       }`}
       onClick={() => {
         onClick(name)

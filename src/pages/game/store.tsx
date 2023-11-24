@@ -11,14 +11,17 @@ import { NotifcationContext } from "@/UI/NotificationProvider"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
 import ProfileData from "@/models/ProfileData.model"
 import profileService from "@/services/ProfileService"
+import Dialogue from "@/components/Dialogue/Dialogue"
 
 const Page: NextPageWithLayout = () => {
   const [items, setItem] = useState<Product[]>([])
   const notify: (data: NotifData) => void = useContext(NotifcationContext)
   const { profileData, setProfileData } = useContext(ProfileContext)
 
-  const category = ["Paddle", "Map skin", "Background"]
-  const [selected, setSelected] = useState(category[0])
+  const category = ["Paddle", "Map skin"]
+  const [selectedCategory, setSelectedCategory] = useState(category[0])
+  const [selectedItem, setSelectedItem] = useState<Product | null>(null)
+  const [dialogueState, setDialogueState] = useState(true)
 
   useEffect(() => {
     ProductService.getProductList()
@@ -55,8 +58,16 @@ const Page: NextPageWithLayout = () => {
       })
   }
 
-  const categoryClicked = (name: string) => {
-    setSelected(name)
+  const itemClicked = (item: Product) => {
+    setSelectedItem(item)
+    setDialogueState(false)
+  }
+
+  const acceptPayment = () => {
+    if (selectedItem) {
+      buyAnItem(selectedItem)
+      setDialogueState(true)
+    }
   }
 
   return (
@@ -68,20 +79,42 @@ const Page: NextPageWithLayout = () => {
             <CategoryCard
               key={index}
               name={item}
-              selected={selected}
-              onClick={categoryClicked}
+              selectedCategory={selectedCategory}
+              onClick={(name: string) => setSelectedCategory(name)}
             />
           ))}
         </div>
         <div className="flex gap-4">
           {items.map((item) => {
-            if (item.category === selected.toUpperCase())
+            if (item.category === selectedCategory.toUpperCase() && !item.owned)
               return (
-                <ItemCard key={item.id} item={item} boughtProduct={buyAnItem} />
+                <ItemCard key={item.id} item={item} onClick={itemClicked} />
               )
           })}
         </div>
       </div>
+      <Dialogue
+        onBackDropClick={() => setDialogueState(true)}
+        closed={dialogueState}
+      >
+        <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
+          <p className="font-light text-white">Buy Item</p>
+          <p className="font-light mb-9 text-sm">
+            you ganna spened{" "}
+            <span className="text-primary">{selectedItem?.price} coins</span> to
+            buy this item{" "}
+            <span className="text-primary">
+              {selectedItem?.name} {selectedItem?.category.toLowerCase()}
+            </span>
+          </p>
+          <button
+            className=" bg-green-400 py-2 px-5 rounded-md w-fit self-end text-white"
+            onClick={acceptPayment}
+          >
+            Buy
+          </button>
+        </div>
+      </Dialogue>
     </div>
   )
 }

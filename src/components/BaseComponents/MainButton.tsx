@@ -1,4 +1,3 @@
-
 import React, { PropsWithChildren } from "react"
 type Props = {
   onClick?: (a: any) => void
@@ -11,13 +10,13 @@ export default function MainButton({
   glow = false,
   children,
   className,
-  type
+  type,
 }: Props & PropsWithChildren) {
   return (
     <button
       className={` relative  group bg-primary duration-300 hover:bg-primary/70   text-sm font-semibold  text-secondary rounded-md text-center  ${className}`}
       onClick={onClick}
-	  type={type}
+      type={type}
     >
       {glow && (
         <div

@@ -55,6 +55,16 @@ body {
 	border: 1.5px solid transparent;
 }
 
+.gradient-border-3 {
+
+	background: linear-gradient(180deg, #374151 0%, #374151 100%) padding-box,
+		linear-gradient(140deg, #FFFFFF00 60%, #32393e 100%) border-box,
+		linear-gradient(300deg, #FFFFFF00 60%, #32393e 100%) border-box;
+
+	border-radius: 10px;
+	border: 1.5px solid transparent;
+}
+
 
 .loader {
 	position: relative;

@@ -51,7 +51,11 @@ export default function EndGame({ data }: Props) {
                   {data.achievements.map(
                     (achievement) =>
                       achievement && (
-                        <div key={achievement.id} className="mx-auto">
+                        <div
+                          key={achievement.id}
+                          className="mx-auto"
+                          title={achievement.description}
+                        >
                           <Avatar
                             key={achievement.id}
                             src={achievement.imgUrl}

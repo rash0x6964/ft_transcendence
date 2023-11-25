@@ -42,7 +42,7 @@ export default function Achievements({ profileData }: Props) {
   return (
     <div className="bg-secondary rounded-2xl h-fit w-1/2 max-w-lg m-10">
       <SectionTitle text="Achievements" />
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap justify-center gap-3">
         {achievements.map((achievement) => (
           <AchievementEntry key={achievement.name} achievement={achievement} />
         ))}

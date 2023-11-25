@@ -1,10 +1,11 @@
+import { Repo } from "@/models/Repo.model"
 import { HttpClient } from "./HttpClient"
 
 class RepoService {
   private channelEndPoint = "/repo"
 
-  getSelectedProduct() {
-    return HttpClient.get(`${this.channelEndPoint}`)
+  getSelectedProduct(): Promise<Repo> {
+    return HttpClient.get(`${this.channelEndPoint}`).then((res) => res.data)
   }
 
   // getAllProductOfUser() {
@@ -12,9 +13,12 @@ class RepoService {
   // }
 
   updateRepo(body: any) {
-    return HttpClient.post(`${this.channelEndPoint}`, body)
+    return HttpClient.post(`${this.channelEndPoint}`, body).then(
+      (res) => res.data
+    )
   }
-
 }
 
-export default new RepoService()
+const repoService = new RepoService()
+
+export default repoService

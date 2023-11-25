@@ -86,7 +86,11 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div className="flex gap-4">
           {items.map((item) => {
-            if (item.category === selectedCategory.toUpperCase().replace(' ', '') && !item.owned)
+            if (
+              item.category ===
+                selectedCategory.toUpperCase().replace(" ", "") &&
+              !item.owned
+            )
               return (
                 <ItemCard key={item.id} item={item} onClick={itemClicked} />
               )

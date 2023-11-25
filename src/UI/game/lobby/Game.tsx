@@ -1,5 +1,6 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
+import repoService from "@/services/RepoService"
 import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
@@ -11,6 +12,8 @@ const primary: string = "#9BECE3"
 const white: string = "#FFFFFF"
 const iris: string = "#5D3FD3"
 const yellow: string = "#FEBF10"
+
+let paddleColor = primary
 
 type Props = {
   width: number
@@ -31,8 +34,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.drawHor(context, primary)
-    rightPaddle.drawHor(context, primary)
+    leftPaddle.drawHor(context, paddleColor)
+    rightPaddle.drawHor(context, paddleColor)
     ball.drawHor(context, white)
     context.closePath()
     context.beginPath()
@@ -56,8 +59,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
-    leftPaddle.drawVer(context, primary)
-    rightPaddle.drawVer(context, primary)
+    leftPaddle.drawVer(context, paddleColor)
+    rightPaddle.drawVer(context, paddleColor)
     ball.drawVer(context, white)
     context.closePath()
     context.beginPath()
@@ -138,13 +141,23 @@ export default function Game({ width, height }: Props) {
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
         new Paddle(data.paddle2.x, data.paddle2.y),
-        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y)),
-        data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
+        data.orbs.map((orb: any) => new GraviraOrb(orb.x, orb.y)),
+        data.stunOrbs.map((orb: any) => new StunOrb(orb.x, orb.y))
       )
     }
+
+    const updateSkins = async () => {
+      try {
+        const repo = await repoService.getSelectedProduct()
+
+        if (repo.paddleSkinID) paddleColor = repo.paddleSkinID
+      } catch (error) {}
+    }
+
     socket?.on("gameData", handler)
     document.addEventListener("keydown", keyDownHandler)
     document.addEventListener("keyup", keyUpHandler)
+    updateSkins()
     return () => {
       socket?.off("gameData")
       document.removeEventListener("keydown", keyDownHandler)

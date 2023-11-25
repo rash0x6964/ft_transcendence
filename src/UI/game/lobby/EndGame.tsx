@@ -11,6 +11,7 @@ type Props = {
 
 export default function EndGame({ data }: Props) {
   const lobby = data.lobby
+  console.log(data)
 
   return (
     <div className="w-full h-full justify-between flex flex-col py-1">
@@ -35,6 +36,7 @@ export default function EndGame({ data }: Props) {
           className="mb-8 mx-auto animate__animated animate__fadeIn"
           player1={lobby.players[0]}
           player2={lobby.players[1]}
+          mana={null}
         />
         <div className="mx-auto mb-24  text-center animate__animated animate__fadeIn">
           <span>{lobby.ranked ? "Ranked" : "Unranked"}</span>
@@ -42,23 +44,35 @@ export default function EndGame({ data }: Props) {
         </div>
 
         <div className="mx-auto flex gap-36 w-fit ">
-          {data.achievements.length > 0 && (
-            <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s ">
-              <div className=" flex gap-4">
-                {data.achievements.map((achievement) => (
-                  <Avatar
-                    key={achievement.id}
-                    src={achievement.imgUrl}
-                    alt={achievement.name}
-                    className="w-10 h-10"
-                  />
-                ))}
+          {data.achievements.length > 0 &&
+            data.achievements.some((ach) => ach != null) && (
+              <div
+                className={`flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s`}
+              >
+                <div className=" flex gap-4">
+                  {data.achievements.map(
+                    (achievement) =>
+                      achievement && (
+                        <div
+                          key={achievement.id}
+                          className="mx-auto"
+                          title={achievement.description}
+                        >
+                          <Avatar
+                            key={achievement.id}
+                            src={achievement.imgUrl}
+                            alt={achievement.name}
+                            className="w-10 h-10 mx-auto bg-transparent"
+                          />
+                        </div>
+                      )
+                  )}
+                </div>
+                <div className="mx-auto text-2xl text-slate-500 font-light">
+                  Achievements
+                </div>
               </div>
-              <div className="mx-auto text-2xl text-slate-500 font-light">
-                Achievements
-              </div>
-            </div>
-          )}
+            )}
           <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-1s">
             <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
             <div className="mx-auto text-2xl text-slate-500 font-light">

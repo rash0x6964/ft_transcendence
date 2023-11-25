@@ -56,7 +56,7 @@ export default function EndGame({ data }: Props) {
                             key={achievement.id}
                             src={achievement.imgUrl}
                             alt={achievement.name}
-                            className="w-10 h-10 mx-auto"
+                            className="w-10 h-10 mx-auto bg-transparent"
                           />
                           <div className="text-sm font-light  flex justify-center">
                             {achievement.name}

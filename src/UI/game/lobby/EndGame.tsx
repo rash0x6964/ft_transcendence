@@ -46,7 +46,9 @@ export default function EndGame({ data }: Props) {
         <div className="mx-auto flex gap-36 w-fit ">
           {data.achievements.length > 0 &&
             data.achievements.some((ach) => ach != null) && (
-              <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s ">
+              <div
+                className={`flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s`}
+              >
                 <div className=" flex gap-4">
                   {data.achievements.map(
                     (achievement) =>
@@ -62,9 +64,6 @@ export default function EndGame({ data }: Props) {
                             alt={achievement.name}
                             className="w-10 h-10 mx-auto bg-transparent"
                           />
-                          <div className="text-sm font-light  flex justify-center">
-                            {achievement.name}
-                          </div>
                         </div>
                       )
                   )}

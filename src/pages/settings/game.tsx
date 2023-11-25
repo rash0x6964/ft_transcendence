@@ -1,12 +1,13 @@
 import SettingLayout from "@/UI/SettingLayout"
-import React, { ReactElement, useEffect, useMemo, useState } from "react"
+import React, { ReactElement, useContext, useEffect, useState } from "react"
 import { NextPageWithLayout } from "../_app"
-import ItemCard from "@/UI/game/store/ItemCard"
 import Product from "@/models/Product.model"
 import ProductService from "@/services/ProductService"
 import OwnedProduct from "@/components/svgs/OwnedProduct"
 import MainButton from "@/components/BaseComponents/MainButton"
 import RepoService from "@/services/RepoService"
+import NotifData from "@/types/NotifData"
+import { NotifcationContext } from "@/UI/NotificationProvider"
 
 const Page: NextPageWithLayout = () => {
   const mainPad: any = {
@@ -29,6 +30,7 @@ const Page: NextPageWithLayout = () => {
     price: 0,
   }
 
+  const notify: (data: NotifData) => void = useContext(NotifcationContext)
   const [items, setItem] = useState<Product[]>([mainPad, mainMap])
   const [selectedMap, setSelectedMap] = useState<Product | null>(null)
   const [selectedPad, setSelectedPad] = useState<Product | null>(null)
@@ -62,7 +64,13 @@ const Page: NextPageWithLayout = () => {
     RepoService.updateRepo({
       selectedMapSkin: selectedMap?.id,
     })
-      .then((res) => {})
+      .then((res) => {
+        notify({
+          message: "The map skin updated",
+          title: "Update texture",
+          type: "success",
+        })
+      })
       .catch((err) => {})
   }
 
@@ -71,7 +79,13 @@ const Page: NextPageWithLayout = () => {
       selectedPaddle: selectedPad?.id,
     }
     RepoService.updateRepo(body)
-      .then((res) => {})
+      .then((res) => {
+        notify({
+          message: "The paddle skin updated",
+          title: "Update texture",
+          type: "success",
+        })
+      })
       .catch((err) => {})
   }
 

@@ -34,6 +34,7 @@ export default function Avatar({
         onError={() => setError(true)}
         width={250}
         height={250}
+        title={alt}
       />
     )
   return (

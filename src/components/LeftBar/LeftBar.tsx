@@ -15,6 +15,7 @@ import Check from "../svgs/Check"
 import Cross2 from "../svgs/Cross2"
 import NotificationBox from "@/UI/game/chat/ChatBar/DialogueBoxes/NotificationBox"
 import { NotifciationsContext } from "@/UI/NotificationProvider"
+import StoreIcon from "../svgs/StoreIcon"
 
 type Props = {
   className?: string
@@ -41,6 +42,10 @@ export default function LeftBar({ className }: Props) {
     {
       icon: <LeaderBoard />,
       href: "/game/leaderboard",
+    },
+    {
+      icon: <StoreIcon />,
+      href: "/game/store",
     },
   ]
 

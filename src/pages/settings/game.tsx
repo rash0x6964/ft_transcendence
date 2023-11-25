@@ -10,7 +10,7 @@ import NotifData from "@/types/NotifData"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 
 const Page: NextPageWithLayout = () => {
-  const mainPad: any = {
+  const mainPad: Product = {
     category: "PADDLE",
     color: "#9BECE3",
     id: "9f3eU400",
@@ -20,7 +20,7 @@ const Page: NextPageWithLayout = () => {
     price: 0,
   }
 
-  const mainMap: any = {
+  const mainMap: Product = {
     category: "MAPSKIN",
     color: "",
     id: "9f3eU4034",
@@ -43,10 +43,10 @@ const Page: NextPageWithLayout = () => {
         const repo: any = await RepoService.getSelectedProduct()
 
         setSelectedMap(
-          _items.find((x) => x.id === repo.data.selectedMapSkin) ?? mainMap
+          _items.find((x) => x.id === repo.data.mapSkinID) ?? mainMap
         )
         setSelectedPad(
-          _items.find((x) => x.id === repo.data.selectedPaddle) ?? mainPad
+          _items.find((x) => x.id === repo.data.paddleSkinID) ?? mainPad
         )
 
         setItem(_items)
@@ -62,7 +62,7 @@ const Page: NextPageWithLayout = () => {
 
   const saveMapSkin = () => {
     RepoService.updateRepo({
-      selectedMapSkin: selectedMap?.id,
+      mapSkinID: selectedMap?.id === mainMap?.id ? null : selectedMap?.id,
     })
       .then((res) => {
         notify({
@@ -75,10 +75,9 @@ const Page: NextPageWithLayout = () => {
   }
 
   const savePadSkin = () => {
-    const body: any = {
-      selectedPaddle: selectedPad?.id,
-    }
-    RepoService.updateRepo(body)
+    RepoService.updateRepo({
+      paddleSkinID: selectedPad?.id === mainPad?.id ? null : selectedPad?.id,
+    })
       .then((res) => {
         notify({
           message: "The paddle skin updated",

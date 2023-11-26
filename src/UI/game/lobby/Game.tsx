@@ -1,10 +1,11 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
+import RepoService from "@/services/RepoService"
 import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
 import StunOrb from "@/types/StunOrb"
-import { useRef, useEffect, useContext } from "react"
+import { useRef, useEffect, useContext, useState } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
@@ -20,6 +21,7 @@ type Props = {
 export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [paddleColor, setPaddleColor] = useState<string>(primary)
 
   const drawHorizontally = (
     context: CanvasRenderingContext2D,
@@ -31,8 +33,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.drawHor(context, primary)
-    rightPaddle.drawHor(context, primary)
+    leftPaddle.drawHor(context, paddleColor)
+    rightPaddle.drawHor(context, paddleColor)
     ball.drawHor(context, white)
     context.closePath()
     context.beginPath()
@@ -56,8 +58,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
-    leftPaddle.drawVer(context, primary)
-    rightPaddle.drawVer(context, primary)
+    leftPaddle.drawVer(context, paddleColor)
+    rightPaddle.drawVer(context, paddleColor)
     ball.drawVer(context, white)
     context.closePath()
     context.beginPath()
@@ -142,6 +144,15 @@ export default function Game({ width, height }: Props) {
         data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
       )
     }
+    const updateSkins = async () => {
+      const skins = await RepoService.getSkins()
+      console.log("first", skins)
+      if (skins.paddleSkin) {
+        setPaddleColor(skins.paddleSkin.color)
+        console.log(skins)
+      }
+    }
+    updateSkins()
     socket?.on("gameData", handler)
     document.addEventListener("keydown", keyDownHandler)
     document.addEventListener("keyup", keyUpHandler)

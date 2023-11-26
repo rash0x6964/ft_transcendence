@@ -7,14 +7,15 @@ class RepoService {
     return HttpClient.get(`${this.channelEndPoint}`)
   }
 
-  // getAllProductOfUser() {
-  //   return HttpClient.get(`${this.channelEndPoint}/user`)
-  // }
-
   updateRepo(body: any) {
     return HttpClient.post(`${this.channelEndPoint}`, body)
   }
 
+  getSkins() {
+    return HttpClient.get(`${this.channelEndPoint}/skins`).then(
+      (res) => res.data
+    )
+  }
 }
 
 export default new RepoService()

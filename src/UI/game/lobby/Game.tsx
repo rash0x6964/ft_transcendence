@@ -5,7 +5,7 @@ import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
 import StunOrb from "@/types/StunOrb"
-import { useRef, useEffect, useContext, useState } from "react"
+import { useRef, useEffect, useContext } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
@@ -21,8 +21,7 @@ type Props = {
 export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [paddleColor, setPaddleColor] = useState<string>(primary)
-
+  const paddleColor = useRef<string>(primary)
   const drawHorizontally = (
     context: CanvasRenderingContext2D,
     ball: Ball,
@@ -33,8 +32,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.drawHor(context, paddleColor)
-    rightPaddle.drawHor(context, paddleColor)
+    leftPaddle.drawHor(context, paddleColor.current)
+    rightPaddle.drawHor(context, paddleColor.current)
     ball.drawHor(context, white)
     context.closePath()
     context.beginPath()
@@ -58,8 +57,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
-    leftPaddle.drawVer(context, paddleColor)
-    rightPaddle.drawVer(context, paddleColor)
+    leftPaddle.drawVer(context, paddleColor.current)
+    rightPaddle.drawVer(context, paddleColor.current)
     ball.drawVer(context, white)
     context.closePath()
     context.beginPath()
@@ -148,11 +147,12 @@ export default function Game({ width, height }: Props) {
       const skins = await RepoService.getSkins()
       console.log("first", skins)
       if (skins.paddleSkin) {
-        setPaddleColor(skins.paddleSkin.color)
+        paddleColor.current = skins.paddleSkin.color
         console.log(skins)
       }
     }
     updateSkins()
+
     socket?.on("gameData", handler)
     document.addEventListener("keydown", keyDownHandler)
     document.addEventListener("keyup", keyUpHandler)

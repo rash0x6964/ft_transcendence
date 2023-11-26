@@ -1,5 +1,6 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
+import RepoService from "@/services/RepoService"
 import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
@@ -20,7 +21,7 @@ type Props = {
 export default function Game({ width, height }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-
+  const paddleColor = useRef<string>(primary)
   const drawHorizontally = (
     context: CanvasRenderingContext2D,
     ball: Ball,
@@ -31,8 +32,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.drawHor(context, primary)
-    rightPaddle.drawHor(context, primary)
+    leftPaddle.drawHor(context, paddleColor.current)
+    rightPaddle.drawHor(context, paddleColor.current)
     ball.drawHor(context, white)
     context.closePath()
     context.beginPath()
@@ -56,8 +57,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
-    leftPaddle.drawVer(context, primary)
-    rightPaddle.drawVer(context, primary)
+    leftPaddle.drawVer(context, paddleColor.current)
+    rightPaddle.drawVer(context, paddleColor.current)
     ball.drawVer(context, white)
     context.closePath()
     context.beginPath()
@@ -142,6 +143,16 @@ export default function Game({ width, height }: Props) {
         data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
       )
     }
+    const updateSkins = async () => {
+      const skins = await RepoService.getSkins()
+      console.log("first", skins)
+      if (skins.paddleSkin) {
+        paddleColor.current = skins.paddleSkin.color
+        console.log(skins)
+      }
+    }
+    updateSkins()
+
     socket?.on("gameData", handler)
     document.addEventListener("keydown", keyDownHandler)
     document.addEventListener("keyup", keyUpHandler)

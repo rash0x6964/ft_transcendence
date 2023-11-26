@@ -9,6 +9,8 @@ type Props = {
   className?: string
   lobby: Lobby
 }
+
+
 export default function GameLobby({ className, lobby }: Props) {
   const divRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState<number>(0)

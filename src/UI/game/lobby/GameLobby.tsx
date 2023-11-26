@@ -9,7 +9,7 @@ type Props = {
   className?: string
   lobby: Lobby
 }
-const primary: string = "#9BECE3"
+
 
 export default function GameLobby({ className, lobby }: Props) {
   const divRef = useRef<HTMLDivElement | null>(null)

@@ -1,4 +1,4 @@
-import Logout from "@/components/svgs/logout"
+import Logout from "@/components/svgs/Logout"
 import CookiesService from "@/services/CookiesService"
 import { useRouter } from "next/navigation"
 

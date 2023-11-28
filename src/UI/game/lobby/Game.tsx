@@ -1,4 +1,7 @@
+import { LobbyContext } from "@/UI/LobbyProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
+import Lobby from "@/models/Lobby.model"
+import { Repo } from "@/models/Repo.model"
 import CookiesService from "@/services/CookiesService"
 import RepoService from "@/services/RepoService"
 import Ball from "@/types/Ball"
@@ -16,12 +19,13 @@ const yellow: string = "#FEBF10"
 type Props = {
   width: number
   height: number
+  skins: any
 }
 
-export default function Game({ width, height }: Props) {
+export default function Game({ width, height, skins }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const paddleColor = useRef<string>(primary)
+  const paddleColor = useRef<string[]>([primary, primary])
   const drawHorizontally = (
     context: CanvasRenderingContext2D,
     ball: Ball,
@@ -32,8 +36,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(context.canvas.width / 2, 0, 2, context.canvas.height)
-    leftPaddle.drawHor(context, paddleColor.current)
-    rightPaddle.drawHor(context, paddleColor.current)
+    leftPaddle.drawHor(context, paddleColor.current[0])
+    rightPaddle.drawHor(context, paddleColor.current[1])
     ball.drawHor(context, white)
     context.closePath()
     context.beginPath()
@@ -57,8 +61,8 @@ export default function Game({ width, height }: Props) {
   ) => {
     context.fillStyle = primary
     context.fillRect(0, context.canvas.height / 2, context.canvas.width, 2)
-    leftPaddle.drawVer(context, paddleColor.current)
-    rightPaddle.drawVer(context, paddleColor.current)
+    leftPaddle.drawVer(context, paddleColor.current[0])
+    rightPaddle.drawVer(context, paddleColor.current[1])
     ball.drawVer(context, white)
     context.closePath()
     context.beginPath()
@@ -143,12 +147,15 @@ export default function Game({ width, height }: Props) {
         data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
       )
     }
+
     const updateSkins = async () => {
-      const skins = await RepoService.getSkins()
-      console.log("first", skins)
-      if (skins.paddleSkin) {
-        paddleColor.current = skins.paddleSkin.color
-        console.log(skins)
+      if (!skins) return
+
+      if (skins[0]?.paddleSkin?.color) {
+        paddleColor.current[0] = skins[0].paddleSkin.color
+      }
+      if (skins[1]?.paddleSkin?.color) {
+        paddleColor.current[1] = skins[1].paddleSkin.color
       }
     }
     updateSkins()

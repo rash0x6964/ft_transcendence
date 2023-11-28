@@ -11,6 +11,12 @@ class RepoService {
     return HttpClient.post(`${this.channelEndPoint}`, body)
   }
 
+  getSkinsById(id: string) {
+    return HttpClient.get(`${this.channelEndPoint}/skins/${id}`).then(
+      (res) => res.data
+    )
+  }
+
   getSkins() {
     return HttpClient.get(`${this.channelEndPoint}/skins`).then(
       (res) => res.data

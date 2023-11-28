@@ -10,7 +10,6 @@ type Props = {
   lobby: Lobby
 }
 
-
 export default function GameLobby({ className, lobby }: Props) {
   const divRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState<number>(0)
@@ -81,7 +80,7 @@ export default function GameLobby({ className, lobby }: Props) {
         ref={divRef}
         className="w-full bg-secondary  h-[80%]  border-primary border-2"
       >
-        <Game width={width} height={height} />
+        <Game skins={lobby.skins} width={width} height={height} />
       </div>
       <div className="flex-1 flex flex-col justify-center">
         <PlayersScore

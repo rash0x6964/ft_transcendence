@@ -28,7 +28,7 @@ export default function SettingLayout({
               path="security"
               icon={<Security />}
             />
-            <NavButton title="Game Prefrences" path="game" icon={<Game />} />
+            <NavButton title="Game Preferences" path="game" icon={<Game />} />
             <LogoutButton />
           </div>
           <div className="w-[823px]">{children}</div>

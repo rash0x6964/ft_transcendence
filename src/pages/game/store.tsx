@@ -86,7 +86,11 @@ const Page: NextPageWithLayout = () => {
         </div>
         <div className="flex gap-4">
           {items.map((item) => {
-            if (item.category === selectedCategory.toUpperCase().replace(' ', '') && !item.owned)
+            if (
+              item.category ===
+                selectedCategory.toUpperCase().replace(" ", "") &&
+              !item.owned
+            )
               return (
                 <ItemCard key={item.id} item={item} onClick={itemClicked} />
               )
@@ -100,12 +104,12 @@ const Page: NextPageWithLayout = () => {
         <div className="gradient-border-2 p-7 rounded-xl w-[470px] h-[198px] flex flex-col justify-between">
           <p className="font-light text-white">Buy Item</p>
           <p className="font-light mb-9 text-sm">
-            you ganna spened{" "}
-            <span className="text-primary">{selectedItem?.price} coins</span> to
-            buy this item{" "}
+            Do you want to purchase{" "}
             <span className="text-primary">
               {selectedItem?.name} {selectedItem?.category.toLowerCase()}
-            </span>
+            </span>{" "}
+            for{" "}
+            <span className="text-primary">{selectedItem?.price} coins</span>?
           </p>
           <button
             className=" bg-green-400 py-2 px-5 rounded-md w-fit self-end text-white"

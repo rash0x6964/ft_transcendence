@@ -156,7 +156,7 @@ const Page: NextPageWithLayout = () => {
 
         if (router.query?.type == "channel")
           setSelected(data.find((x) => x.id == router.query?.id))
-        else if (data.length > 0 && selected != undefined) setSelected(data[0])
+        else if (data.length > 0 && selected === undefined) setSelected(data[0])
       })
       .catch((err) => {
         setIsMounted((obj) => {

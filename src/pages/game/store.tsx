@@ -16,19 +16,23 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 const Page: NextPageWithLayout = () => {
   const [items, setItem] = useState<Product[]>([])
   const notify: (data: NotifData) => void = useContext(NotifcationContext)
-  const { profileData, setProfileData } = useContext(ProfileContext)
+  const { setProfileData } = useContext(ProfileContext)
 
   const category = ["Paddle", "Map skin"]
   const [selectedCategory, setSelectedCategory] = useState(category[0])
   const [selectedItem, setSelectedItem] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
   const [dialogueState, setDialogueState] = useState(true)
 
   useEffect(() => {
     ProductService.getProductList()
       .then((res) => {
+        setLoading(false)
         setItem(res.data)
       })
-      .catch((err) => {})
+      .catch((err) => {
+        setLoading(false)
+      })
   }, [])
 
   const buyAnItem = (item: Product) => {
@@ -70,8 +74,15 @@ const Page: NextPageWithLayout = () => {
     }
   }
 
+  if (loading)
+    return (
+      <div className="w-full h-full flex flex-col justify-center ">
+        <span className="loaderLobby mx-auto"></span>
+      </div>
+    )
+
   return (
-    <div className="flex gap-5 container px-3">
+    <div className="flex gap-5 container px-3 animate__animated animate__fadeIn">
       <HeadTitle>Pong Fury | Store</HeadTitle>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">

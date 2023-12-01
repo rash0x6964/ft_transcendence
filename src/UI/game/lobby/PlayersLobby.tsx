@@ -14,6 +14,7 @@ import CookiesService from "@/services/CookiesService"
 import { LobbyContext } from "@/UI/LobbyProvider"
 import GameMod from "@/types/GameMod"
 import { Head } from "next/document"
+import Leave from "@/components/svgs/Leave"
 
 type Props = {
   className?: string
@@ -65,10 +66,7 @@ export default function PlayersLobby({
           RP={lobby.players[0].profile.rating}
         />
 
-        <div
-          onClick={handleLeaveLobby}
-          className="h-96 flex flex-col justify-center mx-12 animate-pulse"
-        >
+        <div className="h-96 flex flex-col justify-center mx-12 animate-pulse">
           <SwordsLogo className="my-auto" />
         </div>
         <PlayerCard
@@ -107,15 +105,35 @@ export default function PlayersLobby({
             disabled={!lobby?.isOwner}
             className={`w-fit mx-auto  bg-secondary  `}
           />
+
+          {!lobby.isOwner && (
+            <div className="mx-auto ">
+              <button
+                onClick={handleLeaveLobby}
+                className="bg-mirage-400 px-8 py-6 w-fit h-fit flex hover:bg-mirage-400/50 border-r border-black rounded-md "
+              >
+                <Leave className="text-white mr-2" width={20} height={20} />
+                <span className="text-white">Leave Lobby</span>
+              </button>
+            </div>
+          )}
           {lobby?.isOwner && (
             <div className="mx-auto">
-              <MainButton
-                onClick={handleCreateGame}
-                glow={true}
-                className="px-20 py-6 items-center text-lg font-semibold mx-auto self-end"
-              >
-                Create Game
-              </MainButton>
+              <div className="flex">
+                <button
+                  onClick={handleLeaveLobby}
+                  className="bg-mirage-400 hover:bg-mirage-400/50 border-r border-black rounded-l-md px-2"
+                >
+                  <Leave className="text-white" width={20} height={20} />
+                </button>
+                <MainButton
+                  onClick={handleCreateGame}
+                  glow={true}
+                  className="px-16 py-6 items-center text-lg font-semibold mx-auto self-end rounded-l-none"
+                >
+                  Find Game
+                </MainButton>
+              </div>
             </div>
           )}
         </div>

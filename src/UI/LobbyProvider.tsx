@@ -90,7 +90,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       notify({
         title: "match notice",
         message: `Match Found`,
-        imgSrc: "/matchFound.png",
+        imgSrc: "/assets/matchFound.png",
       })
       setTimer(10)
     }

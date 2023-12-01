@@ -46,31 +46,31 @@ export default function RightBar({ className }: Props) {
       <div
         className={`bg-secondary rounded-lg  pb-2 pt-5  h-full  w-16 ${className}`}
       >
-        <div className="flex flex-col justify-between h-full">
-          <div className="flex flex-col gap-5 items-center ">
-            <Friend />
-            <div className="w-[29px] h-[1px] bg-slate-700"></div>
-            <div className="flex flex-col gap-2">
+        <div className="flex flex-col  h-full gap-5 items-center">
+          <Friend />
+          <div className="w-[29px] h-[1px] bg-slate-700"></div>
+          <div className="flex-1">
+            <div className="flex-col flex max-h-[70vh] gap-2 overflow-x-visible overflow-y-scroll  ">
               {friendList.map((data) => (
                 <Person key={data.friend?.id} friendStatusData={data} />
               ))}
             </div>
           </div>
-          <div className="flex flex-col items-center gap-2 ">
-            <DialButton
-              onClick={() => setDialogueClosed(false)}
-              className="w-fit mx-auto"
-            >
-              <FriendCheck width={16} height={16} />
-            </DialButton>
-            <div className="w-[29px] h-[1px] bg-slate-700 "></div>
-            <DialButton
-              onClick={() => setDialogueClosedFriends(false)}
-              className="w-fit mx-auto"
-            >
-              <AddUser width={16} height={16} />
-            </DialButton>
-          </div>
+        </div>
+        <div className="flex flex-col items-center gap-2 ">
+          <DialButton
+            onClick={() => setDialogueClosed(false)}
+            className="w-fit mx-auto"
+          >
+            <FriendCheck width={16} height={16} />
+          </DialButton>
+          <div className="w-[29px] h-[1px] bg-slate-700 "></div>
+          <DialButton
+            onClick={() => setDialogueClosedFriends(false)}
+            className="w-fit mx-auto"
+          >
+            <AddUser width={16} height={16} />
+          </DialButton>
         </div>
       </div>
     </>

@@ -175,8 +175,6 @@ export default function ChannelInfo({
     e: MouseEvent<HTMLDivElement>,
     data: ChannelUser | undefined
   ) => {
-    console.log(selectedChannel)
-
     if (selectedChannel?.role == "MEMBER") return
 
     if (selectedChannel.role == data?.role || data?.role == "OWNER") return

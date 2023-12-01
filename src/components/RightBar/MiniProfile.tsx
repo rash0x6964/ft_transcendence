@@ -19,9 +19,11 @@ type Props = {
   profileRef: React.Ref<HTMLDivElement>
   className: string
   onClick: () => void
+  posY: number
 }
 
 export default function MiniProfile({
+  posY,
   friendStatus,
   className,
   profileRef,
@@ -68,6 +70,7 @@ export default function MiniProfile({
 
   return (
     <motion.div
+      style={{ top: posY }}
       ref={profileRef}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

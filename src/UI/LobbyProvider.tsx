@@ -63,11 +63,10 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     const onLeaveLobby = (data: ProfileData) => {
       setStartingTimer(5)
       setLobby(null)
-      if (!data) return
       socket.emit("presence", {
-        token: CookiesService.getJwtCookie(),
         data: "Online",
       })
+      if (!data) return
       notify({
         title: "Lobby notice",
         message: `${data.username} has left the lobby`,
@@ -77,13 +76,16 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     const onLobbyCreated = (data: Lobby) => {
       router.push("/game/lobby")
       socket.emit("presence", {
-        token: CookiesService.getJwtCookie(),
         data: "In-Lobby",
       })
       setInQueue(false)
       setLobby(data)
     }
     const onLobbyChange = (lobby: Lobby) => {
+      lobby.lobbySate == "ingame" &&
+        socket.emit("presence", {
+          data: "In-Game",
+        })
       setInQueue(false)
       setLobby(lobby)
     }

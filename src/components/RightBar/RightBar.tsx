@@ -9,22 +9,13 @@ import FriendCheck from "../svgs/FriendCheck"
 import SearchPersonDialBox from "@/UI/game/chat/ChatBar/DialogueBoxes/SearchPersonDialBox"
 import FriendService from "@/services/Friend.service"
 import FriendStatus from "@/models/FriendStatus.model"
-import ContextMenu, {
-  MenuBtn,
-  getMenuPos,
-  useContextMenu,
-} from "../BaseComponents/ContextMenu"
+
 import { MouseEvent } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
-import {
-  handleFriendRemove,
-  useRightBarSocket,
-} from "./Helpers/RightBarHandlers"
-import DMService from "@/services/DirectMessageService"
-import { useRouter } from "next/router"
-import DirectMessage from "@/models/DirectMessage.model"
+import { useRightBarSocket } from "./Helpers/RightBarHandlers"
+
 type Props = {
   className?: string
 }

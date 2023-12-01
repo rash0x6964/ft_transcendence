@@ -90,7 +90,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       notify({
         title: "match notice",
         message: `Match Found`,
-        imgSrc: "https://cdn-icons-png.flaticon.com/512/3104/3104645.png",
+        imgSrc: "/matchFound.png",
       })
       setTimer(10)
     }

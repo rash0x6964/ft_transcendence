@@ -19,6 +19,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
   const router = useRouter()
   const [lobby, setLobby] = useState<Lobby | null>(null)
   const [timer, setTimer] = useState(0)
+  const [startingTimer, setStartingTimer] = useState(5)
   const [inQueue, setInQueue] = useState(false)
 
   const socket = useContext(WebSocketContext)
@@ -60,6 +61,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
     }
 
     const onLeaveLobby = (data: ProfileData) => {
+      setStartingTimer(5)
       setLobby(null)
       if (!data) return
       socket.emit("presence", {
@@ -92,11 +94,10 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
         message: `Match Found`,
         imgSrc: "/assets/matchFound.png",
       })
-      setTimer(10)
     }
 
     const onMatchStarting = (counter: number) => {
-      setTimer(counter)
+      setStartingTimer(counter)
     }
 
     const onEnterQueue = (data: QueueData) => {
@@ -167,6 +168,7 @@ export default function LobbyProvider({ children }: PropsWithChildren) {
       value={{
         lobby,
         timerState: [timer, setTimer],
+        startingTimerState: [startingTimer, setStartingTimer],
         queueState: [inQueue, setInQueue],
       }}
     >

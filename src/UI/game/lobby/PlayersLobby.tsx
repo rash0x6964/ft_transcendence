@@ -37,11 +37,14 @@ export default function PlayersLobby({
   radios,
 }: Props) {
   const socket = useContext(WebSocketContext)
-  const { timerState }: { timerState: any } = useContext(LobbyContext)
+  const {
+    timerState,
+    startingTimerState,
+  }: { timerState: any; startingTimerState: any } = useContext(LobbyContext)
   const [timer, setTimer]: [number, any] = timerState
+  const [startingTimer, setStartingTimer]: [number, any] = startingTimerState
 
   const handleCreateGame = () => {
-    setTimer(10)
     socket?.emit("createPrivateGame", {
       token: CookiesService.getJwtCookie(),
     })
@@ -82,7 +85,7 @@ export default function PlayersLobby({
           <div className="flex flex-col">
             <div className="text-lg mb-4 mx-auto ">Match Starting in :</div>
             <div className="mx-auto text-slate-400 text-base animate-ping">
-              {timer}
+              {startingTimer}
             </div>
           </div>
         </div>

@@ -61,7 +61,7 @@ export default function PlayerInfoBar({ profileData }: Props) {
 
           <div className="flex flex-1 gap-24 justify-center">
             {achievements.map((ach) => {
-              return <AchStat achievement={ach} />
+              return <AchStat key={ach.id} achievement={ach} />
             })}
           </div>
         </div>

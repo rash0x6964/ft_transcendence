@@ -15,7 +15,6 @@ export default function AchStat({ achievement }: Props) {
         className={`h-16 w-16 rounded-full `}
         src={achievement.imgUrl}
         alt={achievement.name}
-        title={achievement.description}
       />
       <div className="text-gray-600 text-sm font-medium">
         {achievement.name}

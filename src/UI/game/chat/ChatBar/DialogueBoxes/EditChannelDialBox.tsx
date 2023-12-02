@@ -1,10 +1,7 @@
 import Avatar from "@/components/BaseComponents/Avatar"
-import Input from "@/components/BaseComponents/Input"
 import MainButton from "@/components/BaseComponents/MainButton"
 import RadioGroup from "@/components/RadioGroup/RadioGroup"
-import Lock from "@/components/svgs/Lock"
 import Plus from "@/components/svgs/Plus"
-import TVIcn from "@/components/svgs/TVIcn"
 
 export default function EditChannelDialBox() {
   const options = ["Public", "Private"]

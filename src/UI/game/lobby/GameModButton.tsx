@@ -1,5 +1,4 @@
 import Info from "@/components/svgs/Info"
-import Image from "next/image"
 import React from "react"
 type Props = {
   className?: string
@@ -10,6 +9,7 @@ type Props = {
   onInfoClick?: () => void
   disabled: boolean
 }
+
 export default function GameModButton({
   className,
   selected,

@@ -4,7 +4,7 @@ type Props = {
   className: string
 }
 
-function Icon({ width, height, className }: Props) {
+function Info({ width, height, className }: Props) {
   return (
     <svg
       width={width}
@@ -34,4 +34,4 @@ function Icon({ width, height, className }: Props) {
   )
 }
 
-export default Icon
+export default Info

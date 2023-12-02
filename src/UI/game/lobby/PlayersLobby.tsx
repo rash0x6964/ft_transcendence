@@ -1,19 +1,14 @@
-import HeadTitle from "@/components/BaseComponents/HeadTitle"
 import MainButton from "@/components/BaseComponents/MainButton"
-import Dialogue from "@/components/Dialogue/Dialogue"
 import RadioGroup from "@/components/RadioGroup/RadioGroup"
-import lobby from "@/pages/game/lobby"
-import FriendsInviteDialBox from "../chat/ChatBar/DialogueBoxes/FriendsInviteDialBox"
 import GameModBar from "./GameModBar"
 import PlayerCard from "./PlayerCard"
 import SwordsLogo from "./SwordsLogo"
 import Lobby from "@/models/Lobby.model"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import { LobbyContext } from "@/UI/LobbyProvider"
 import GameMod from "@/types/GameMod"
-import { Head } from "next/document"
 
 type Props = {
   className?: string

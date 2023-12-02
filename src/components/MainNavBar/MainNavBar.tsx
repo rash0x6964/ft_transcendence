@@ -18,20 +18,10 @@ type Props = {
 }
 
 export default function MainNavBar({ coins, className }: Props) {
-  const { profileData, setProfileData } = useContext(ProfileContext)
+  const { profileData } = useContext(ProfileContext)
   const [latestMatches, setLatestMatches] = useState<Match[]>([])
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const _profileData = await profileService.getCurrentProfileData()
-
-        setProfileData(_profileData)
-      } catch (error) {
-        console.log("Couldn't fetch profile data")
-      }
-    }
-
     const fetchLatestMatches = async () => {
       try {
         const _matches = await matchService.getLatestMatches(5)
@@ -41,9 +31,8 @@ export default function MainNavBar({ coins, className }: Props) {
       }
     }
 
-    fetchProfileData()
     fetchLatestMatches()
-  }, [])
+  }, [profileData])
 
   if (!profileData)
     return <span className="loader mx-auto scale-50 my-3"></span>

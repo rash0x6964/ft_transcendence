@@ -14,6 +14,7 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import CookiesService from "@/services/CookiesService"
 import GameMod from "@/types/GameMod"
 import Head from "next/head"
+import Leave from "@/components/svgs/Leave"
 type Props = {
   className?: string
   handleRadioChange: (data: string) => void
@@ -114,7 +115,7 @@ export default function DefaultLobby({
               <MainButton
                 onClick={handleFindMatch}
                 glow={true}
-                className="px-20 py-6 items-center text-lg font-semibold mx-auto self-end"
+                className="px-20 py-6 items-center text-lg font-semibold mx-auto self-end "
               >
                 Find Game
               </MainButton>

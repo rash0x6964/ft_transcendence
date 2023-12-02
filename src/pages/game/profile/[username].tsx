@@ -5,11 +5,16 @@ import { NextPageWithLayout } from "../../_app"
 import { ReactElement, useEffect, useState } from "react"
 import Layout from "@/UI/Layout"
 import HeadTitle from "@/components/BaseComponents/HeadTitle"
-import BannerProfile from "@/UI/game/profile/(topSide)/BannerProfile"
 import { useRouter } from "next/router"
 import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
 import NotFoundError from "@/components/svgs/NotFoundError"
+import Avatar from "@/components/BaseComponents/Avatar"
+import RP from "@/components/svgs/RP"
+import PlayerLevel from "@/components/MainNavBar/PlayerLevel"
+import Stat from "@/UI/game/profile/(topSide)/Stat"
+import CenterProfile from "@/UI/game/profile/(topSide)/CenterProfile"
+import LevelBar from "@/UI/game/profile/(topSide)/LevelBar"
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter()
@@ -64,16 +69,21 @@ const Page: NextPageWithLayout = () => {
     )
   else if (profileData)
     return (
-      <div className="animate__animated animate__fadeIn flex flex-col h-full">
+      <div className="animate__animated animate__fadeIn flex flex-col h-full px-10">
         <HeadTitle>Profile | {profileData.username}</HeadTitle>
 
-        <div className="relative">
-          <BannerProfile bannerUrl={profileData.bannerUrl} />
+        <div className="w-full  relative rounded-[20px] ">
+          <img
+            src={profileData.bannerUrl}
+            className=" object-cover rounded-[20px] absolute  w-full h-full"
+            alt=""
+          />
+          <div className="w-full h-full rounded-[20px] bg-[#0A0E12]/75 backdrop-blur-[5px] absolute flex justify-around items-center px-12"></div>
           <PlayerInfoBar profileData={profileData} />
         </div>
-        <div className="flex container mx-auto overflow-y-scroll">
-          <Achievements profileData={profileData} />
+        <div className="flex container mx-auto overflow-y-scroll flex-row-reverse">
           <MatchHistory profileData={profileData} />
+          <Achievements profileData={profileData} />
         </div>
       </div>
     )

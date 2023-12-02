@@ -29,7 +29,7 @@ export default function Avatar({
         className={` bg-gray-300 ${!override && "rounded-full"} ${
           onClick && " transition-opacity cursor-pointer hover:opacity-50"
         }  object-cover   drop-shadow-lg  ${className}`}
-        src={error ? "/err.png" : src ?? "/err.png"}
+        src={error ? "/assets/err.png" : src ?? "/assets/err.png"}
         alt={alt}
         onError={() => setError(true)}
         width={250}
@@ -45,7 +45,7 @@ export default function Avatar({
         className={`bg-gray-300 ${
           !override && "rounded-full"
         } ${" transition-opacity cursor-pointer hover:opacity-50"}  object-cover   drop-shadow-lg  ${className}`}
-        src={error ? "/err.png" : src ?? "/err.png"}
+        src={error ? "/assets/err.png" : src ?? "/assets/err.png"}
         alt={alt}
         width={250}
         height={250}

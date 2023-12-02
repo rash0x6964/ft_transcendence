@@ -8,6 +8,7 @@ import MiniProfile from "./MiniProfile"
 import FriendStatus from "@/models/FriendStatus.model"
 import User from "@/models/User.model"
 import { handleFriendRemove } from "./Helpers/RightBarHandlers"
+import { getMenuPos, getProfilePos } from "../BaseComponents/ContextMenu"
 type Props = {
   friendStatusData?: FriendStatus
 }
@@ -16,6 +17,7 @@ export default function Person({ friendStatusData }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
   const [showProfile, setShowProfile] = useState(false)
+  const [position, setPosition] = useState(0)
 
   const friend = friendStatusData?.friend
   useEffect(() => {
@@ -33,27 +35,33 @@ export default function Person({ friendStatusData }: Props) {
     }
   }, [])
 
-  const handleContextMenu = (e: any) => {
+  const handleContextMenu = (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault()
     setShowProfile((prev) => !prev)
+
+    setPosition(getProfilePos(e))
   }
 
   return (
     <>
+      {showProfile && (
+        <MiniProfile
+          onClick={() => setShowProfile((prev) => !prev)}
+          friendStatus={friendStatusData}
+          friendData={friend}
+          profileRef={profileRef}
+          posY={position}
+          className=" z-20 -mr-9 fixed  -mt-24"
+        />
+      )}
       <div className="w-9 relative flex flex-col items-center">
-        {showProfile && (
-          <MiniProfile
-            onClick={() => setShowProfile((prev) => !prev)}
-            friendStatus={friendStatusData}
-            friendData={friend}
-            profileRef={profileRef}
-            className=" z-20 -mr-9 mt-3 absolute"
-          />
-        )}
-        <div ref={ref} onContextMenu={handleContextMenu}>
+        <div
+          ref={ref}
+          onClick={handleContextMenu}
+          onContextMenu={handleContextMenu}
+        >
           <Avatar
-            onClick={() => setShowProfile((prev) => !prev)}
-            className="rounded-full border-2 h-9 w-9"
+            className="rounded-full border-2 h-9 w-9 hover:opacity-60 cursor-pointer duration-500"
             src={friend?.avatarUrl || ""}
             alt={friend?.userName}
           />

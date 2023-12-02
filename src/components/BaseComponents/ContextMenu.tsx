@@ -61,6 +61,13 @@ export function getMenuPos(
   return { x: posX, y: posY }
 }
 
+export function getProfilePos(e: MouseEvent): number {
+  let posY: number = e.clientY
+
+  if (posY + 400 > window.innerHeight) posY -= 400
+  return posY
+}
+
 // custom hook
 export function useContextMenu(
   menuRef: any

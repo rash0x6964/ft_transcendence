@@ -5,11 +5,9 @@ type Props = {
 
 export default function Stat({ title, value }: Props) {
   return (
-    <div>
-      <div className="flex flex-col items-center">
-        <p className="text-sm text-gray-600 font-semibold mb-5 mt-2">{title}</p>
-        <h4 className="p-1 text-xl font-extrabold">{value}</h4>
-      </div>
+    <div className="flex flex-col items-center my-auto">
+      <div className="text-white text-xl font-semibold mb-1">{value}</div>
+      <div className="text-gray-600 text-sm font-medium">{title}</div>
     </div>
   )
 }

@@ -26,15 +26,15 @@ const Page: NextPageWithLayout = () => {
   let gameMods: GameMod[] = [
     {
       name: "Normal",
-      src: "https://ninjoo.com/cdn/shop/products/Halfmoon3_800x800.png?v=1629977279",
+      src: "/assets/normal.png",
     },
     {
       name: "Speed Demons",
-      src: "https://thumbs.dreamstime.com/b/vector-abstract-futuristic-high-speed-illustration-digital-technology-colorful-background-concept-129976555.jpg",
+      src: "/assets/speedD.png",
     },
     {
       name: "Magician",
-      src: "https://ms.yugipedia.com//thumb/6/69/GraviticOrb-MADU-EN-VG-artwork.png/300px-GraviticOrb-MADU-EN-VG-artwork.png",
+      src: "/assets/magician.png",
     },
   ]
 

@@ -19,6 +19,7 @@ export default function ScoreBoard({ match }: Props) {
       <Score match={match} />
       <div className="mt-2">
         <Avatar
+          href={"/game/profile/" + match.p_2.username}
           src={match.p_2.url}
           className="mx-auto rounded-full h-12 w-12 "
         />

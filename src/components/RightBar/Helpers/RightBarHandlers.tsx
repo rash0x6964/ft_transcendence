@@ -45,8 +45,10 @@ export function useRightBarSocket(
     const onConnect = (userId: string) => {
       setFriendList((prevStatus: FriendStatus[]) => {
         return prevStatus.map((data: FriendStatus) => {
-          if (data.friend && data.friend.id == userId)
+          if (data.friend && data.friend.id == userId) {
+            data.friend.state = "Online"
             data.friend.onlineStatus = true
+          }
           return data
         })
       })
@@ -55,8 +57,10 @@ export function useRightBarSocket(
     const onDisconnect = (userId: string) => {
       setFriendList((prevStatus: FriendStatus[]) => {
         return prevStatus.map((data: FriendStatus) => {
-          if (data.friend && data.friend.id == userId)
+          if (data.friend && data.friend.id == userId) {
+            data.friend.state = "Offline"
             data.friend.onlineStatus = false
+          }
           return data
         })
       })

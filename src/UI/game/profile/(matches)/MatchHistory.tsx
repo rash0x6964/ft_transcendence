@@ -55,10 +55,10 @@ export default function MatchHistory({ profileData }: Props) {
   }
 
   return (
-    <div className="m-10 flex-1 flex flex-col ">
+    <div className="my-10 flex-1 flex flex-col ">
       <SectionTitle text="Match History" />
       <div className="overflow-y-scroll">
-        {matches.map(match => (
+        {matches.map((match) => (
           <MatchEntry key={match.id} match={match} />
         ))}
       </div>

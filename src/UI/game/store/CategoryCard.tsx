@@ -13,8 +13,8 @@ export default function CategoryCard({
     <button
       className={` py-3 px-6 rounded-xl text-center text-sm font-light shadow-sm ${
         selectedCategory === name
-          ? " gradient-border-3"
-          : " gradient-border-2"
+          ? " gradient-border-3 "
+          : " gradient-border-2 hover:bg-gray-500 "
       }`}
       onClick={() => {
         onClick(name)

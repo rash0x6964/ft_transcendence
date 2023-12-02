@@ -28,28 +28,25 @@ export default function NotificationProvider({ children }: PropsWithChildren) {
   const [notifications, setNotifications] = useState<NotifData[]>([])
   const [notification, setNotication] = useState<NotifData>(defaultObj)
   const [styleData, setStyleData] = useState("-bottom-64")
-  const [queuedNotif, setQueueNotification] = useState(0)
+  const [queuedNotif, setQueueNotification] = useState(1)
   const notify = (data: NotifData, insert = false) => {
     if (insert)
       setNotifications((prevNotifs) =>
         prevNotifs.concat({ createdAt: Date.now(), ...data })
       )
-    if (queuedNotif > 0) {
+    if (styleData == "-bottom-0") {
+      setQueueNotification((prevState) => prevState + 1)
       setTimeout(() => {
         setNotication(data)
         setQueueNotification((prevState) => prevState - 1)
       }, notifTime * queuedNotif + 1000)
-
-      setQueueNotification((prevState) => prevState + 1)
     } else setNotication(data)
   }
   useEffect(() => {
     if (notification == defaultObj) return
-    setQueueNotification((prevState) => prevState + 1)
     setStyleData("-bottom-0")
     let timeout = setTimeout(() => {
       setStyleData("-bottom-64")
-      setQueueNotification((prevState) => prevState - 1)
     }, notifTime)
     return () => {
       clearTimeout(timeout)

@@ -10,7 +10,7 @@ export default function ItemCard({
 }) {
   return (
     <div
-      className="gradient-border-2  p-4 rounded-xl w-52 flex flex-col justify-between text-sm gap-4"
+      className="gradient-border-2 border-2 hover:border-primary cursor-pointer hover:opacity-75 transition-all p-4 rounded-xl w-52 flex flex-col justify-between text-sm gap-4"
       onClick={() => onClick(item)}
     >
       <p className="self-center text-gray-600 ">{item.category}</p>

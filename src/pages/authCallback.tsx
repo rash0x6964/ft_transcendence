@@ -36,9 +36,9 @@ const Page: NextPage = () => {
       .createByProvider({ providerInfoToken: providerCookie })
       .then((res) => {
         cookieService.setJwtCookie(res.access_token)
+        router.replace("/game")
       })
-      .catch((err) => console.log(err))
-    router.replace("/game")
+      .catch((err) => router.replace("/signup"))
   }
 
   useEffect(() => {

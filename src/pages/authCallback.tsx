@@ -14,7 +14,7 @@ const Page: NextPage = () => {
     if (cookieService.get2FACookie()) {
       router.replace("/signin")
     } else {
-      cookieService.setJwtCookie(infoCookie)
+      cookieService.setJwtCookie(infoCookie!)
       cookieService.deleteInfoCookie()
       router.replace("/game")
     }
@@ -23,7 +23,7 @@ const Page: NextPage = () => {
   const linkAccount = () => {
     cookieService.deleteProviderCookie()
     userService
-      .addProvider({ providerInfoToken: providerCookie })
+      .addProvider({ providerInfoToken: providerCookie! })
       .then((res) => {})
       .catch((err) => {
         console.log(err)
@@ -33,10 +33,10 @@ const Page: NextPage = () => {
   const signUp = () => {
     cookieService.deleteProviderCookie()
     userService
-      .createByProvider({ providerInfoToken: providerCookie })
+      .createByProvider({ providerInfoToken: providerCookie! })
       .then((res) => {
         cookieService.setJwtCookie(res.access_token)
-        router.replace("/game")
+        router.replace("/settings/profile")
       })
       .catch((err) => router.replace("/signup"))
   }

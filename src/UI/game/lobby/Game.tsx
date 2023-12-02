@@ -1,14 +1,11 @@
-import { LobbyContext } from "@/UI/LobbyProvider"
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
-import Lobby from "@/models/Lobby.model"
-import { Repo } from "@/models/Repo.model"
 import CookiesService from "@/services/CookiesService"
 import RepoService from "@/services/RepoService"
 import Ball from "@/types/Ball"
 import GraviraOrb from "@/types/GraviraOrb"
 import Paddle from "@/types/Paddle"
 import StunOrb from "@/types/StunOrb"
-import { useRef, useEffect, useContext } from "react"
+import { useRef, useEffect, useContext, useState } from "react"
 
 const secondary: string = "#0F1921"
 const primary: string = "#9BECE3"
@@ -25,6 +22,8 @@ type Props = {
 export default function Game({ width, height, skins }: Props) {
   const socket = useContext(WebSocketContext)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const backgroundSkin = useRef<HTMLImageElement | null>(null)
+  const isBackgroundSkinLoaded = useRef<boolean>(false)
   const paddleColor = useRef<string[]>([primary, primary])
   const drawHorizontally = (
     context: CanvasRenderingContext2D,
@@ -91,6 +90,14 @@ export default function Game({ width, height, skins }: Props) {
     context.beginPath()
     context.fillStyle = secondary
     context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+    if (backgroundSkin.current !== null && isBackgroundSkinLoaded.current)
+      context.drawImage(
+        backgroundSkin.current,
+        0,
+        0,
+        context.canvas.width,
+        context.canvas.height
+      )
     if (context.canvas.width > context.canvas.height)
       drawHorizontally(context, ball, leftPaddle, rightPaddle, orbs, stunOrbs)
     else drawVertically(context, ball, leftPaddle, rightPaddle, orbs, stunOrbs)
@@ -157,7 +164,18 @@ export default function Game({ width, height, skins }: Props) {
       if (skins[1]?.paddleSkin?.color) {
         paddleColor.current[1] = skins[1].paddleSkin.color
       }
+      try {
+        const skins = await RepoService.getSkins()
+        console.log(skins)
+        backgroundSkin.current = new Image()
+        backgroundSkin.current.src = skins.mapSkin.img
+        backgroundSkin.current.onload = () =>
+          (isBackgroundSkinLoaded.current = true)
+      } catch (err) {
+        console.log(err)
+      }
     }
+	
     updateSkins()
 
     socket?.on("gameData", handler)

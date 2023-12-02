@@ -72,6 +72,7 @@ export default function GameLobby({ className, lobby }: Props) {
         socket?.off("resourcesChange", handleResourcesChange)
       }
     }
+
   }, [])
 
   return (

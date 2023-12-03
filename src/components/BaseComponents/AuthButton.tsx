@@ -4,6 +4,7 @@ import Intra from "../svgs/Intra"
 import Google from "../svgs/Google"
 import GoogleAuth from "../svgs/GoogleAuth"
 import env from "@/environment/environment"
+import Link from "next/link"
 type Props = {
   onClick?: () => void
   glow?: Boolean
@@ -22,7 +23,7 @@ export default function AuthButton({
   const loginUrl = `${env.endPoint}/${provider}Authentication/login`
   if (link)
     return (
-      <a href={loginUrl}>
+      <Link href={loginUrl}>
         <div
           onClick={onClick}
           className={`rounded-md px-10 py-3  duration-300 bg-backdrop hover:bg-secondary-900  ${className}`}
@@ -31,7 +32,7 @@ export default function AuthButton({
           {provider === "fortytwo" && <Intra />}
           {provider === "github" && <Github />}
         </div>
-      </a>
+      </Link>
     )
   else
     return (

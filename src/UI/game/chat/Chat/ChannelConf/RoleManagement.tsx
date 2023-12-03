@@ -89,7 +89,7 @@ export default function RoleManagement({ channelId }: { channelId: string }) {
           if (item.role === "OWNER") return
 
           return (
-            <div className="h-14 w-fill bg-secondary  grid grid-cols-12  rounded-lg  pl-7  gap-3 flex-1 text-sm ">
+            <div key={item.userID} className="h-14 w-fill bg-secondary  grid grid-cols-12  rounded-lg  pl-7  gap-3 flex-1 text-sm ">
               {/* Member */}
               <div className="self-center flex gap-3 col-span-4">
                 <Avatar

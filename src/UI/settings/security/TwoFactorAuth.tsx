@@ -70,7 +70,7 @@ export default function TwoFactorAuth({ has2FA, setHas2FA }: Props) {
       <Dialogue  closed={closed}>
         <div className="gradient-border-2 p-4  min-w-[29rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
           <SectionTitle className="pl-0 text-sm" text="Scan QR code" />
-          <img className="border-2 border-indigo-600" src={src} />
+          <img alt="QR CODE" className="border-2 border-indigo-600" src={src} />
 		  <div className="flex justify-around mt-2">
 		   <MainButton className="w-32 py-3" onClick={activate2FA}>Confirm</MainButton >
 		   <button className="bg-red-500 w-32 py-3 text-sm font-semibold text-secondary rounded-md text-center"

@@ -150,8 +150,8 @@ export default function Game({ width, height, skins }: Props) {
         new Ball(data.ball.x, data.ball.y),
         new Paddle(data.paddle1.x, data.paddle1.y),
         new Paddle(data.paddle2.x, data.paddle2.y),
-        data.orbs.map((orb) => new GraviraOrb(orb.x, orb.y)),
-        data.stunOrbs.map((orb) => new StunOrb(orb.x, orb.y))
+        data.orbs.map((orb: any) => new GraviraOrb(orb.x, orb.y)),
+        data.stunOrbs.map((orb: any) => new StunOrb(orb.x, orb.y))
       )
     }
 
@@ -175,7 +175,7 @@ export default function Game({ width, height, skins }: Props) {
         console.log(err)
       }
     }
-	
+
     updateSkins()
 
     socket?.on("gameData", handler)

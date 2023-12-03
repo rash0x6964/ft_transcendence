@@ -1,6 +1,5 @@
 import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import Avatar from "@/components/BaseComponents/Avatar"
-import Cross from "@/components/svgs/CloseBox"
 import UnblockAtList from "@/components/svgs/UnblockAtList"
 import { ChannelUser } from "@/models/Channel.model"
 import ChannelUserService from "@/services/ChannelUser.service"
@@ -64,7 +63,7 @@ export default function BannedList({ channelId }: { channelId: string }) {
             new Date(item.joinedAt).getFullYear()
 
           return (
-            <div className="h-14 w-fill bg-secondary   rounded-lg flex pl-7 pr-16 text-sm ">
+            <div key={item.userID} className="h-14 w-fill bg-secondary   rounded-lg flex pl-7 pr-16 text-sm ">
               <div className="grid grid-cols-6  flex-1">
                 {/* Member */}
                 <div className="self-center col-span-3 flex gap-3">

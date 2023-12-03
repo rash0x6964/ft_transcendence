@@ -18,6 +18,7 @@ import Dialogue from "@/components/Dialogue/Dialogue"
 import AuthDialBox from "@/components/BaseComponents/AuthDialBox"
 import TFAService from "@/services/TFAService"
 import axios from "axios"
+import Link from "next/link"
 const audiowide = Audiowide({
   weight: "400",
   subsets: ["latin"],
@@ -87,7 +88,7 @@ const Page: NextPageWithLayout = () => {
     cookieService.deleteInfoCookie()
     cookieService.delete2FACookie()
     setCloseDialogue(false)
-    setTempToken(infoCookie)
+    setTempToken(infoCookie!)
   }, [])
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
@@ -149,9 +150,9 @@ const Page: NextPageWithLayout = () => {
           </div>
           <p className="text-sm mx-auto font-light">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-primary">
+            <Link href="/signup" className="text-primary">
               Sign up
-            </a>
+            </Link>
           </p>
         </div>
       </form>

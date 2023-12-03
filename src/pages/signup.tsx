@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation"
 import { NotifcationContext } from "@/UI/NotificationProvider"
 import NotifData from "@/types/NotifData"
 import axios from "axios"
+import Link from "next/link"
 
 const audiowide = Audiowide({
   weight: "400",
@@ -147,9 +148,9 @@ const Page: NextPageWithLayout = () => {
           </div>
           <p className="text-sm mx-auto font-light">
             already have an account?{" "}
-            <a href="/signin" className="text-primary">
+            <Link href="/signin" className="text-primary">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </form>

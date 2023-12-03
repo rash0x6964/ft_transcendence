@@ -9,12 +9,6 @@ import { useRouter } from "next/router"
 import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
 import NotFoundError from "@/components/svgs/NotFoundError"
-import Avatar from "@/components/BaseComponents/Avatar"
-import RP from "@/components/svgs/RP"
-import PlayerLevel from "@/components/MainNavBar/PlayerLevel"
-import Stat from "@/UI/game/profile/(topSide)/Stat"
-import CenterProfile from "@/UI/game/profile/(topSide)/CenterProfile"
-import LevelBar from "@/UI/game/profile/(topSide)/LevelBar"
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter()

@@ -17,7 +17,6 @@ export default function AchievementEntry({ achievement }: Props) {
         className={`h-20 w-20 p-1 object-cover rounded-full ${active}`}
         src={achievement.imgUrl}
         alt={achievement.name}
-        title={achievement.description}
       />
     </div>
   )

@@ -1,4 +1,4 @@
 export default interface GameMod {
-	name: string
-	src: string
+  name: string
+  src: string
 }

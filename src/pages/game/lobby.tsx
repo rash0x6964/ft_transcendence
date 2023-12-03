@@ -12,6 +12,7 @@ import PlayersLobby from "@/UI/game/lobby/PlayersLobby"
 import DefaultLobby from "@/UI/game/lobby/DefaultLobby"
 import Calculating from "@/UI/game/lobby/Calculating"
 import Head from "next/head"
+import GameMod from "@/types/GameMod"
 
 const Page: NextPageWithLayout = () => {
   const socket = useContext(WebSocketContext)
@@ -22,7 +23,7 @@ const Page: NextPageWithLayout = () => {
   const [gameMod, setGameMod] = useState("Normal")
 
   const radios: string[] = ["Ranked", "Unranked"]
-  let gameMods = [
+  let gameMods: GameMod[] = [
     {
       name: "Normal",
       src: "/assets/normal.png",

@@ -13,11 +13,10 @@ import Link from "next/link"
 import { ProfileContext } from "@/UI/ActiveUserProvider"
 import ProfileData from "@/models/ProfileData.model"
 type Props = {
-  coins: number
   className: string
 }
 
-export default function MainNavBar({ coins, className }: Props) {
+export default function MainNavBar({ className }: Props) {
   const { profileData } = useContext(ProfileContext)
   const [latestMatches, setLatestMatches] = useState<Match[]>([])
 

@@ -27,11 +27,11 @@ const Page: NextPageWithLayout = () => {
         const _profileData = await profileService.getProfileDataByUsername(
           _username
         )
-        setLoading(false)
         setProfileData(_profileData)
-      } catch (error) {
         setLoading(false)
+      } catch (error) {
         setError(true)
+        setLoading(false)
       }
     }
 

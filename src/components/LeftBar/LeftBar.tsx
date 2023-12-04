@@ -68,12 +68,12 @@ export default function LeftBar({ className }: Props) {
       </AnimatePresence>
 
       <div className={className}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-row sm:flex-col gap-6">
           {links.map((link, i) => (
             <Button key={`link-${i}`} href={link.href} icon={link.icon} />
           ))}
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="hidden sm:flex flex-row sm:flex-col gap-y-4">
           <button
             ref={notifRef}
             onClick={() => setShowNotif((prev) => !prev)}

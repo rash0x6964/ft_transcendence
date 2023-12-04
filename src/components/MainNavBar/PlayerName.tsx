@@ -14,7 +14,7 @@ export default function PlayerName({
   return (
     <div className={className}>
       <div className="flex  gap-2 ">
-        <div className="w-[1px] h-[40px] mr-4 bg-slate-700 my-auto "></div>
+        <div className="w-[1px] h-[40px] hidden sm:block mr-4 bg-slate-700 my-auto "></div>
         <span className="text-sm my-auto mr-2">{name}</span>
 
         <Avatar

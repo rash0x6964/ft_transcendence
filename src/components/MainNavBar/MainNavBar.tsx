@@ -45,18 +45,24 @@ export default function MainNavBar({ className }: Props) {
       <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
         <PlayerName src={profileData.avatarUrl} name={profileData.username} />
 
-        <PlayerCoins className="my-auto" coins={profileData.profile.coins} />
+        <PlayerCoins
+          className="my-auto hidden sm:block"
+          coins={profileData.profile.coins}
+        />
         <NavHistory
-          className="my-auto"
+          className="my-auto hidden   md:block"
           matches={latestMatches}
           id={profileData.id}
         />
         <PlayerLevel
-          className="my-auto"
+          className="my-auto hidden md:block"
           level={profileData.profile.level}
           percentage={profileService.calculatePercentage(profileData)}
         />
-        <PlayerRP className="my-auto" RP={profileData.profile.rating} />
+        <PlayerRP
+          className="my-auto  hidden md:block"
+          RP={profileData.profile.rating}
+        />
       </div>
       <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
     </div>

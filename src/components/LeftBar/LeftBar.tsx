@@ -28,10 +28,6 @@ export default function LeftBar({ className }: Props) {
   const notifRef = useRef<HTMLButtonElement>(null)
   let links = [
     {
-      icon: <Menu />,
-      href: "/game",
-    },
-    {
       icon: <GameController />,
       href: "/game/lobby",
     },

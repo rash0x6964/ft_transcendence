@@ -129,7 +129,7 @@ export default function PlayersLobby({
                   glow={true}
                   className="px-16 py-6 items-center text-lg font-semibold mx-auto self-end rounded-l-none"
                 >
-                  Find Game
+                  Launch Game
                 </MainButton>
               </div>
             </div>

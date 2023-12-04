@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import env from "@/environment/environment"
 import Link from "next/link"
 import { link } from "fs"
@@ -22,6 +22,9 @@ export default function Avatar({
   override = false,
 }: Props) {
   const [error, setError] = useState(false)
+  useEffect(() => {
+    setError(false)
+  }, [src])
   if (href == "")
     return (
       <Image

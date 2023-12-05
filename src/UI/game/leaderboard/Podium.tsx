@@ -39,7 +39,8 @@ export default function Podium({
         <Avatar
           href={`/game/profile/` + playerName}
           className={
-            " border-2 md:border-4 w-24 h-24 md:w-36 md:h-36 " + colorStyle
+            " border-2 md:border-4 w-24 h-24 md:w-36 md:h-36 " +
+            colorStyle(position)
           }
           src={playerAvatar}
           alt=""
@@ -48,7 +49,7 @@ export default function Podium({
           <span
             className={
               "text-xl text-center w-10 h-10 rounded-full border-2 md:border-4 absolute bottom-[-15px]  bg-secondary " +
-              colorStyle
+              colorStyle(position)
             }
           >
             {position}

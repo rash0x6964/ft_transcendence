@@ -17,7 +17,6 @@ export default function ActiveUserProvider({ children }: PropsWithChildren) {
   const fetchProfileData = async () => {
     try {
       const _profileData = await profileService.getCurrentProfileData()
-      console.log("yes")
 
       setProfileData(_profileData)
     } catch (error) {

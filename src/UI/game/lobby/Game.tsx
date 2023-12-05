@@ -104,13 +104,13 @@ export default function Game({ width, height, skins }: Props) {
   }
 
   const keyDownHandler = (ev: any) => {
-    if (ev.key == "w") {
+    if (ev.key == "w" || ev.key == "ArrowUp") {
       socket?.emit("paddleUp", {
         token: CookiesService.getJwtCookie(),
         data: { isUP: true },
       })
     }
-    if (ev.key == "s") {
+    if (ev.key == "s" || ev.key == "ArrowDown") {
       socket?.emit("paddleDown", {
         token: CookiesService.getJwtCookie(),
         data: { isDown: true },
@@ -124,13 +124,13 @@ export default function Game({ width, height, skins }: Props) {
   }
 
   const keyUpHandler = (ev: any) => {
-    if (ev.key == "w") {
+    if (ev.key == "w" ||  ev.key == "ArrowUp") {
       socket?.emit("paddleUp", {
         token: CookiesService.getJwtCookie(),
         data: { isUP: false },
       })
     }
-    if (ev.key == "s") {
+    if (ev.key == "s" || ev.key == "ArrowDown") {
       socket?.emit("paddleDown", {
         token: CookiesService.getJwtCookie(),
         data: { isDown: false },

@@ -33,14 +33,16 @@ export default function Podium({
       <div className="self-center relative mb-3">
         <Avatar
           href={`/game/profile/` + playerName}
-          className={" border-4 w-36 h-36 " + colorStyle}
+          className={
+            " border-2 md:border-4 w-24 h-24 md:w-36 md:h-36 " + colorStyle
+          }
           src={playerAvatar}
           alt=""
         />
         <div className="w-full flex justify-center">
           <span
             className={
-              "text-xl text-center w-10 h-10 rounded-full border-4 absolute bottom-[-15px]  bg-secondary " +
+              "text-xl text-center w-10 h-10 rounded-full border-2 md:border-4 absolute bottom-[-15px]  bg-secondary " +
               colorStyle
             }
           >

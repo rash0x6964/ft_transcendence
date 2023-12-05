@@ -55,7 +55,6 @@ const Page = () => {
                   <MainButton className="w-36 py-4">Sign In</MainButton>{" "}
                 </Link>
               )}
-              <MainButton className="w-36 py-4">Explore</MainButton>
             </div>
           </div>
           <div className="w-[33vw] h-[40vh] border-4 border-primary relative my-auto ">

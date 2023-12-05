@@ -7,6 +7,30 @@ type Props = {
   playerAvatar: string
   rp: number
   position: number
+  count: number
+}
+
+const paddingStyle = (position: number, count: number) => {
+  let style = "flex flex-col gap-3 "
+
+  if (count < 3)
+    return style
+
+  if (position === 2)
+    return style + "mt-14 order-1"
+  else if (position === 3)
+    return style + "mt-14 order-3"
+  else
+    return style + "order-2"
+}
+
+const colorStyle = (position: number) => {
+  if (position === 1)
+    return "border-[#FFDB2D]"
+  else if (position === 2)
+    return "border-[#C0C0C0]"
+  else
+    return "border-[#CD7F32]"
 }
 
 export default function Podium({
@@ -14,26 +38,15 @@ export default function Podium({
   playerAvatar,
   rp,
   position,
+  count,
 }: Props) {
-  let paddingStyle =
-    "flex flex-col gap-3 " +
-    (position === 2
-      ? "mt-14 order-1"
-      : position === 3
-      ? "mt-14 order-3"
-      : "order-2")
-  let colorStyle =
-    position === 1
-      ? "border-[#FFDB2D]"
-      : position === 2
-      ? "border-[#C0C0C0]"
-      : "border-[#CD7F32]"
+
   return (
-    <div className={paddingStyle}>
+    <div className={paddingStyle(position, count)}>
       <div className="self-center relative mb-3">
         <Avatar
           href={`/game/profile/` + playerName}
-          className={" border-4 w-36 h-36 " + colorStyle}
+          className={" border-4 w-36 h-36 " + colorStyle(position)}
           src={playerAvatar}
           alt=""
         />
@@ -41,7 +54,7 @@ export default function Podium({
           <span
             className={
               "text-xl text-center w-10 h-10 rounded-full border-4 absolute bottom-[-15px]  bg-secondary " +
-              colorStyle
+              colorStyle(position)
             }
           >
             {position}

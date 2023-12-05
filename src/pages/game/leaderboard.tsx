@@ -66,6 +66,7 @@ const Page: NextPageWithLayout = () => {
                 playerName={e.username}
                 position={index + 1}
                 rp={e.profile.rating}
+                count = {leaderboard.length}
               />
             )
         })}

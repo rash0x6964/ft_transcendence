@@ -85,7 +85,7 @@ const Page: NextPageWithLayout = () => {
     <div className="flex gap-5 container px-3 animate__animated animate__fadeIn">
       <HeadTitle>Pong Fury | Store</HeadTitle>
       <div className="flex flex-col gap-4">
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           {category.map((item, index) => (
             <CategoryCard
               key={index}
@@ -95,7 +95,7 @@ const Page: NextPageWithLayout = () => {
             />
           ))}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-wrap ">
           {items.map((item) => {
             if (
               item.category ===

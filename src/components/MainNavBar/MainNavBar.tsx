@@ -42,11 +42,15 @@ export default function MainNavBar({ className }: Props) {
           className="text-primary my-auto hover:text-primary/75"
         />
       </Link>
-      <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-        <PlayerName src={profileData.avatarUrl} name={profileData.username} />
+      <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-1 sm:gap-12">
+        <PlayerName
+          coins={profileData.profile.coins}
+          src={profileData.avatarUrl}
+          name={profileData.username}
+        />
 
         <PlayerCoins
-          className="my-auto hidden sm:block"
+          className="my-auto hidden   md:block"
           coins={profileData.profile.coins}
         />
         <NavHistory

@@ -77,7 +77,7 @@ export default function DefaultLobby({
         <FriendsInviteDialBox />
       </Dialogue>
       <div className="animate__animated animate__fadeIn container mx-auto flex flex-col   h-full  ">
-        <div className="hidden sm:block h-[20%]"></div>
+        <div className="h-[5%] sm:h-[20%]"></div>
         <div className="flex mx-auto  flex-col sm:flex-row justify-center gap-4  ">
           <PlayerCard
             playerImage={profile.avatarUrl}

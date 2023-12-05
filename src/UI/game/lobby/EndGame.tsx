@@ -49,7 +49,7 @@ export default function EndGame({ data }: Props) {
               <div
                 className={`flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-4s`}
               >
-                <div className=" flex gap-4">
+                <div className=" flex gap-1 sm:gap-4">
                   {data.achievements.map(
                     (achievement) =>
                       achievement && (
@@ -62,13 +62,13 @@ export default function EndGame({ data }: Props) {
                             key={achievement.id}
                             src={achievement.imgUrl}
                             alt={achievement.name}
-                            className="w-10 h-10 mx-auto bg-transparent"
+                            className="w-7 h-7 sm:w-10 sm:h-10 mx-auto bg-transparent"
                           />
                         </div>
                       )
                   )}
                 </div>
-                <div className="mx-auto text-2xl text-slate-500 font-light">
+                <div className="mx-auto text-lg sm:text-2xl text-slate-500 font-light">
                   Achievements
                 </div>
               </div>

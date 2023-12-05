@@ -348,6 +348,42 @@ const Page: NextPageWithLayout = () => {
       set_Refresh((prev) => !prev)
     }
 
+    const _friendship = (data: any) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
+            dm.isFriend = true
+            dm.pending = false
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
+    const _cancelFriendReq = (data: any) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
+            dm.isFriend = false
+            dm.pending = false
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("YouGotUnbanned", _ubannedFromChannel)
@@ -365,6 +401,8 @@ const Page: NextPageWithLayout = () => {
     socket?.on("youGotUnblocked_DM", _blocked_unblocked_DM)
 
     socket?.on("unfriend", _unfriend)
+    socket?.on("acceptFriend", _friendship)
+    socket?.on("cancelFriendReq", _cancelFriendReq)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -384,6 +422,8 @@ const Page: NextPageWithLayout = () => {
       socket?.off("youGotUnblocked_DM", _blocked_unblocked_DM)
 
       socket?.off("unfriend", _unfriend)
+      socket?.off("acceptFriend", _friendship)
+      socket?.off("cancelFriendReq", _cancelFriendReq)
     }
   }, [selected])
 

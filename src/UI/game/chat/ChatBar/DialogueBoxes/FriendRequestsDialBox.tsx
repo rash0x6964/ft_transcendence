@@ -39,11 +39,9 @@ export default function FriendRequestsDialBox() {
     FriendRequestService.acceptRequest(data)
       .then(() => {
         socket
-          ?.emit("friendAction", { token: cookieService.getJwtCookie(), data })
-          .emit("friendReqAction", {
-            token: cookieService.getJwtCookie(),
-            data,
-          })
+          ?.emit("friendAction", { data: data })
+          .emit("friendReqAction", { data: data })
+          .emit("acceptFriend", { data: data })
         setRefresh((prevState) => !prevState)
       })
       .catch((err) => {
@@ -54,10 +52,9 @@ export default function FriendRequestsDialBox() {
   const handleDecline = (data: FriendRequests) => {
     FriendRequestService.deleteRequest(data)
       .then(() => {
-        socket?.emit("friendReqAction", {
-          token: cookieService.getJwtCookie(),
-          data: data,
-        })
+        socket
+          ?.emit("friendReqAction", { data: data })
+          .emit("cancelFriendReq", { data: data })
         setRefresh((prevState) => !prevState)
       })
       .catch((err) => {

@@ -15,23 +15,11 @@ const audiowide = Audiowide({
   display: "swap",
 })
 const Page = () => {
-  const mainDiv = useRef<HTMLDivElement>(null)
-
-  //   useEffect(() => {
-  //     mainDiv.current?.scrollTo(0, 0)
-  //     const handler = (e: Event) => {
-  //       e.preventDefault()
-  //       document
-  //         .getElementsByClassName("SECOND")[0]
-  //         .scrollIntoView({ behavior: "smooth" })
-  //     }
-  //     window.addEventListener("wheel", handler)
-  //     return () => {
-  //       window.removeEventListener("wheel", handler)
-  //     }
-  //   }, [])
   return (
     <div className={`${lexend.className} min-w-[100vw] `}>
+      <Head>
+        <title>Pong Fury</title>
+      </Head>
       <div className="w-screen fixed h-screen  bg-gradient-to-r from-10% to-80% from-backdrop to-mirage -z-10 "></div>
       <Link className="absolute left-0 top-0 m-5" href={"/"}>
         <Logo className="text-primary" />{" "}
@@ -45,11 +33,12 @@ const Page = () => {
             >
               PONG FURY
             </div>
-            <p className="text-base font-ligh mb-4">
-              Contrary to popular belief, Lorem Ipsum is not simply random text.
-              Sections 1.10.32 and 1.10.33 from de Finibus Bonorum et Malorum
-              by Cicero are also reproduced in their exact original form, used
-              since the 1500s is reproduced below for those interested.
+            <p className="text-base font-light mb-4">
+              Unleash the thrill of classic arcade action! Dive into the
+              heart-pounding excitement of our Pong game – where every bounce,
+              every move, sparks an electrifying rush of nostalgia and
+              competition. Get ready to paddle up and experience the timeless
+              joy of Pong like never before.
             </p>
 
             <div className="flex gap-2">
@@ -66,7 +55,6 @@ const Page = () => {
                   <MainButton className="w-36 py-4">Sign In</MainButton>{" "}
                 </Link>
               )}
-              <MainButton className="w-36 py-4">Explore</MainButton>
             </div>
           </div>
           <div className="w-[33vw] h-[40vh] border-4 border-primary relative my-auto ">

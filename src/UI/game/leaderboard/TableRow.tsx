@@ -22,7 +22,7 @@ export default function TableRow({
   nbGame,
 }: Props) {
   return (
-    <div className="h-14 w-fill bg-secondary grid grid-cols-10 drop-shadow-lg rounded-lg    pl-7 pr-16 text-sm">
+    <div className="h-14  w-fill bg-secondary grid grid-cols-10 drop-shadow-lg rounded-lg    pl-7 pr-16 text-sm ">
       {/* Rank */}
       <div className="self-center flex gap-3 col-span-2">
         <Trophy />

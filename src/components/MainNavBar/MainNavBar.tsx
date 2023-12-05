@@ -32,36 +32,43 @@ export default function MainNavBar({ className }: Props) {
 
     fetchLatestMatches()
   }, [profileData])
+  if (!profileData) return <div className="py-3 px-7 mb-4"> </div>
+  return (
+    <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
+      <Link className="flex flex-col justify-center" href="/">
+        <Logo
+          width={24}
+          height={24}
+          className="text-primary my-auto hover:text-primary/75"
+        />
+      </Link>
+      <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-1 sm:gap-12">
+        <PlayerName
+          coins={profileData.profile.coins}
+          src={profileData.avatarUrl}
+          name={profileData.username}
+        />
 
-  if (!profileData)
-    return <span className="loader mx-auto scale-50 my-3"></span>
-  else
-    return (
-      <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
-        <Link href="/">
-          <Logo
-            width={24}
-            height={24}
-            className="text-primary my-auto hover:text-primary/75"
-          />
-        </Link>
-        <div className="bg-transparent-500  flex justify-center flex-row-reverse  h-fit gap-12">
-          <PlayerName src={profileData.avatarUrl} name={profileData.username} />
-
-          <PlayerCoins className="my-auto" coins={profileData.profile.coins} />
-          <NavHistory
-            className="my-auto"
-            matches={latestMatches}
-            id={profileData.id}
-          />
-          <PlayerLevel
-            className="my-auto"
-            level={profileData.profile.level}
-            percentage={profileService.calculatePercentage(profileData)}
-          />
-          <PlayerRP className="my-auto" RP={profileData.profile.rating} />
-        </div>
-        <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
+        <PlayerCoins
+          className="my-auto hidden   md:block"
+          coins={profileData.profile.coins}
+        />
+        <NavHistory
+          className="my-auto hidden   md:block"
+          matches={latestMatches}
+          id={profileData.id}
+        />
+        <PlayerLevel
+          className="my-auto hidden md:block"
+          level={profileData.profile.level}
+          percentage={profileService.calculatePercentage(profileData)}
+        />
+        <PlayerRP
+          className="my-auto  hidden md:block"
+          RP={profileData.profile.rating}
+        />
       </div>
-    )
+      <SettingsButton className="my-auto text-white hover:text-white/50 duration-500" />
+    </div>
+  )
 }

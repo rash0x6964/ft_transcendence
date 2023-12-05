@@ -73,11 +73,11 @@ const Page: NextPageWithLayout = () => {
         <div className="order-5"></div>
       </div>
 
-      <div className="flex flex-col ">
+      <div className="flex flex-col max-w-[100vw] overflow-x-scroll ">
         {leaderboard.length > 3 && (
-          <TableHead className="h-14 w-fill   ml-8 mr-16 text-sm text-slate-600" />
+          <TableHead className="h-14  min-w-[44rem]  ml-8 mr-16 text-sm text-slate-600" />
         )}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 min-w-[50rem]  ">
           {leaderboard.map((e, index) => {
             if (index > 2)
               return (

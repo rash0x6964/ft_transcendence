@@ -14,10 +14,10 @@ export default function OpponentCard({ className, onClick, inQ }: Props) {
     return (
       <button
         onClick={onClick}
-        className={`drop-shadow-lg bg-gradient-to-b h-96 w-[15rem] from-backdrop to-mirage  transition-transform hover:opacity-70 hover:scale-105   pb-2  shadow-md border-slate-500 rounded-xl   gradient-border ${className}`}
+        className={`drop-shadow-lg bg-gradient-to-b h-fit  sm:h-96 w-[15rem] px-5 py-8 sm:py-0 from-backdrop to-mirage  transition-transform hover:opacity-70 hover:scale-105  sm:pb-2  shadow border-slate-500 rounded-xl  gradient-border ${className}`}
       >
         <div className="flex flex-col justify-between h-full">
-          <div className="pt-32  ">
+          <div className="sm:pt-32 mb-2 ">
             <div className="w-24 h-24 rounded-full border border-gray-500 mx-auto bg-backdrop flex justify-center">
               <svg
                 className="my-auto fill-gray-500"
@@ -46,7 +46,7 @@ export default function OpponentCard({ className, onClick, inQ }: Props) {
     return (
       <div
         onClick={onClick}
-        className={`drop-shadow-lg bg-gradient-to-b h-96 w-[15rem] from-backdrop to-mirage  transition-transform    pb-2  shadow-md border-slate-500 rounded-xl   gradient-border ${className}`}
+        className={`drop-shadow-lg bg-gradient-to-b h-fit  sm:h-96 w-[15rem] px-5 py-16 sm:py-0 from-backdrop to-mirage  transition-transform hover:opacity-70 hover:scale-105  sm:pb-2  shadow border-slate-500 rounded-xl  gradient-border ${className}`}
       >
         <div className="flex flex-col justify-center h-full">
           <span className="loaderLobby mx-auto"></span>

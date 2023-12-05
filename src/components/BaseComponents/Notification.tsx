@@ -60,7 +60,7 @@ export default function Notification({ className, notifData, onClick }: Props) {
   else
     return (
       <div
-        className={`bg-backdrop w-[26rem]  py-2 px-4 rounded-lg  border border-primary fixed z-[100] transition-all  right-0 mb-2 mr-20 ${className}`}
+        className={`bg-backdrop w-screen sm:w-[26rem]  py-2 px-4 rounded-lg  border border-primary fixed z-[100] transition-all mr-0 sm:mr-20 right-0 mb-2 sm:mx-auto ${className}`}
       >
         <div className="w-full h-full ">
           <div className="flex justify-between mb-2">

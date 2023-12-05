@@ -55,8 +55,8 @@ export default function PlayersLobby({
     <div
       className={`animate__animated animate__fadeIn container mx-auto flex flex-col   h-full  ${className} `}
     >
-      <div className="h-[20%]"></div>
-      <div className="flex justify-center gap-4  ">
+      <div className="hidden sm:block h-[20%]"></div>
+      <div className="flex mx-auto  flex-col sm:flex-row justify-center  gap-4  ">
         <PlayerCard
           playerImage={lobby.players[0].avatarUrl}
           playerName={lobby.players[0].userName}
@@ -64,8 +64,8 @@ export default function PlayersLobby({
           RP={lobby.players[0].profile.rating}
         />
 
-        <div className="h-96 flex flex-col justify-center mx-12 animate-pulse">
-          <SwordsLogo className="my-auto" />
+        <div className=" mx-auto flex flex-col justify-center sm:mx-6 md:mx-12 animate-pulse">
+          <SwordsLogo className="my-auto sm:w-24 sm:h-24 h-16 w-16 relative" />
         </div>
         <PlayerCard
           playerImage={lobby.players[1].avatarUrl}
@@ -87,10 +87,10 @@ export default function PlayersLobby({
       )}
 
       {lobby.lobbySate == "idle" && (
-        <div className="flex flex-col flex-1 justify-around">
+        <div className="flex  flex-col flex-1 justify-around">
           <RadioGroup
             disabled={!lobby?.isOwner}
-            className="flex gap-4 mx-auto "
+            className="hidden md:flex  gap-4 mx-auto "
             onChange={handleRadioChange}
             radios={radios}
             value={ranked}
@@ -101,7 +101,7 @@ export default function PlayersLobby({
             onChange={handleGameModChange}
             gameMods={gameModes}
             disabled={!lobby?.isOwner}
-            className={`w-fit mx-auto  bg-secondary  `}
+            className={`w-fit mx-auto  hidden md:flex bg-secondary `}
           />
 
           {!lobby.isOwner && (
@@ -129,7 +129,7 @@ export default function PlayersLobby({
                   glow={true}
                   className="px-16 py-6 items-center text-lg font-semibold mx-auto self-end rounded-l-none"
                 >
-                  Find Game
+                  Launch Game
                 </MainButton>
               </div>
             </div>

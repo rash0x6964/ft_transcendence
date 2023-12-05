@@ -27,7 +27,7 @@ export default function FriendsInviteDialBox() {
   }, [])
 
   return (
-    <div className="gradient-border-2 p-4 h-[50vh] min-w-[29rem]  overflow-y-scroll rounded-xl flex flex-col gap-1">
+    <div className="gradient-border-2 p-4 h-screen sm:h-[50vh] w-screen sm:w-fit sm:min-w-[29rem]  overflow-y-scroll rounded-none sm:rounded-xl flex flex-col gap-1">
       <SectionTitle className="text-sm" text="Friend Requests" />
       {!isLoading && (
         <div className="flex flex-col">

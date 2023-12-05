@@ -39,7 +39,7 @@ export default function PlayerInfoBar({ profileData }: Props) {
     fetchStats()
   }, [profileData])
 
-  if (!profileData || !stats) return <span className="loader"></span>
+  if (!profileData || !stats) return <></>
   else
     return (
       <div className="relative flex flex-col py-9 ">

@@ -28,10 +28,6 @@ export default function LeftBar({ className }: Props) {
   const notifRef = useRef<HTMLButtonElement>(null)
   let links = [
     {
-      icon: <Menu />,
-      href: "/game",
-    },
-    {
       icon: <GameController />,
       href: "/game/lobby",
     },
@@ -72,12 +68,12 @@ export default function LeftBar({ className }: Props) {
       </AnimatePresence>
 
       <div className={className}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-row md:flex-col gap-6">
           {links.map((link, i) => (
             <Button key={`link-${i}`} href={link.href} icon={link.icon} />
           ))}
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="hidden md:flex flex-row md:flex-col gap-y-4">
           <button
             ref={notifRef}
             onClick={() => setShowNotif((prev) => !prev)}

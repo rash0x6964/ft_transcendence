@@ -77,8 +77,8 @@ export default function DefaultLobby({
         <FriendsInviteDialBox />
       </Dialogue>
       <div className="animate__animated animate__fadeIn container mx-auto flex flex-col   h-full  ">
-        <div className="h-[20%]"></div>
-        <div className="flex justify-center gap-4  ">
+        <div className="h-[5%] sm:h-[20%]"></div>
+        <div className="flex mx-auto  flex-col sm:flex-row justify-center gap-4  ">
           <PlayerCard
             playerImage={profile.avatarUrl}
             playerName={profile.username}
@@ -86,16 +86,16 @@ export default function DefaultLobby({
             RP={profile.profile.rating}
           />
 
-          <div className="h-96 flex flex-col justify-center mx-12 animate-pulse">
-            <SwordsLogo className="my-auto" />
+          <div className=" mx-auto flex flex-col justify-center sm:mx-6 md:mx-12 animate-pulse">
+            <SwordsLogo className="my-auto sm:w-24 sm:h-24 h-16 w-16 relative" />
           </div>
 
           <OpponentCard inQ={inQueue} onClick={() => setDialogueClose(false)} />
         </div>
-        <div className="flex flex-col flex-1 justify-around">
+        <div className="flex  flex-col flex-1 justify-around">
           <RadioGroup
             disabled={inQueue}
-            className="flex gap-4 mx-auto "
+            className="hidden md:flex  gap-4 mx-auto "
             onChange={handleRadioChange}
             radios={radios}
             value={ranked}
@@ -107,7 +107,7 @@ export default function DefaultLobby({
             value={gameModValue}
             onChange={handleGameModChange}
             disabled={inQueue}
-            className={`w-fit mx-auto  bg-secondary `}
+            className={`w-fit mx-auto  hidden md:flex bg-secondary `}
           />
 
           <div className="mx-auto">

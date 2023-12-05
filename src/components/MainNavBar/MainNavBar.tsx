@@ -35,7 +35,7 @@ export default function MainNavBar({ className }: Props) {
   if (!profileData) return <div className="py-3 px-7 mb-4"> </div>
   return (
     <div className={` flex justify-between py-3 px-7 mb-4 ${className}`}>
-      <Link href="/">
+      <Link className="flex flex-col justify-center" href="/">
         <Logo
           width={24}
           height={24}

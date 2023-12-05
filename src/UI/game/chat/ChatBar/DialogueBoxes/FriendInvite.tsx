@@ -28,7 +28,7 @@ export default function FriendInvite({ friendData }: Props) {
     setInviteSent(true)
   }
   return (
-    <div className="flex justify-between w-[28rem] mr-4">
+    <div className="flex justify-between sm:w-[28rem] mr-4">
       <div className="flex ml-4">
         <Avatar
           className="m-2 w-10 h-10 "

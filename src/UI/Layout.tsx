@@ -20,12 +20,12 @@ export default function Layout({ children }: PropsWithChildren) {
               <div className="  h-screen w-screen flex flex-col ">
                 <MainNavBar className=" w-screen" />
                 <div className="flex-1 min-h-0 flex justify-between mb-4">
-                  <LeftBar className=" h-full w-fit  hidden   sm:flex   bg-secondary mx-2 py-6 drop-shadow-lg  mb-4 rounded-lg  flex-col  justify-between" />
+                  <LeftBar className=" h-full w-fit  hidden   md:flex   bg-secondary mx-2 py-6 drop-shadow-lg  mb-4 rounded-lg  flex-col  justify-between" />
                   <div className=" flex-1 ">{children}</div>
-                  <RightBar className="shadow   h-full drop-shadow-lg   w-16 bg-secondary mx-2 mb-4 rounded-lg hidden   sm:flex flex-col items-center gap-5 py-5" />
+                  <RightBar className="shadow   h-full drop-shadow-lg   w-16 bg-secondary mx-2 mb-4 rounded-lg hidden   md:flex flex-col items-center gap-5 py-5" />
                 </div>
 
-                <LeftBar className=" mx-auto w-fit  h-fit  flex sm:hidden   bg-secondary  py-4 drop-shadow-lg  mb-4 rounded-lg  flex-row  justify-between" />
+                <LeftBar className=" mx-auto w-fit  h-fit  flex md:hidden   bg-secondary  py-4 drop-shadow-lg  mb-4 rounded-lg  flex-row  justify-between" />
               </div>
             </main>
           </LobbyProvider>

@@ -17,15 +17,15 @@ export default function EndGame({ data }: Props) {
     <div className="w-full h-full justify-between flex flex-col py-1">
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
-          <div className=" w-[50%] h-2 bg-primary animate-pulse"></div>
-          <div className=" w-[25%] h-2 bg-primary animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className=" w-[50%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className=" w-[25%] h-2 bg-primary animate-none sm:animate-pulse"></div>
         </div>
 
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
-          <div className="ml-auto  w-[50%] h-2 bg-primary animate-pulse"></div>
-          <div className="ml-auto  w-[25%] h-2 bg-primary animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary  animate-none sm:animate-pulse"></div>
+          <div className="ml-auto  w-[50%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className="ml-auto  w-[25%] h-2 bg-primary animate-none sm:animate-pulse"></div>
         </div>
       </div>
 
@@ -43,7 +43,7 @@ export default function EndGame({ data }: Props) {
           <span className="text-primary mx-4">/</span> <span>{lobby.mode}</span>
         </div>
 
-        <div className="mx-auto flex gap-36 w-fit ">
+        <div className="mx-auto flex gap-8 sm:gap-36 w-fit ">
           {data.achievements.length > 0 &&
             data.achievements.some((ach) => ach != null) && (
               <div
@@ -74,22 +74,28 @@ export default function EndGame({ data }: Props) {
               </div>
             )}
           <div className="flex flex-col gap-10 animate__animated animate__fadeIn  animate__delay-1s">
-            <div className="mx-auto text-5xl text-primary">+{data.coins}</div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">
+            <div className="mx-auto text-2xl sm:text-5xl text-primary">
+              +{data.coins}
+            </div>
+            <div className="mx-auto text-lg sm:text-2xl text-slate-500 font-light">
               Coins
             </div>
           </div>
           <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-2s">
-            <div className="mx-auto text-5xl text-primary">+{data.xp}</div>
-            <div className="mx-auto text-2xl text-slate-500 font-light">XP</div>
+            <div className="mx-auto text-2xl sm:text-5xl text-primary">
+              +{data.xp}
+            </div>
+            <div className="mx-auto text-lg sm:text-2xl text-slate-500 font-light">
+              XP
+            </div>
           </div>
           {lobby.ranked && (
             <div className="flex flex-col gap-10 animate__animated animate__fadeIn animate__delay-3s">
-              <div className="mx-auto text-5xl text-primary">
+              <div className="mx-auto text-2xl sm:text-5xl text-primary">
                 {data.rating > 0 ? "+" : ""}
                 {data.rating}
               </div>
-              <div className="mx-auto text-2xl text-slate-500 font-light">
+              <div className="mx-auto text-lg sm:text-2xl text-slate-500 font-light">
                 RP
               </div>
             </div>
@@ -106,15 +112,15 @@ export default function EndGame({ data }: Props) {
 
       <div className="flex justify-between">
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className=" w-[25%] h-2 bg-primary animate-pulse"></div>
-          <div className=" w-[50%] h-2 bg-primary animate-pulse"></div>
-          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
+          <div className=" w-[25%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className=" w-[50%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-none sm:animate-pulse"></div>
         </div>
 
         <div className="w-[40%] gap-2 flex flex-col">
-          <div className="ml-auto  w-[25%] h-2 bg-primary animate-pulse"></div>
-          <div className="ml-auto  w-[50%] h-2 bg-primary animate-pulse"></div>
-          <div className=" mr-auto w-full h-2 bg-primary animate-pulse"></div>
+          <div className="ml-auto  w-[25%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className="ml-auto  w-[50%] h-2 bg-primary animate-none sm:animate-pulse"></div>
+          <div className=" mr-auto w-full h-2 bg-primary animate-none sm:animate-pulse"></div>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ const Page = () => {
             >
               PONG FURY
             </div>
-            <p className="text-base font-ligh mb-4">
+            <p className="text-base font-light mb-4">
               Unleash the thrill of classic arcade action! Dive into the
               heart-pounding excitement of our Pong game – where every bounce,
               every move, sparks an electrifying rush of nostalgia and

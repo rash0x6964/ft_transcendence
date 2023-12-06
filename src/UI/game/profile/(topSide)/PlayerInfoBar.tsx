@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react"
-import GamesStats from "./GamesStats"
-import matchService from "@/services/MatchService"
 import MatchesStats from "@/types/MatchesStats"
 import ProfileData from "@/models/ProfileData.model"
 import LevelBar from "./LevelBar"
@@ -8,37 +5,19 @@ import CenterProfile from "./CenterProfile"
 import Stat from "./Stat"
 import profileService from "@/services/ProfileService"
 import AchStat from "./AchStat"
-import AchievementUser from "@/types/AchievementUser"
-import achievementService from "@/services/AchievementService"
 import Achievement from "@/models/Achievement.model"
 
 type Props = {
-  profileData: ProfileData
+  profileData: ProfileData | null
+  stats: MatchesStats | null
+  achievements: Achievement[]
 }
 
-export default function PlayerInfoBar({ profileData }: Props) {
-  const [stats, setStats] = useState<MatchesStats | null>(null)
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-
-  useEffect(() => {
-    if (!profileData) return
-
-    const fetchStats = async () => {
-      try {
-        const _ach = await achievementService.getUserAchievementsById(
-          profileData.id
-        )
-        const _stats = await matchService.getStatsById(profileData.id)
-        setStats(_stats)
-        setAchievements(_ach.slice(0, 3))
-      } catch (error) {
-        console.log("Couldn't fetch player stats")
-      }
-    }
-
-    fetchStats()
-  }, [profileData])
-
+export default function PlayerInfoBar({
+  profileData,
+  stats,
+  achievements,
+}: Props) {
   if (!profileData || !stats) return <></>
   else
     return (

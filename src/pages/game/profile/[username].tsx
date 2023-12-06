@@ -9,10 +9,24 @@ import { useRouter } from "next/router"
 import profileService from "@/services/ProfileService"
 import ProfileData from "@/models/ProfileData.model"
 import NotFoundError from "@/components/svgs/NotFoundError"
+import MatchesStats from "@/types/MatchesStats"
+import Achievement from "@/models/Achievement.model"
+import achievementService from "@/services/AchievementService"
+import matchService from "@/services/MatchService"
+import AchievementUser from "@/types/AchievementUser"
+import MatchDisplayData from "@/types/MatchDisplayData"
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter()
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
+  const [stats, setStats] = useState<MatchesStats | null>(null)
+  const [achievements, setAchievements] = useState<Achievement[]>([])
+  const [achievementsUser, setAchievementsUser] = useState<AchievementUser[]>(
+    []
+  )
+  const [matches, setMatches] = useState<MatchDisplayData[]>([])
+  const [shouldLoadMore, setShouldLoadMore] = useState(false)
+
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -28,6 +42,34 @@ const Page: NextPageWithLayout = () => {
           _username
         )
         setProfileData(_profileData)
+
+        const promises = [
+          achievementService.getAllAchievements(),
+          achievementService.getUserAchievementsById(_profileData.id),
+          matchService.getStatsById(_profileData.id),
+          matchService.getAllMatchesByIdByOffset(_profileData.id, 0),
+        ]
+        const [allAchievements, _ach, _stats, matchModels] = await Promise.all(
+          promises
+        )
+        setStats(_stats)
+        setAchievements(_ach.slice(0, 3))
+        const achievs: AchievementUser[] = allAchievements.map(
+          (achievement: Achievement) => {
+            return {
+              ...achievement,
+              active: _ach.some(
+                (ach: Achievement) => ach.id === achievement.id
+              ),
+            }
+          }
+        )
+        setAchievementsUser(achievs)
+
+        if (matchModels.length < 20) setShouldLoadMore(false)
+        else setShouldLoadMore(true)
+
+        setMatches(await matchService.getMatchProps(_profileData, matchModels))
         setLoading(false)
       } catch (error) {
         setError(true)
@@ -37,13 +79,32 @@ const Page: NextPageWithLayout = () => {
 
     fetchData()
   }, [router, _username])
+
+  const onLoadMore = async () => {
+    if (!profileData || shouldLoadMore === false) return
+
+    try {
+      const _matchAppend = await matchService.getAllMatchesByIdByOffset(
+        profileData.id,
+        matches.length
+      )
+      const _matchAppendModels = await matchService.getMatchProps(
+        profileData,
+        _matchAppend
+      )
+      _matchAppend.length === 0 && setShouldLoadMore(false)
+      setMatches(matches.concat(_matchAppendModels))
+    } catch (error) {
+      console.log("Couldn't fetch more matches")
+    }
+  }
+
   if (loading)
     return (
       <div className="w-full h-full flex flex-col justify-center ">
         <span className="loaderLobby mx-auto"></span>
       </div>
     )
-
   if (error)
     return (
       <div className="animate__animated animate__fadeIn h-full">
@@ -73,11 +134,19 @@ const Page: NextPageWithLayout = () => {
             alt=""
           />
           <div className="w-full h-full rounded-[20px] bg-[#0A0E12]/75 backdrop-blur-[5px] absolute flex justify-around items-center px-12"></div>
-          <PlayerInfoBar profileData={profileData} />
+          <PlayerInfoBar
+            profileData={profileData}
+            stats={stats}
+            achievements={achievements}
+          />
         </div>
         <div className="flex container mx-auto overflow-y-scroll flex-row-reverse">
-          <MatchHistory profileData={profileData} />
-          <Achievements profileData={profileData} />
+          <MatchHistory
+            matches={matches}
+            shouldLoadMore={shouldLoadMore}
+            onLoadMore={onLoadMore}
+          />
+          <Achievements achievements={achievementsUser} />
         </div>
       </div>
     )

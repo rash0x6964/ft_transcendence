@@ -34,7 +34,7 @@ export default function Podium({
   count,
 }: Props) {
   return (
-    <div className={paddingStyle(position, count)}>
+    <div className={paddingStyle(position, count)} > 
       <div className="self-center relative mb-3">
         <Avatar
           href={`/game/profile/` + playerName}

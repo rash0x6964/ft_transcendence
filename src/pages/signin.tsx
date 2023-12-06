@@ -1,74 +1,74 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react"
-import MainBtn from "@/components/BaseComponents/MainButton"
-import Input from "@/components/BaseComponents/Input"
-import AuthBtn from "@/components/BaseComponents/AuthButton"
-import { Audiowide } from "next/font/google"
-import Lock from "@/components/svgs/Lock"
-import Pen from "@/components/svgs/Pen"
-import Logo from "@/components/svgs/Logo"
-import AuthLayout from "@/UI/AuthLayout"
-import { NextPageWithLayout } from "./_app"
-import HeadTitle from "@/components/BaseComponents/HeadTitle"
-import authService from "@/services/AuthService"
-import cookieService from "@/services/CookiesService"
-import { useRouter } from "next/navigation"
-import { NotifcationContext } from "@/UI/NotificationProvider"
-import NotifData from "@/types/NotifData"
-import Dialogue from "@/components/Dialogue/Dialogue"
-import AuthDialBox from "@/components/BaseComponents/AuthDialBox"
-import TFAService from "@/services/TFAService"
-import axios from "axios"
-import Link from "next/link"
+import React, { ReactElement, useContext, useEffect, useState } from "react";
+import MainBtn from "@/components/BaseComponents/MainButton";
+import Input from "@/components/BaseComponents/Input";
+import AuthBtn from "@/components/BaseComponents/AuthButton";
+import { Audiowide } from "next/font/google";
+import Lock from "@/components/svgs/Lock";
+import Pen from "@/components/svgs/Pen";
+import Logo from "@/components/svgs/Logo";
+import AuthLayout from "@/UI/AuthLayout";
+import { NextPageWithLayout } from "./_app";
+import HeadTitle from "@/components/BaseComponents/HeadTitle";
+import authService from "@/services/AuthService";
+import cookieService from "@/services/CookiesService";
+import { useRouter } from "next/navigation";
+import { NotifcationContext } from "@/UI/NotificationProvider";
+import NotifData from "@/types/NotifData";
+import Dialogue from "@/components/Dialogue/Dialogue";
+import AuthDialBox from "@/components/BaseComponents/AuthDialBox";
+import TFAService from "@/services/TFAService";
+import axios from "axios";
+import Link from "next/link";
 const audiowide = Audiowide({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
-})
+});
 
 const Page: NextPageWithLayout = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [closeDialogue, setCloseDialogue] = useState(true)
-  const [token, setTempToken] = useState("")
-  const router = useRouter()
-  const notify: (data: NotifData) => void = useContext(NotifcationContext)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [closeDialogue, setCloseDialogue] = useState(true);
+  const [token, setTempToken] = useState("");
+  const router = useRouter();
+  const notify: (data: NotifData) => void = useContext(NotifcationContext);
 
   const setToken = (access_token: string) => {
-    cookieService.setJwtCookie(access_token)
-    router.push("/game")
-  }
+    cookieService.setJwtCookie(access_token);
+    router.push("/game");
+  };
   const handleSubmit = async (e: any) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!(password && username))
       return notify({
         message: "username and password are required",
         title: "Sign In Error",
         type: "error",
-      })
+      });
     try {
       const { access_token, tempToken } = await authService.signIn({
         username,
         password,
-      })
-      if (!tempToken) setToken(access_token)
+      });
+      if (!tempToken) setToken(access_token);
       else {
-        setCloseDialogue(false)
-        setTempToken(access_token)
+        setCloseDialogue(false);
+        setTempToken(access_token);
       }
     } catch (err: any) {
       notify({
         message: "You have entered an invalid username or password",
         title: "Sign In Error",
         type: "error",
-      })
+      });
     }
-  }
+  };
 
   const handle2FA = async (code: string) => {
     try {
-      console.log(code)
-      const { access_token } = await TFAService.verify2Fa({ token, code })
-      setToken(access_token)
+      console.log(code);
+      const { access_token } = await TFAService.verify2Fa({ token, code });
+      setToken(access_token);
     } catch (err) {
       if (axios.isAxiosError(err)) {
         notify({
@@ -77,19 +77,19 @@ const Page: NextPageWithLayout = () => {
             "username and email should be unique",
           title: "Validation Error",
           type: "error",
-        })
+        });
       }
     }
-  }
+  };
 
   useEffect(() => {
-    if (!cookieService.get2FACookie()) return
-    const infoCookie = cookieService.getInfoCookie()
-    cookieService.deleteInfoCookie()
-    cookieService.delete2FACookie()
-    setCloseDialogue(false)
-    setTempToken(infoCookie!)
-  }, [])
+    if (!cookieService.get2FACookie()) return;
+    const infoCookie = cookieService.getInfoCookie();
+    cookieService.deleteInfoCookie();
+    cookieService.delete2FACookie();
+    setCloseDialogue(false);
+    setTempToken(infoCookie!);
+  }, []);
   return (
     <div className="flex w-fit h-full flex-col gap-7 justify-center align-middle mx-auto">
       <HeadTitle>Pong Fury | Sign in</HeadTitle>
@@ -118,9 +118,6 @@ const Page: NextPageWithLayout = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="bg-big-stone w-[332px] min-w-[300px]  h-11"
             />
-            <a className="font-light self-end text-[10px] text-primary" href="">
-              Forgot password?
-            </a>
           </div>
           <MainBtn className="py-3" onClick={handleSubmit} type="submit">
             {" "}
@@ -157,11 +154,11 @@ const Page: NextPageWithLayout = () => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
 Page.getLayout = function getLayout(page: ReactElement) {
-  return <AuthLayout>{page}</AuthLayout>
-}
+  return <AuthLayout>{page}</AuthLayout>;
+};
 
-export default Page
+export default Page;

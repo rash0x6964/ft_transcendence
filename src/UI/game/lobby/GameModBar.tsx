@@ -33,7 +33,7 @@ export default function GameModBar({
       <div className="flex gap-5 mb-2">
         {gameMods.map((gameMod, i) => {
           return (
-            <>
+            <div key={gameMod.name}>
               <GameModButton
                 disabled={disabled}
                 onInfoClick={() => {
@@ -47,7 +47,7 @@ export default function GameModBar({
                 img={gameMod.src}
                 selected={gameMod.name == value}
               />
-            </>
+            </div>
           )
         })}
         <Dialogue

@@ -43,12 +43,12 @@ export default function GameModButton({
       <div
         className={`w-full h-full rounded-xl flex flex-col justify-center top-0 left-0   absolute bg-gray-900/60 `}
       >
-        <button
+        <div
           onClick={onInfoClick}
           className="absolute right-0 top-0 m-1  hover:text-white/50  text-white "
         >
           <Info width={20} height={20} className="opacity-100" />
-        </button>
+        </div>
         <h1 className=" w-full   text-xs ">{gameMod}</h1>
       </div>
     </button>

@@ -62,6 +62,7 @@ const Page: NextPageWithLayout = () => {
           if (index < 3)
             return (
               <Podium
+			    key={e.id}
                 playerAvatar={e.avatarUrl}
                 playerName={e.username}
                 position={index + 1}

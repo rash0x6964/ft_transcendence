@@ -14,6 +14,7 @@ import Achievement from "@/models/Achievement.model"
 import achievementService from "@/services/AchievementService"
 import matchService from "@/services/MatchService"
 import AchievementUser from "@/types/AchievementUser"
+import MatchDisplayData from "@/types/MatchDisplayData"
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter()
@@ -23,6 +24,8 @@ const Page: NextPageWithLayout = () => {
   const [achievementsUser, setAchievementsUser] = useState<AchievementUser[]>(
     []
   )
+  const [matches, setMatches] = useState<MatchDisplayData[]>([])
+  const [shouldLoadMore, setShouldLoadMore] = useState(false)
 
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -44,8 +47,11 @@ const Page: NextPageWithLayout = () => {
           achievementService.getAllAchievements(),
           achievementService.getUserAchievementsById(_profileData.id),
           matchService.getStatsById(_profileData.id),
+          matchService.getAllMatchesByIdByOffset(_profileData.id, 0),
         ]
-        const [allAchievements, _ach, _stats] = await Promise.all(promises)
+        const [allAchievements, _ach, _stats, matchModels] = await Promise.all(
+          promises
+        )
         setStats(_stats)
         setAchievements(_ach.slice(0, 3))
         const achievs: AchievementUser[] = allAchievements.map(
@@ -60,6 +66,10 @@ const Page: NextPageWithLayout = () => {
         )
         setAchievementsUser(achievs)
 
+        if (matchModels.length < 20) setShouldLoadMore(false)
+        else setShouldLoadMore(true)
+
+        setMatches(await matchService.getMatchProps(_profileData, matchModels))
         setLoading(false)
       } catch (error) {
         setError(true)
@@ -69,6 +79,25 @@ const Page: NextPageWithLayout = () => {
 
     fetchData()
   }, [router, _username])
+
+  const onLoadMore = async () => {
+    if (!profileData || shouldLoadMore === false) return
+
+    try {
+      const _matchAppend = await matchService.getAllMatchesByIdByOffset(
+        profileData.id,
+        matches.length
+      )
+      const _matchAppendModels = await matchService.getMatchProps(
+        profileData,
+        _matchAppend
+      )
+      _matchAppend.length === 0 && setShouldLoadMore(false)
+      setMatches(matches.concat(_matchAppendModels))
+    } catch (error) {
+      console.log("Couldn't fetch more matches")
+    }
+  }
 
   if (loading)
     return (
@@ -112,7 +141,11 @@ const Page: NextPageWithLayout = () => {
           />
         </div>
         <div className="flex container mx-auto overflow-y-scroll flex-row-reverse">
-          <MatchHistory profileData={profileData} />
+          <MatchHistory
+            matches={matches}
+            shouldLoadMore={shouldLoadMore}
+            onLoadMore={onLoadMore}
+          />
           <Achievements achievements={achievementsUser} />
         </div>
       </div>

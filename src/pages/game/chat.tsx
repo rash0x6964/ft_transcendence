@@ -355,8 +355,11 @@ const Page: NextPageWithLayout = () => {
     const _unfriend = (data: DirectMessage) => {
       setTempDMList((prevDmList) => {
         return prevDmList.map((dm) => {
-          if ( (dm.senderID === data.senderID && dm.receiverID === data.receiverID) ||
-          (dm.senderID === data.receiverID && dm.receiverID === data.senderID)) {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
             dm.isFriend = false
             dm.pending = false
             setSelected(dm)
@@ -463,7 +466,6 @@ const Page: NextPageWithLayout = () => {
       socket?.off("acceptFriend", _friendship)
       socket?.off("cancelFriendReq", _cancelFriendReq)
       socket?.off("pendingReq", _pendingReq)
-
     }
   }, [selected])
 
@@ -581,12 +583,13 @@ const Page: NextPageWithLayout = () => {
     FriendRequestService.sendRequest(
       (selected as DirectMessage).friend?.id ?? ""
     )
-      .then((res) => {
-        socket?.emit("pendingReq", { data: selected as DirectMessage })
-        set_Refresh((prev) => !prev)
+      .then((res: any) => {
+        socket?.emit("friendAction", { data: selected as DirectMessage })
         socket?.emit("friendReqAction", {
           data: selected as DirectMessage,
         })
+        if (res.data.skipRefresh) return
+        socket?.emit("pendingReq", { data: selected as DirectMessage })
       })
       .catch((err) => {})
   }
@@ -612,7 +615,7 @@ const Page: NextPageWithLayout = () => {
         setSelected((obj) => {
           return { ...(obj as DirectMessage), pending: false, isFriend: false }
         })
-        socket?.emit("friendReqAction", {data: selected as DirectMessage})
+        socket?.emit("friendReqAction", { data: selected as DirectMessage })
       })
       .catch((err) => {})
   }

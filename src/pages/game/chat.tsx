@@ -232,7 +232,7 @@ const Page: NextPageWithLayout = () => {
       setChannelConfDialog(true)
     }
 
-    const _ubannedFromChannel = (data: any) => {
+    const _unbannedFromChannel = (data: any) => {
       data.channel["isMember"] = true
       data.channel["role"] = data.role
 
@@ -244,6 +244,24 @@ const Page: NextPageWithLayout = () => {
 
     const _outOfChannel = (data: any) => {
       setTempChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+      setSearchFor((text) => {
+        if (text.length <= 0) set_Refresh((prev) => !prev)
+        return text
+      })
+      setRefreshSelection((prev) => !prev)
+    }
+
+    const _bannedFromChannel = (data: any) => {
+      setTempChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+      setChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.channelID
         })
@@ -337,7 +355,11 @@ const Page: NextPageWithLayout = () => {
     const _unfriend = (data: DirectMessage) => {
       setTempDMList((prevDmList) => {
         return prevDmList.map((dm) => {
-          if (dm.id === data.id) {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
             dm.isFriend = false
             dm.pending = false
             setSelected(dm)
@@ -384,10 +406,28 @@ const Page: NextPageWithLayout = () => {
       set_Refresh((prev) => !prev)
     }
 
+    const _pendingReq = (data: any) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
+            dm.isFriend = false
+            dm.pending = true
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
-    socket?.on("YouGotUnbanned", _ubannedFromChannel)
-    socket?.on("YouGotBanned", _outOfChannel)
+    socket?.on("YouGotUnbanned", _unbannedFromChannel)
+    socket?.on("YouGotBanned", _bannedFromChannel)
     socket?.on("YouGotKicked", _outOfChannel)
     socket?.on("YouGotMuted", _getMuted)
     socket?.on("disconnected", _disconnect)
@@ -403,12 +443,13 @@ const Page: NextPageWithLayout = () => {
     socket?.on("unfriend", _unfriend)
     socket?.on("acceptFriend", _friendship)
     socket?.on("cancelFriendReq", _cancelFriendReq)
+    socket?.on("pendingReq", _pendingReq)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
-      socket?.off("YouGotUnbanned", _ubannedFromChannel)
-      socket?.off("YouGotBanned", _outOfChannel)
+      socket?.off("YouGotUnbanned", _unbannedFromChannel)
+      socket?.off("YouGotBanned", _bannedFromChannel)
       socket?.off("YouGotKicked", _outOfChannel)
       socket?.off("YouGotMuted", _getMuted)
       socket?.off("disconnected", _disconnect)
@@ -424,6 +465,7 @@ const Page: NextPageWithLayout = () => {
       socket?.off("unfriend", _unfriend)
       socket?.off("acceptFriend", _friendship)
       socket?.off("cancelFriendReq", _cancelFriendReq)
+      socket?.off("pendingReq", _pendingReq)
     }
   }, [selected])
 
@@ -541,21 +583,13 @@ const Page: NextPageWithLayout = () => {
     FriendRequestService.sendRequest(
       (selected as DirectMessage).friend?.id ?? ""
     )
-      .then((res) => {
-        setTempDMList((prevDmList) => {
-          return prevDmList.map((dm) => {
-            if (dm.id === (selected as DirectMessage).id) {
-              dm.isFriend = false
-              dm.pending = true
-              setSelected(dm)
-            }
-            return dm
-          })
-        })
-        set_Refresh((prev) => !prev)
+      .then((res: any) => {
+        socket?.emit("friendAction", { data: selected as DirectMessage })
         socket?.emit("friendReqAction", {
           data: selected as DirectMessage,
         })
+        if (res.data.skipRefresh) return
+        socket?.emit("pendingReq", { data: selected as DirectMessage })
       })
       .catch((err) => {})
   }
@@ -581,6 +615,7 @@ const Page: NextPageWithLayout = () => {
         setSelected((obj) => {
           return { ...(obj as DirectMessage), pending: false, isFriend: false }
         })
+        socket?.emit("friendReqAction", { data: selected as DirectMessage })
       })
       .catch((err) => {})
   }

@@ -68,7 +68,7 @@ export default function SearchPersonDialBox() {
         socket?.emit("friendReqAction", {
           token: cookieService.getJwtCookie(),
           data: data.data,
-        })
+        }).emit("pendingReq", {data: data.data})
         notify({
           message: "Friend Request sent",
           title: "Friend Request",

@@ -17,7 +17,7 @@ export const handleFriendRemove = (
       socket?.emit("friendAction", {
         token: cookieService.getJwtCookie(),
         data: selectedData,
-      })
+      }).emit("unfriend", {data: selectedData})
     })
     .catch((err) => {})
 }
@@ -34,7 +34,7 @@ export function useRightBarSocket(
   useEffect(() => {
     FriendService.getFriendList()
       .then((data) => {
-        console.log(data)
+        // console.log(data)
 
         setFriendList(data.data)
       })

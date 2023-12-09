@@ -232,7 +232,7 @@ const Page: NextPageWithLayout = () => {
       setChannelConfDialog(true)
     }
 
-    const _ubannedFromChannel = (data: any) => {
+    const _unbannedFromChannel = (data: any) => {
       data.channel["isMember"] = true
       data.channel["role"] = data.role
 
@@ -244,6 +244,24 @@ const Page: NextPageWithLayout = () => {
 
     const _outOfChannel = (data: any) => {
       setTempChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+      setSearchFor((text) => {
+        if (text.length <= 0) set_Refresh((prev) => !prev)
+        return text
+      })
+      setRefreshSelection((prev) => !prev)
+    }
+
+    const _bannedFromChannel = (data: any) => {
+      setTempChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return item.id != data.channelID
+        })
+      })
+      setChannelList((prevChannelList) => {
         return prevChannelList.filter((item) => {
           return item.id != data.channelID
         })
@@ -386,8 +404,8 @@ const Page: NextPageWithLayout = () => {
 
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
-    socket?.on("YouGotUnbanned", _ubannedFromChannel)
-    socket?.on("YouGotBanned", _outOfChannel)
+    socket?.on("YouGotUnbanned", _unbannedFromChannel)
+    socket?.on("YouGotBanned", _bannedFromChannel)
     socket?.on("YouGotKicked", _outOfChannel)
     socket?.on("YouGotMuted", _getMuted)
     socket?.on("disconnected", _disconnect)
@@ -407,8 +425,8 @@ const Page: NextPageWithLayout = () => {
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
       socket?.off("roomRemoved", _deleteChannelEvent)
-      socket?.off("YouGotUnbanned", _ubannedFromChannel)
-      socket?.off("YouGotBanned", _outOfChannel)
+      socket?.off("YouGotUnbanned", _unbannedFromChannel)
+      socket?.off("YouGotBanned", _bannedFromChannel)
       socket?.off("YouGotKicked", _outOfChannel)
       socket?.off("YouGotMuted", _getMuted)
       socket?.off("disconnected", _disconnect)

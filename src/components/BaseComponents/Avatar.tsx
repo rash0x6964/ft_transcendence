@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 import Link from "next/link"
 import { link } from "fs"
 

@@ -1,6 +1,6 @@
 import MainButton from "@/components/BaseComponents/MainButton"
 import LinkIcn from "../icons/LinkIcn"
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 
 type Props = {
   provider: "github" | "fortytwo" | "google"

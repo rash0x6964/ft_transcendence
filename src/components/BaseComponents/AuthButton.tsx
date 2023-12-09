@@ -3,7 +3,7 @@ import Github from "../svgs/Github"
 import Intra from "../svgs/Intra"
 import Google from "../svgs/Google"
 import GoogleAuth from "../svgs/GoogleAuth"
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 import Link from "next/link"
 type Props = {
   onClick?: () => void

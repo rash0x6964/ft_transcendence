@@ -1,6 +1,6 @@
 import axios from "axios"
 import { HttpClient } from "./HttpClient"
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 import cookieService from "./CookiesService"
 import { ProviderToken } from "@/types/Auth"
 import { UpdatePassword, UpdateUser } from "@/types/User"

@@ -17,7 +17,7 @@ import { WebSocketContext } from "@/UI/WebSocketContextWrapper"
 import cookieService from "@/services/CookiesService"
 import MemberSection from "./MemberSection"
 import AddUser from "@/components/svgs/AddUser"
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 
 type Props = {
   onEdit: () => void

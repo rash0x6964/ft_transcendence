@@ -1,4 +1,4 @@
-import env from "@/environment/environment"
+import env from "@/constants/constants"
 import axios from "axios"
 import cookieService from "./CookiesService"
 

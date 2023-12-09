@@ -245,6 +245,7 @@ export default function ChannelInfo({
   }
 
   const handleClipBoard = () => {
+    if (!navigator.clipboard) return
     navigator.clipboard.writeText(
       window.location.host + `/game/chat/?type=invite&id=${selectedChannel.id}`
     )

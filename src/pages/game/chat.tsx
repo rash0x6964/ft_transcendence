@@ -248,6 +248,11 @@ const Page: NextPageWithLayout = () => {
           return item.id != data.channelID
         })
       })
+      setChannelList((prevChannelList) => {
+        return prevChannelList.filter((item) => {
+          return !(item.id == data.channelID && item.visibility == "PRIVATE")
+        })
+      })
       setSearchFor((text) => {
         if (text.length <= 0) set_Refresh((prev) => !prev)
         return text

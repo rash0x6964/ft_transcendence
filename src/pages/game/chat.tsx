@@ -355,7 +355,8 @@ const Page: NextPageWithLayout = () => {
     const _unfriend = (data: DirectMessage) => {
       setTempDMList((prevDmList) => {
         return prevDmList.map((dm) => {
-          if (dm.id === data.id) {
+          if ( (dm.senderID === data.senderID && dm.receiverID === data.receiverID) ||
+          (dm.senderID === data.receiverID && dm.receiverID === data.senderID)) {
             dm.isFriend = false
             dm.pending = false
             setSelected(dm)
@@ -402,6 +403,24 @@ const Page: NextPageWithLayout = () => {
       set_Refresh((prev) => !prev)
     }
 
+    const _pendingReq = (data: any) => {
+      setTempDMList((prevDmList) => {
+        return prevDmList.map((dm) => {
+          if (
+            (dm.senderID === data.senderID &&
+              dm.receiverID === data.receiverID) ||
+            (dm.senderID === data.receiverID && dm.receiverID === data.senderID)
+          ) {
+            dm.isFriend = false
+            dm.pending = true
+            setSelected(dm)
+          }
+          return dm
+        })
+      })
+      set_Refresh((prev) => !prev)
+    }
+
     socket?.on("channelUpdated", _updateSelectedChannel)
     socket?.on("roomRemoved", _deleteChannelEvent)
     socket?.on("YouGotUnbanned", _unbannedFromChannel)
@@ -421,6 +440,7 @@ const Page: NextPageWithLayout = () => {
     socket?.on("unfriend", _unfriend)
     socket?.on("acceptFriend", _friendship)
     socket?.on("cancelFriendReq", _cancelFriendReq)
+    socket?.on("pendingReq", _pendingReq)
 
     return () => {
       socket?.off("channelUpdated", _updateSelectedChannel)
@@ -442,6 +462,8 @@ const Page: NextPageWithLayout = () => {
       socket?.off("unfriend", _unfriend)
       socket?.off("acceptFriend", _friendship)
       socket?.off("cancelFriendReq", _cancelFriendReq)
+      socket?.off("pendingReq", _pendingReq)
+
     }
   }, [selected])
 
@@ -560,16 +582,18 @@ const Page: NextPageWithLayout = () => {
       (selected as DirectMessage).friend?.id ?? ""
     )
       .then((res) => {
-        setTempDMList((prevDmList) => {
-          return prevDmList.map((dm) => {
-            if (dm.id === (selected as DirectMessage).id) {
-              dm.isFriend = false
-              dm.pending = true
-              setSelected(dm)
-            }
-            return dm
-          })
-        })
+        // setTempDMList((prevDmList) => {
+        //   return prevDmList.map((dm) => {
+        //     if (dm.id === (selected as DirectMessage).id) {
+        //       dm.isFriend = false
+        //       dm.pending = true
+        //       setSelected(dm)
+        //     }
+        //     return dm
+        //   })
+        // })
+
+        socket?.emit("pendingReq", { data: selected as DirectMessage })
         set_Refresh((prev) => !prev)
         socket?.emit("friendReqAction", {
           data: selected as DirectMessage,
